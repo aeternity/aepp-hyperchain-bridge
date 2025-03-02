@@ -1,0 +1,64 @@
+@compiler >= 6
+
+include "./BridgeTokenInterface.aes"
+
+main contract HyperchainBridge = 
+	record state = {
+		owner 						: address,
+		deposit_count 		: int,
+		withdraw_count 		: int,
+		deposits 					: map(int, deposit),
+		withdraws 				: map(int, withdraw),
+		registered_tokens : map(string, BridgeTokenInterface)}
+	
+	record deposit = {
+		amount		: int,
+		from			: address,
+		token			: BridgeTokenInterface}
+
+	record withdraw = {
+		amount		: int,
+		recipient	: address,
+		token			: BridgeTokenInterface}
+
+	datatype event = Deposit(string, address, int) | 
+		Withdraw(string, address, int) | 
+		RegisterToken(string, BridgeTokenInterface)
+
+	entrypoint init(registered_tokens: map(string, BridgeTokenInterface), owner: address): state = {
+		owner = owner, 
+		deposits = {}, 
+		withdraws = {},
+		deposit_count = 0, 
+		withdraw_count = 0, 
+		registered_tokens = registered_tokens}
+
+	entrypoint registered_token(token: string): option(BridgeTokenInterface) =
+		Map.lookup(token, state.registered_tokens)
+	
+	entrypoint deposits() = state.deposits
+
+	stateful entrypoint deposit(token: string, amount: int) =
+		require_registered_token(token)
+		state.registered_tokens[token].transfer_allowance(Call.caller, Contract.address, amount)
+		let deposit = {amount = amount, from = Call.caller, token = state.registered_tokens[token]}
+		put(state{deposits[state.deposit_count] = deposit, deposit_count = state.deposit_count + 1})
+		Chain.event(Deposit(token, Call.caller, amount))
+
+	stateful entrypoint withdraw(token: string, destination: address, amount: int) =
+		require_owner()
+		state.registered_tokens[token].transfer(destination, amount)
+		Chain.event(Withdraw(token, destination, amount))
+
+	stateful entrypoint register_token(token: string, token_contract: BridgeTokenInterface) =
+		require_owner()
+		require(!Map.member(token, state.registered_tokens), "TOKEN_ALREADY_REGISTERED")
+		put(state{registered_tokens[token] = token_contract})
+		Chain.event(RegisterToken(token, token_contract))
+
+	function require_owner() =
+		require(Call.caller == state.owner, "ONLY_OWNER_CALL_ALLOWED")
+
+	function require_registered_token(token: string) =
+		require(Map.member(token, state.registered_tokens), "TOKEN_NOT_REGISTERED")
+

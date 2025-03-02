@@ -1,0 +1,17 @@
+{
+  "name": "hyperchain-bridge",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "scripts": {
+    "compile": "bin/aesophia_cli contracts/HyperchainBridge.aes",
+    "test": "bun test --timeout 20000"
+  },
+  "type": "module",
+  "dependencies": {
+    "@aeternity/aepp-sdk": "^14.0.0"
+  }
+}
