@@ -7,29 +7,9 @@ import {
   getFileSystem,
   Contract,
 } from "@aeternity/aepp-sdk";
+import { aeTest, hcPerf, hcLocal } from "../../configs/network";
 
-const network = {
-  id: "ae_uat",
-  url: "https://testnet.aeternity.io/",
-  compilerUrl: "https://v8.compiler.aepps.com",
-  getFundingAccount: async () => {
-    const account = MemoryAccount.generate();
-
-    const { status } = await fetch(
-      `https://faucet.aepps.com/account/${account.address}`,
-      {
-        method: "POST",
-      }
-    );
-    console.assert(
-      [200, 425].includes(status),
-      "Invalid faucet response code",
-      status
-    );
-
-    return account;
-  },
-};
+const network = aeTest;
 
 export async function getSdk(accountCount = 1): Promise<AeSdk> {
   const fundingAccount = await network.getFundingAccount();
