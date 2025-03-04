@@ -1,15 +1,31 @@
-# hyperchain-bridge
+# Hyperchain Bridge
 
-To install dependencies:
+This project is created to establish bridges between Aeternity networks (Hyperchain, Mainnet). Project will include smart contracts, tests, backend server to bond the funds and a frontend application to interact with the contracts/bridge.
 
-```bash
+## Getting started
+
+### Install dependencies
+
+Project uses [Bun](https://bun.sh/docs) toolkit, so before proceeding [Bun installation](https://bun.sh/docs/installation) should be completed.
+
+Afterwards, run the following command to install the project dependencies:
+
+```
 bun install
 ```
 
-To run:
+### Compile smart contracts
 
-```bash
-bun run index.ts
+Project has a [aesophia_cli v8 binary](https://github.com/aeternity/aesophia_cli/blob/master/priv/bin/v8.0.0/aesophia_cli) in the `/bin` folder to compile the contracts with following command:
+
+```
+bun run compile
 ```
 
-This project was created using `bun init` in bun v1.2.1. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+### Running the tests
+
+Project uses Bun test runner and it can run the test without any additional package with the following command:
+
+```
+bun run tests
+```
