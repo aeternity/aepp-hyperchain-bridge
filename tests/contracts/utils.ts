@@ -1,12 +1,5 @@
-import { readFileSync } from "fs";
-import {
-  AeSdk,
-  MemoryAccount,
-  CompilerHttp,
-  Node,
-  getFileSystem,
-  Contract,
-} from "@aeternity/aepp-sdk";
+import { AeSdk, MemoryAccount, CompilerHttp, Node } from "@aeternity/aepp-sdk";
+import { createContract } from "../../utils/contract";
 import { aeTest, hcPerf, hcLocal } from "../../configs/network";
 
 const network = aeTest;
@@ -34,16 +27,43 @@ export async function getSdk(accountCount = 1): Promise<AeSdk> {
   return sdk;
 }
 
-async function getContractOptions(path: string) {
-  const sourceCode = readFileSync(path, "utf-8");
-  const fileSystem = await getFileSystem(path);
+export async function setupContracts(aeSdk: AeSdk) {
+  // Contract sources
+  const BridgeToken = "contracts/BridgeToken.aes";
+  const HyperchainBridge = "contracts/HyperchainBridge.aes";
 
-  return { sourceCode, fileSystem };
-}
+  // Account addresses
+  const ownerAddress: `ak_${string}` = aeSdk.addresses()[0];
+  const userAddress: `ak_${string}` = aeSdk.addresses()[1];
 
-export async function createContract(contractPath: string, sdk: AeSdk) {
-  return Contract.initialize({
-    ...sdk.getContext(),
-    ...(await getContractOptions(contractPath)),
-  });
+  // Deploy contracts
+  const TestToken = await createContract(BridgeToken, aeSdk);
+  const Bridge = await createContract(HyperchainBridge, aeSdk);
+
+  // Initialize contracts
+  await TestToken.init("TestToken", 18, "TST", 100e18);
+  await Bridge.init();
+
+  // Contract addresses
+  const testTokenAddress = TestToken.$options.address!;
+  const bridgeAddress = Bridge.$options.address!;
+  const bridgeAccountAddress = bridgeAddress.replace("ct_", "ak_");
+
+  // Setup contracts for testing
+  await Bridge.register_network("testnet");
+  await Bridge.register_token(testTokenAddress);
+  await TestToken.transfer(userAddress, 20e18);
+
+  aeSdk.selectAccount(userAddress);
+  await TestToken.create_allowance(bridgeAccountAddress, 100e18);
+
+  return {
+    Bridge,
+    TestToken,
+    ownerAddress,
+    userAddress,
+    testTokenAddress,
+    bridgeAddress,
+    bridgeAccountAddress,
+  };
 }

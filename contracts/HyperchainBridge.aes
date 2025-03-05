@@ -1,64 +1,103 @@
 @compiler >= 6
 
+include "List.aes"
 include "./BridgeTokenInterface.aes"
 
+/// @title Bridge contract for Hyperchain
+/// @notice This contract allows users to bridge tokens between Aeternity mainnet and Hyperchains
+/// @author Yusuf Seyrek
+/// @dev This contract is a bridge contract for Hyperchain. It allows users to deposit tokens from Aeternity mainnet to Hyperchain and withdraw tokens from Hyperchain to Aeternity mainnet.
 main contract HyperchainBridge = 
   record state = {
-    owner 						: address,
-    deposit_count 		: int,
-    withdraw_count 		: int,
-    deposits 					: map(int, deposit),
-    withdraws 				: map(int, withdraw),
-    registered_tokens : map(string, BridgeTokenInterface)}
+    owner 						  : address,
+    deposits 					  : list(deposit),
+    withdraws 				  : list(withdraw),
+    registered_tokens   : list(BridgeTokenInterface),
+    registered_networks : list(string)}
   
   record deposit = {
-    amount		: int,
-    from			: address,
-    token			: BridgeTokenInterface}
+    amount		    : int,
+    from			    : address,
+    token			    : BridgeTokenInterface,
+    for_network   : string}
 
   record withdraw = {
-    amount		: int,
-    recipient	: address,
-    token			: BridgeTokenInterface}
+    amount		    : int,
+    recipient	    : address,
+    token			    : BridgeTokenInterface,
+    from_network  : string}
 
-  datatype event = Deposit(string, address, int) | 
-    Withdraw(string, address, int) | 
-    RegisterToken(string, BridgeTokenInterface)
+  entrypoint init(): state = {
+    owner               = Call.caller, 
+    deposits            = [], 
+    withdraws           = [], 
+    registered_networks = [],
+    registered_tokens   = []}
 
-  entrypoint init(registered_tokens: map(string, BridgeTokenInterface), owner: address): state = {
-    owner = owner, 
-    deposits = {}, 
-    withdraws = {},
-    deposit_count = 0, 
-    withdraw_count = 0, 
-    registered_tokens = registered_tokens}
+  entrypoint withdraws(): list(withdraw) = state.withdraws
+  entrypoint deposits(): list(deposit) = state.deposits
+  entrypoint registered_tokens(): list(BridgeTokenInterface) = state.registered_tokens
+  entrypoint registered_networks(): list(string) = state.registered_networks
 
-  entrypoint registered_token(token: string): option(BridgeTokenInterface) =
-    Map.lookup(token, state.registered_tokens)
-  
-  entrypoint deposits() = state.deposits
-
-  stateful entrypoint deposit(token: string, amount: int) =
+  /// @notice Deposit tokens to start the bridging process
+  /// @param for_network The network which tokens will be bridged to
+  /// @param token The token to be bridged
+  /// @param amount The amount of tokens to be bridged
+  /// @dev This function allows users to deposit tokens to start the bridging process
+  stateful entrypoint deposit(for_network: string, token: BridgeTokenInterface, amount: int) =
     require_registered_token(token)
-    state.registered_tokens[token].transfer_allowance(Call.caller, Contract.address, amount)
-    let deposit = {amount = amount, from = Call.caller, token = state.registered_tokens[token]}
-    put(state{deposits[state.deposit_count] = deposit, deposit_count = state.deposit_count + 1})
-    Chain.event(Deposit(token, Call.caller, amount))
+    require_registered_network(for_network)
+    _deposit({amount = amount, from = Call.caller, token = token, for_network = for_network})
 
-  stateful entrypoint withdraw(token: string, destination: address, amount: int) =
+  /// @notice Withdraw tokens to finalize the bridging process
+  /// @param from_network The network which tokens will be bridged from
+  /// @param token The token to be bridged
+  /// @param recipient The address to receive the tokens
+  /// @param amount The amount of tokens to be bridged
+  /// @dev This function allows contract owner to withdraw tokens to finalize the bridging process 
+  stateful entrypoint withdraw(from_network: string, token: BridgeTokenInterface, recipient: address, amount: int) =
     require_owner()
-    state.registered_tokens[token].transfer(destination, amount)
-    Chain.event(Withdraw(token, destination, amount))
+    _withdraw({amount = amount, recipient = recipient, token = token, from_network = from_network})
 
-  stateful entrypoint register_token(token: string, token_contract: BridgeTokenInterface) =
+  /// @notice Register a token to be used in the bridging process
+  /// @param token The token to be registered
+  /// @dev This function allows contract owner to register a token to be used in the bridging process
+  stateful entrypoint register_token(token: BridgeTokenInterface) =
     require_owner()
-    require(!Map.member(token, state.registered_tokens), "TOKEN_ALREADY_REGISTERED")
-    put(state{registered_tokens[token] = token_contract})
-    Chain.event(RegisterToken(token, token_contract))
+    require_token_not_registered(token)
+    put(state{registered_tokens = state.registered_tokens ++ [token]})
+
+  /// @notice Register a network to be used in the bridging process
+  /// @param network The network to be registered
+  /// @dev This function allows contract owner to register a network to be used in the bridging process
+  stateful entrypoint register_network(network: string) =
+    require_owner()
+    require_network_not_registered(network)
+    put(state{registered_networks = state.registered_networks ++ [network] })
+
+  stateful function _deposit(new_deposit: deposit) =
+    new_deposit.token.transfer_allowance(Call.caller, Contract.address, new_deposit.amount)
+    put(state{deposits = state.deposits ++ [new_deposit]})
+
+  stateful function _withdraw(new_withdraw: withdraw) =
+    new_withdraw.token.transfer(new_withdraw.recipient, new_withdraw.amount)
+    put(state{withdraws = state.withdraws ++ [new_withdraw]})
 
   function require_owner() =
     require(Call.caller == state.owner, "ONLY_OWNER_CALL_ALLOWED")
 
-  function require_registered_token(token: string) =
-    require(Map.member(token, state.registered_tokens), "TOKEN_NOT_REGISTERED")
+  function require_registered_network(network: string) =
+    require(List.contains(network, state.registered_networks), "NETWORK_NOT_REGISTERED")
+
+  function require_registered_token(token: BridgeTokenInterface) =
+    require(List.contains(token, state.registered_tokens), "TOKEN_NOT_REGISTERED")
+
+  function require_token_not_registered(token: BridgeTokenInterface) =
+    require(!List.contains(token, state.registered_tokens), "TOKEN_ALREADY_REGISTERED")
+
+  function require_network_not_registered(network: string) =
+    require(!List.contains(network, state.registered_networks), "NETWORK_ALREADY_REGISTERED")
+
+  
+
 

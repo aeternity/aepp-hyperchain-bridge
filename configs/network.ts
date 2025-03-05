@@ -1,6 +1,13 @@
 import { MemoryAccount } from "@aeternity/aepp-sdk";
 
-export const aeTest = {
+export interface Network {
+  id: string;
+  url: string;
+  compilerUrl: string;
+  getFundingAccount: () => Promise<MemoryAccount>;
+}
+
+export const aeTest: Network = {
   id: "ae_uat",
   url: "https://testnet.aeternity.io/",
   compilerUrl: "https://v8.compiler.aepps.com",
@@ -23,7 +30,7 @@ export const aeTest = {
   },
 };
 
-export const hcLocal = {
+export const hcLocal: Network = {
   id: "hc_bridge_test",
   url: "http://localhost:3013",
   compilerUrl: "https://v8.compiler.aepps.com",
@@ -34,7 +41,7 @@ export const hcLocal = {
   },
 };
 
-export const hcPerf = {
+export const hcPerf: Network = {
   id: "aehc_perf",
   url: "https://perf.hyperchains.aeternity.io/",
   compilerUrl: "https://v8.compiler.aepps.com",
