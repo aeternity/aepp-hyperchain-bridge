@@ -1,17 +1,31 @@
 {
-  "name": "hyperchain-bridge",
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
-  },
+  "name": "aepp-hyperchain-bridge",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "compile": "bin/aesophia_cli contracts/HyperchainBridge.aes",
+    "dev:web": "next dev --turbopack",
+    "build:web": "next build",
+    "start:web": "next start",
+    "lint": "next lint",
+    "compile:contract": "bin/aesophia_cli contracts/HyperchainBridge.aes",
     "tests": "bun test --timeout 20000"
   },
-  "type": "module",
   "dependencies": {
-    "@aeternity/aepp-sdk": "^14.0.0"
+    "@aeternity/aepp-sdk": "^14.0.0",
+    "next": "15.2.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/bun": "^1.2.4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.2.1",
+    "tailwindcss": "^4",
+    "typescript": "^5"
   }
 }

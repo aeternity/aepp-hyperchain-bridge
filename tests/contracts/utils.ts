@@ -6,8 +6,8 @@ import {
   encode,
   Encoding,
 } from "@aeternity/aepp-sdk";
-import { createContract } from "../../utils/contract";
-import { aeMain, aeTest } from "../../configs/network";
+import { createContract } from "@/utils/contract";
+import { aeMain, aeTest } from "@/configs/network";
 
 const network = aeTest;
 
