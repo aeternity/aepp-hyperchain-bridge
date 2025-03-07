@@ -1,30 +1,32 @@
-import { AeSdk, MemoryAccount, CompilerHttp, Node } from "@aeternity/aepp-sdk";
+import {
+  AeSdk,
+  MemoryAccount,
+  CompilerHttp,
+  Node,
+  encode,
+  Encoding,
+} from "@aeternity/aepp-sdk";
 import { createContract } from "../../utils/contract";
-import { aeTest, hcPerf, hcLocal } from "../../configs/network";
+import { aeMain, aeTest } from "../../configs/network";
 
 const network = aeTest;
 
-export async function getSdk(accountCount = 1): Promise<AeSdk> {
-  const fundingAccount = await network.getFundingAccount();
-  const accounts = new Array(accountCount - 1)
-    .fill(null)
-    .map(() => MemoryAccount.generate());
-  accounts.unshift(fundingAccount);
+export async function getSdk(): Promise<AeSdk> {
+  const accounts = [Bun.env.BRIDGE_OWNER_PK, Bun.env.BRIDGE_USER_PK].map(
+    (pk) =>
+      new MemoryAccount(
+        encode(
+          Buffer.from(pk!, "hex").subarray(0, 32),
+          Encoding.AccountSecretKey
+        )
+      )
+  );
 
-  const sdk = new AeSdk({
+  return new AeSdk({
     onCompiler: new CompilerHttp(network.compilerUrl),
     nodes: [{ name: "test", instance: new Node(network.url) }],
     accounts,
   });
-
-  for (let i = 0; i < accounts.length; i += 1) {
-    await sdk.spend(1e18, accounts[i].address, {
-      onAccount: fundingAccount,
-      verify: false,
-    });
-  }
-
-  return sdk;
 }
 
 export async function setupContracts(aeSdk: AeSdk) {

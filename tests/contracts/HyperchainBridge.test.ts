@@ -3,7 +3,7 @@ import { describe, expect, test, beforeEach, beforeAll } from "bun:test";
 import { getSdk, setupContracts } from "./utils";
 
 describe("HyperchainBridge", async () => {
-  const aeSdk = await getSdk(2);
+  const aeSdk = await getSdk();
   const {
     Bridge,
     TestToken,
