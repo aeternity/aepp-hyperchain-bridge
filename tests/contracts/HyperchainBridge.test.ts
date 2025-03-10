@@ -1,9 +1,11 @@
 import { describe, expect, test, beforeEach, beforeAll } from "bun:test";
 
-import { getSdk, setupContracts } from "./utils";
+import getSdk from "@/utils/ae-sdk";
+import { testsSetup } from "./tests-setup";
+import { aeTest } from "@/constants/network";
 
 describe("HyperchainBridge", async () => {
-  const aeSdk = await getSdk();
+  const aeSdk = await getSdk(aeTest);
   const {
     Bridge,
     TestToken,
@@ -12,7 +14,7 @@ describe("HyperchainBridge", async () => {
     bridgeAddress,
     testTokenAddress,
     bridgeAccountAddress,
-  } = await setupContracts(aeSdk);
+  } = await testsSetup(aeSdk);
 
   describe("Deposits", async () => {
     beforeEach(async () => {
