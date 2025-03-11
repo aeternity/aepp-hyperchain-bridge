@@ -30,3 +30,5 @@ export const hcPerf: Network = {
   url: "https://perf.hyperchains.aeternity.io/",
   ...networkDefaults,
 };
+
+export const networks = [aeMain, aeTest, hcPerf];

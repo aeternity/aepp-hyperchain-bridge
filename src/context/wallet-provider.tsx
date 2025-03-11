@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useEffect, useRef, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import {
   AccountBase,
   walletDetector,
@@ -39,8 +39,8 @@ export const WalletContext = createContext({
 
 export default function WalletProvider({ children }: { children: React.ReactNode }) {
   const [balance, setBalance] = useState("");
-  const [address, setAddress] = useState("");
   const [networkId, setNetworkId] = useState("");
+  const [address, setAddress] = useState<`ak_${string}` | "">("");
   const [detectionStatus, setDetectionStatus] = useState(WalletDetectionStatus.IDLE);
   const [connectionStatus, setConnectionStatus] = useState(WalletConnectionStatus.IDLE);
 
@@ -56,6 +56,10 @@ export default function WalletProvider({ children }: { children: React.ReactNode
   }, [wallet]);
 
   useEffect(() => {
+    address && aeSdk.getBalance(address).then(setBalance);
+  }, [networkId, address]);
+
+  useEffect(() => {
     if (connector === null) return;
 
     setConnectionStatus(WalletConnectionStatus.CONNECTING);
@@ -64,7 +68,9 @@ export default function WalletProvider({ children }: { children: React.ReactNode
       aeSdk.addAccount(accounts[0], { select: true });
       setAddress(aeSdk.address);
       setNetworkId(connector.networkId);
-      aeSdk.getBalance(aeSdk.address).then(setBalance);
+
+      // because not correct node is selected in the beginning
+      aeSdk.selectNode(connector.networkId);
     });
 
     connector.addListener("networkIdChange", async (networkId: string) => {
