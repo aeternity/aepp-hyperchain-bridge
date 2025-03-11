@@ -1,4 +1,4 @@
-import { Node, AeSdk, CompilerHttp } from "@aeternity/aepp-sdk";
+import { Node, AeSdk, CompilerHttp, AeSdkWallet, WALLET_TYPE } from "@aeternity/aepp-sdk";
 
 import { aeMain, aeTest, hcPerf, networkDefaults } from "@/constants/networks";
 

@@ -1,19 +1,8 @@
 "use client";
 
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/header";
 import WalletProvider from "@/context/wallet-provider";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 const metadata = {
   title: "Hyperchain Bridge",
@@ -29,9 +18,7 @@ export default function RootLayout({
     <html lang="en">
       <title>{metadata.title}</title>
       <meta name="description" content={metadata.description} />
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`antialiased`}>
         <WalletProvider>
           <div className="flex min-h-screen flex-col">
             <header className="flex flex-col md:flex">
