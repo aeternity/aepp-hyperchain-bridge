@@ -21,9 +21,7 @@ export default function RootLayout({
       <body className={`antialiased`}>
         <WalletProvider>
           <div className="flex min-h-screen flex-col">
-            <header className="flex flex-col md:flex">
-              <Header />
-            </header>
+            <Header />
             <main className="flex-grow p-4">{children}</main>
             <footer className="bg-gray-300 p-4">Footer</footer>
           </div>
