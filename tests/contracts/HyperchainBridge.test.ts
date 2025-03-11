@@ -1,8 +1,8 @@
 import { describe, expect, test, beforeEach, beforeAll } from "bun:test";
 
-import getSdk from "@/utils/ae-sdk";
-import { testsSetup } from "./tests-setup";
-import { aeTest } from "@/constants/network";
+import getSdk from "./utils/ae-sdk";
+import { testsSetup } from "./utils/tests-setup";
+import { aeTest } from "@/constants/networks";
 
 describe("HyperchainBridge", async () => {
   const aeSdk = await getSdk(aeTest);
@@ -28,12 +28,11 @@ describe("HyperchainBridge", async () => {
       await Bridge.deposit("testnet", testTokenAddress, 10e18);
 
       const { decodedResult: deposits } = await Bridge.deposits();
-      const { decodedResult: bridgeContractBalance } = await TestToken.balance(
-        bridgeAccountAddress
-      );
+      const { decodedResult: bridgeContractBalance } =
+        await TestToken.balance(bridgeAccountAddress);
 
       expect(bridgeContractBalance).toBe(
-        bridgeContractBalanceBefore + BigInt(10e18)
+        bridgeContractBalanceBefore + BigInt(10e18),
       );
       expect(deposits[deposits.length - 1]).toEqual({
         from: userAddress,
@@ -45,13 +44,13 @@ describe("HyperchainBridge", async () => {
 
     test("user should not be able to deposit if the specified token is not registered", async () => {
       await expect(
-        Bridge.deposit("testnet", bridgeAddress, 10e18)
+        Bridge.deposit("testnet", bridgeAddress, 10e18),
       ).rejects.toThrow("TOKEN_NOT_REGISTERED");
     });
 
     test("user should not be able to deposit if the specified network is not registered", async () => {
       await expect(
-        Bridge.deposit("mainnet", testTokenAddress, 10e18)
+        Bridge.deposit("mainnet", testTokenAddress, 10e18),
       ).rejects.toThrow("NETWORK_NOT_REGISTERED");
     });
   });
@@ -63,9 +62,8 @@ describe("HyperchainBridge", async () => {
     });
 
     test("owner should be able to withdraw tokens from the bridge", async () => {
-      const { decodedResult: userBalanceBefore } = await TestToken.balance(
-        userAddress
-      );
+      const { decodedResult: userBalanceBefore } =
+        await TestToken.balance(userAddress);
 
       aeSdk.selectAccount(ownerAddress);
       await Bridge.withdraw("testnet", testTokenAddress, userAddress, 3e18);
@@ -86,7 +84,7 @@ describe("HyperchainBridge", async () => {
     test("user without owner privileges should not be able to withdraw tokens from the bridge", async () => {
       aeSdk.selectAccount(userAddress);
       await expect(
-        Bridge.withdraw("testnet", testTokenAddress, userAddress, 3e18)
+        Bridge.withdraw("testnet", testTokenAddress, userAddress, 3e18),
       ).rejects.toThrow("ONLY_OWNER_CALL_ALLOWED");
     });
   });

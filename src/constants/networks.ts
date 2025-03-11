@@ -4,7 +4,7 @@ export interface Network {
   compilerUrl: string;
 }
 
-const networkDefaults = {
+export const networkDefaults = {
   compilerUrl: "https://v8.compiler.aepps.com",
 };
 

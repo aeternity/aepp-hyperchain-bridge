@@ -3,7 +3,7 @@ import ContractWithMethods, {
   ContractMethodsBase,
 } from "@aeternity/aepp-sdk/es/contract/Contract";
 
-import { createOrUseExistingContracts } from "@/utils/contract";
+import { createOrUseExistingContracts } from "./contract-deployment";
 
 export async function testsSetup(aeSdk: AeSdk) {
   // Account addresses
@@ -25,7 +25,7 @@ export async function testsSetup(aeSdk: AeSdk) {
     testTokenAddress,
     userAddress,
     ownerAddress,
-    aeSdk
+    aeSdk,
   );
 
   return {
@@ -46,7 +46,7 @@ async function configureContractsForTesting(
   testTokenAddress: string,
   userAddress: string,
   ownerAddress: string,
-  aeSdk: AeSdk
+  aeSdk: AeSdk,
 ) {
   // Register testnet network
   aeSdk.selectAccount(ownerAddress as `ak_${string}`);
@@ -63,9 +63,8 @@ async function configureContractsForTesting(
   }
 
   // Transfer test tokens to user
-  const { decodedResult: userTestTokenBalance } = await TestToken.balance(
-    userAddress
-  );
+  const { decodedResult: userTestTokenBalance } =
+    await TestToken.balance(userAddress);
   if (!userTestTokenBalance || userTestTokenBalance === BigInt(0)) {
     await TestToken.transfer(userAddress, 1e24);
   }
