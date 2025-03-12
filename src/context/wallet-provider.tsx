@@ -32,6 +32,7 @@ export const WalletContext = createContext({
   networkId: "",
   detectionStatus: WalletDetectionStatus.IDLE,
   connectionStatus: WalletConnectionStatus.IDLE,
+  currency: { symbol: "", decimals: 0 },
   connect: () => {},
   disconnect: () => {},
   requestNetworkChange: (networkId: string) => {},
@@ -41,6 +42,7 @@ export default function WalletProvider({ children }: { children: React.ReactNode
   const [balance, setBalance] = useState("");
   const [networkId, setNetworkId] = useState("");
   const [address, setAddress] = useState<`ak_${string}` | "">("");
+  const [currency, setCurrency] = useState({ symbol: "", decimals: 0 });
   const [detectionStatus, setDetectionStatus] = useState(WalletDetectionStatus.IDLE);
   const [connectionStatus, setConnectionStatus] = useState(WalletConnectionStatus.IDLE);
 
@@ -56,6 +58,16 @@ export default function WalletProvider({ children }: { children: React.ReactNode
   }, [wallet]);
 
   useEffect(() => {
+    aeSdk.getNodeInfo().then((info) => {
+      fetch(`${info.url}v3/currency`)
+        .then((res) => res.json())
+        .then((data) =>
+          setCurrency({ symbol: data.symbol, decimals: Math.log10(data.subunits_per_unit) }),
+        );
+    });
+  }, [networkId]);
+
+  useEffect(() => {
     address && aeSdk.getBalance(address).then(setBalance);
   }, [networkId, address]);
 
@@ -66,11 +78,9 @@ export default function WalletProvider({ children }: { children: React.ReactNode
 
     connector.addListener("accountsChange", async (accounts: AccountBase[]) => {
       aeSdk.addAccount(accounts[0], { select: true });
+      aeSdk.selectNode(connector.networkId);
       setAddress(aeSdk.address);
       setNetworkId(connector.networkId);
-
-      // because not correct node is selected in the beginning
-      aeSdk.selectNode(connector.networkId);
     });
 
     connector.addListener("networkIdChange", async (networkId: string) => {
@@ -143,6 +153,7 @@ export default function WalletProvider({ children }: { children: React.ReactNode
       value={{
         balance,
         address,
+        currency,
         networkId,
         detectionStatus,
         connectionStatus,

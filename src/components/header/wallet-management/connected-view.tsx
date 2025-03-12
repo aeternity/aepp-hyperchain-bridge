@@ -6,7 +6,7 @@ import { WalletContext } from "@/context/wallet-provider";
 import NetworkSelect from "./network-select";
 
 export default function ConnectedView() {
-  const { address, balance, disconnect } = useContext(WalletContext);
+  const { address, balance, disconnect, currency } = useContext(WalletContext);
   const [justCopied, setJustCopied] = useState(false);
 
   const handleAddressClick = () => {
@@ -19,7 +19,9 @@ export default function ConnectedView() {
     <div className="flex flex-row items-center">
       <NetworkSelect />
       <div className="border-aepink-100 ml-2 flex flex-row items-center overflow-hidden rounded-xl border font-medium text-white">
-        <div className="px-2 text-gray-900">{formatBalance(balance)} AE</div>
+        <div className="px-2 text-gray-900">
+          {formatBalance(balance, currency.decimals)} {currency.symbol}
+        </div>
         <div
           onClick={handleAddressClick}
           className="bg-aepink-100 w-35 cursor-pointer rounded-l-xl px-2.5 py-1 text-center"
