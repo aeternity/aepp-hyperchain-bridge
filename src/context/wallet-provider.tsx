@@ -71,7 +71,9 @@ export default function WalletProvider({ children }: { children: React.ReactNode
   }, [networkId]);
 
   useEffect(() => {
-    address && aeSdk.getBalance(address).then(setBalance);
+    if (!networkId || !address) return;
+
+    aeSdk.getBalance(address).then(setBalance);
   }, [networkId, address]);
 
   useEffect(() => {
