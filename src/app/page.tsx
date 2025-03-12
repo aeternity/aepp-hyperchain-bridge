@@ -1,4 +1,7 @@
+"use client";
+
 import Bridge from "@/components/bridge";
+import BridgeProvider from "@/context/bridge-provider";
 
 export default function Page() {
   return (
@@ -7,7 +10,9 @@ export default function Page() {
       <span className="font-roboto text-muted-foreground hidden text-sm md:flex">
         Bridge your assets between Aeternity mainnet and Hyperchains
       </span>
-      <Bridge />
+      <BridgeProvider>
+        <Bridge />
+      </BridgeProvider>
     </div>
   );
 }
