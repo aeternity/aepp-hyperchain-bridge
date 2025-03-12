@@ -10,7 +10,7 @@ export default function NetworkSelect() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="relative mx-3">
+    <div className="relative mx-3 hidden min-sm:flex">
       <div
         // onClick={() => setIsOpen(!isOpen)}
         className="flex cursor-pointer flex-row font-medium text-gray-900 select-none before:mr-2 before:inline-flex before:h-2 before:w-2 before:self-center before:rounded-full before:bg-green-300"
