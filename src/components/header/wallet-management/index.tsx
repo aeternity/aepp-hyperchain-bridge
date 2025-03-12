@@ -1,17 +1,30 @@
 "use client";
 
 import { useContext } from "react";
-import { WalletConnectionStatus, WalletContext } from "@/context/wallet-provider";
 
 import ConnectButton from "./connect-button";
 import ConnectedView from "./connected-view";
+import InstallWalletButton from "./install-wallet-button";
+import { ConnectionStatus, DetectionStatus, WalletContext } from "@/context/wallet-provider";
 
 export default function WalletManagement() {
-  const { connectionStatus } = useContext(WalletContext);
+  const { connectionStatus, detectionStatus } = useContext(WalletContext);
 
-  if (connectionStatus === WalletConnectionStatus.CONNECTED) {
-    return <ConnectedView />;
+  switch (detectionStatus) {
+    case DetectionStatus.IDLE:
+    case DetectionStatus.DETECTING:
+      return null;
+    case DetectionStatus.FAILED:
+      return <InstallWalletButton />;
+    case DetectionStatus.DETECTED:
+      switch (connectionStatus) {
+        case ConnectionStatus.IDLE:
+        case ConnectionStatus.DISCONNECTED:
+        case ConnectionStatus.CONNECTING:
+        case ConnectionStatus.FAILED:
+          return <ConnectButton />;
+        case ConnectionStatus.CONNECTED:
+          return <ConnectedView />;
+      }
   }
-
-  return <ConnectButton />;
 }

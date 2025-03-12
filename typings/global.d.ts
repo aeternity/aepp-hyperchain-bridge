@@ -1,3 +1,5 @@
+type Wallet = Parameters<Parameters<typeof walletDetector>[1]>[0]["newWallet"];
+
 interface ContractDeployment {
   networkId: string;
   timestamp: number;

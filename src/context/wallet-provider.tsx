@@ -1,37 +1,31 @@
 "use client";
 
 import { createContext, useEffect, useState } from "react";
-import {
-  AccountBase,
-  walletDetector,
-  SUBSCRIPTION_TYPES,
-  WalletConnectorFrame,
-  BrowserWindowMessageConnection,
-} from "@aeternity/aepp-sdk";
-import { aeSdk } from "@/lib/aeternity";
+import { AccountBase, SUBSCRIPTION_TYPES, WalletConnectorFrame } from "@aeternity/aepp-sdk";
 
-type Wallet = Parameters<Parameters<typeof walletDetector>[1]>[0]["newWallet"];
+import { aeSdk, getConnector, getWallet } from "@/lib/aeternity";
 
-export enum WalletDetectionStatus {
-  IN_PROGRESS,
-  SUCCESS,
-  FAILURE,
+export enum DetectionStatus {
   IDLE,
+  DETECTING,
+  DETECTED,
+  FAILED,
 }
-export enum WalletConnectionStatus {
-  CONNECTED,
+
+export enum ConnectionStatus {
+  IDLE,
   CONNECTING,
+  CONNECTED,
   DISCONNECTED,
   FAILED,
-  IDLE,
 }
 
 export const WalletContext = createContext({
   balance: "",
   address: "",
   networkId: "",
-  detectionStatus: WalletDetectionStatus.IDLE,
-  connectionStatus: WalletConnectionStatus.IDLE,
+  detectionStatus: DetectionStatus.IDLE,
+  connectionStatus: ConnectionStatus.IDLE,
   currency: { symbol: "", decimals: 0 },
   connect: () => {},
   disconnect: () => {},
@@ -43,18 +37,27 @@ export default function WalletProvider({ children }: { children: React.ReactNode
   const [networkId, setNetworkId] = useState("");
   const [address, setAddress] = useState<`ak_${string}` | "">("");
   const [currency, setCurrency] = useState({ symbol: "", decimals: 0 });
-  const [detectionStatus, setDetectionStatus] = useState(WalletDetectionStatus.IDLE);
-  const [connectionStatus, setConnectionStatus] = useState(WalletConnectionStatus.IDLE);
+  const [detectionStatus, setDetectionStatus] = useState(DetectionStatus.IDLE);
+  const [connectionStatus, setConnectionStatus] = useState(ConnectionStatus.IDLE);
 
   const [wallet, setWallet] = useState<Wallet | null>(null);
   const [connector, setConnector] = useState<WalletConnectorFrame | null>(null);
 
   useEffect(() => {
-    getWallet().then(setWallet);
+    setDetectionStatus(DetectionStatus.DETECTING);
+
+    getWallet().then((wallet: Wallet) => {
+      setWallet(wallet);
+      setDetectionStatus(wallet ? DetectionStatus.DETECTED : DetectionStatus.FAILED);
+    });
   }, []);
 
   useEffect(() => {
-    getConnector(wallet)?.then(setConnector);
+    if (!wallet) return;
+
+    getConnector(wallet).then((connector: WalletConnectorFrame | null) => {
+      setConnector(connector);
+    });
   }, [wallet]);
 
   useEffect(() => {
@@ -72,9 +75,7 @@ export default function WalletProvider({ children }: { children: React.ReactNode
   }, [networkId, address]);
 
   useEffect(() => {
-    if (connector === null) return;
-
-    setConnectionStatus(WalletConnectionStatus.CONNECTING);
+    if (!connector) return;
 
     connector.addListener("accountsChange", async (accounts: AccountBase[]) => {
       aeSdk.addAccount(accounts[0], { select: true });
@@ -89,7 +90,7 @@ export default function WalletProvider({ children }: { children: React.ReactNode
     });
 
     connector.addListener("disconnect", () => {
-      setConnectionStatus(WalletConnectionStatus.DISCONNECTED);
+      setConnectionStatus(ConnectionStatus.DISCONNECTED);
       setNetworkId("");
       setAddress("");
     });
@@ -101,31 +102,16 @@ export default function WalletProvider({ children }: { children: React.ReactNode
     };
   }, [connector]);
 
-  const getWallet = () =>
-    new Promise<Wallet | null>((resolveWallet) => {
-      setDetectionStatus(WalletDetectionStatus.IN_PROGRESS);
-      const scannerConnection = new BrowserWindowMessageConnection();
-      const stopScan = walletDetector(scannerConnection, ({ newWallet }) => {
-        setDetectionStatus(WalletDetectionStatus.SUCCESS);
-        clearTimeout(walletDetectionTimeout);
-        resolveWallet(newWallet);
-        stopScan();
-      });
-
-      const walletDetectionTimeout = setTimeout(() => resolveWallet(null), 2000);
-    });
-
-  const getConnector = (wallet: Wallet | null) => {
-    if (!wallet) return null;
-    return WalletConnectorFrame.connect("Hyperchain Bridge Aepp", wallet.getConnection());
-  };
-
   const tryConnect = async () => {
     try {
-      await connector?.subscribeAccounts("subscribe" as SUBSCRIPTION_TYPES, "current");
-      setConnectionStatus(WalletConnectionStatus.CONNECTED);
+      setConnectionStatus(ConnectionStatus.CONNECTING);
+
+      if (connector && connector.isConnected) {
+        await connector.subscribeAccounts("subscribe" as SUBSCRIPTION_TYPES, "current");
+        setConnectionStatus(ConnectionStatus.CONNECTED);
+      }
     } catch (error) {
-      setConnectionStatus(WalletConnectionStatus.FAILED);
+      setConnectionStatus(ConnectionStatus.FAILED);
     }
   };
 
@@ -137,7 +123,7 @@ export default function WalletProvider({ children }: { children: React.ReactNode
     // couldn't make disconnect & reconnect work
     // so for now, just set the connection status to disconnected
 
-    setConnectionStatus(WalletConnectionStatus.DISCONNECTED);
+    setConnectionStatus(ConnectionStatus.DISCONNECTED);
     setNetworkId("");
     setAddress("");
   };

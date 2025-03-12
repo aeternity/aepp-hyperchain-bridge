@@ -1,4 +1,11 @@
-import { Node, AeSdk, CompilerHttp, AeSdkWallet, WALLET_TYPE } from "@aeternity/aepp-sdk";
+import {
+  Node,
+  AeSdk,
+  CompilerHttp,
+  WalletConnectorFrame,
+  BrowserWindowMessageConnection,
+  walletDetector,
+} from "@aeternity/aepp-sdk";
 
 import { aeMain, aeTest, hcPerf, networkDefaults } from "@/constants/networks";
 
@@ -9,3 +16,20 @@ export const aeSdk = new AeSdk({
     instance: new Node(node.url),
   })),
 });
+
+export const getWallet = (): Promise<Wallet | null> =>
+  new Promise<Wallet | null>((resolveWallet) => {
+    const scannerConnection = new BrowserWindowMessageConnection();
+    const stopScan = walletDetector(scannerConnection, ({ newWallet }) => {
+      clearTimeout(walletDetectionTimeout);
+      resolveWallet(newWallet);
+      stopScan();
+    });
+
+    const walletDetectionTimeout = setTimeout(() => resolveWallet(null), 2000);
+  });
+
+export const getConnector = async (wallet: Wallet | null): Promise<WalletConnectorFrame | null> => {
+  if (!wallet) return null;
+  return WalletConnectorFrame.connect("Hyperchain Bridge Aepp", wallet.getConnection());
+};
