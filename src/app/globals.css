@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @font-face {
   font-family: "ClashDisplay";
   src: url("../../public/ClashDisplay-Variable.woff2");

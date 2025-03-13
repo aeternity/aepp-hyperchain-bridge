@@ -1,12 +1,19 @@
 import { useContext } from "react";
 
 import { BridgeContext } from "@/context/bridge-provider";
+import BridgeForm from "./form";
 
 export default function Bridge() {
-  const { contractDeployment } = useContext(BridgeContext);
+  const { bridgeContract, registeredNetworks, registeredTokens } = useContext(BridgeContext);
+
   return (
-    <div className="">
-      <p>contractDeployment: {contractDeployment?.address}</p>
-    </div>
+    <>
+      {registeredNetworks.length === 0 ? (
+        <div>Loading...</div>
+      ) : (
+        <BridgeForm registeredNetworks={registeredNetworks} registeredTokens={registeredTokens} />
+      )}
+      ;
+    </>
   );
 }

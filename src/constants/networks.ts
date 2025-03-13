@@ -1,10 +1,3 @@
-export interface Network {
-  id: string;
-  url: string;
-  name: string;
-  compilerUrl: string;
-}
-
 export const networkDefaults = {
   compilerUrl: "https://v8.compiler.aepps.com",
 };

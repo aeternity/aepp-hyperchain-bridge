@@ -8,10 +8,16 @@
     "start:web": "next start",
     "lint": "next lint",
     "compile:contract": "bin/aesophia_cli contracts/HyperchainBridge.aes",
-    "tests": "bun test --timeout 20000"
+    "tests": "bun test --timeout 20000",
+    "deploy:token": "bun run scripts/deploy-token.ts",
+    "deploy:bridge": "bun run scripts/deploy-bridge.ts"
   },
   "dependencies": {
     "@aeternity/aepp-sdk": "^14.0.0",
+    "@headlessui/react": "^2.2.0",
+    "@heroicons/react": "^2.2.0",
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.5.0",
     "next": "15.2.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
@@ -26,7 +32,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.2.1",
     "prettier-plugin-tailwindcss": "^0.6.11",
-    "tailwindcss": "^4",
+    "tailwindcss": "^4.0.13",
     "typescript": "^5"
   }
 }

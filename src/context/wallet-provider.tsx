@@ -3,7 +3,7 @@
 import { createContext, useEffect, useState } from "react";
 import { AccountBase, SUBSCRIPTION_TYPES, WalletConnectorFrame } from "@aeternity/aepp-sdk";
 
-import { aeSdk, getConnector, getWallet } from "@/lib/aeternity";
+import { aeSdk, getConnector, getWallet } from "@/utils/ae-sdk";
 
 export enum DetectionStatus {
   IDLE,
