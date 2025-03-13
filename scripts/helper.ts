@@ -1,6 +1,7 @@
 import fs from "fs";
 import { parseArgs } from "util";
 import { AeSdk, Contract, getFileSystem } from "@aeternity/aepp-sdk";
+
 import { getNetworkById } from "@/utils/filters";
 
 export function parseArguments() {

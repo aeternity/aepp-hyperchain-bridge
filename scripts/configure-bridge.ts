@@ -1,6 +1,7 @@
+import assert from "node:assert";
+
 import { parseArguments } from "./helper";
 import { createSdkInstance, getContract } from "@/utils/ae-sdk";
-import assert from "node:assert";
 import HyperchainBridge_aci from "../contracts/aci/HyperchainBridge.json";
 
 // Usage: bun configure:bridge --network ae_uat --address ct_ea8D2DbzfWVBjTkxDoXYFZR3wAUQMc9ji743LRWmZBAx33Yow --tokensToRegister ct_2c7JasaDqYKYXCXHmD7YnokYbUNwMyNenTJVuZU76wChRLQdJA ct_jcbziWjsTb9CEkBub6n8d12ZaTtjg49a2mdawPc6H9gBT8FVg ct_2THHu4bzSmZELX6nhoRuV3yhuHja3FEr7owPZt7KPiHU7RFyJY --networksToRegister aehc_perf ae_mainnet
