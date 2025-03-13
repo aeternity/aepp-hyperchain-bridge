@@ -2,6 +2,8 @@ import { getNetworkById } from "@/utils/filters";
 import { createSdkInstance } from "@/utils/ae-sdk";
 import { parseArguments, deployContract } from "./helper";
 
+// Usage: bun deploy:token --network ae_uat --name TestToken --symbol TST --decimals 18 --initialOwnerBalance 1000000
+
 const args = parseArguments();
 
 if (!args.network || !args.name || !args.symbol || !args.decimals || !args.initialOwnerBalance) {
