@@ -1,16 +1,18 @@
 import {
   Node,
   AeSdk,
+  encode,
+  Contract,
+  Encoding,
   CompilerHttp,
+  MemoryAccount,
+  walletDetector,
   WalletConnectorFrame,
   BrowserWindowMessageConnection,
-  walletDetector,
-  MemoryAccount,
-  encode,
-  Encoding,
 } from "@aeternity/aepp-sdk";
 
 import { aeMain, aeTest, hcPerf, networkDefaults } from "@/constants/networks";
+import { Aci } from "@aeternity/aepp-sdk/es/contract/compiler/Base";
 
 export const aeSdk = new AeSdk({
   onCompiler: new CompilerHttp(networkDefaults.compilerUrl),
@@ -47,5 +49,13 @@ export async function createSdkInstance(network: Network): Promise<AeSdk> {
     onCompiler: new CompilerHttp(network.compilerUrl),
     nodes: [{ name: "test", instance: new Node(network.url) }],
     accounts,
+  });
+}
+
+export async function getContract(aeSdk: AeSdk, address: `ct_${string}`, aci: Aci) {
+  return await Contract.initialize({
+    ...aeSdk.getContext(),
+    address,
+    aci,
   });
 }
