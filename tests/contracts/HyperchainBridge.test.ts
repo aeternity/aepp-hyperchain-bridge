@@ -37,6 +37,7 @@ describe("HyperchainBridge", async () => {
         amount: BigInt(10e18),
         for_network: "aehc_perf",
         token: testTokenAddress,
+        index: BigInt(deposits.length - 1),
       });
     });
 

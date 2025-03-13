@@ -7,10 +7,11 @@
     "build:web": "next build",
     "start:web": "next start",
     "lint": "next lint",
-    "compile:contract": "bin/aesophia_cli contracts/HyperchainBridge.aes",
+    "compile:contract": "bin/aesophia_cli contracts/source/HyperchainBridge.aes",
     "tests": "bun test --timeout 20000",
     "deploy:token": "bun run scripts/deploy-token.ts",
-    "deploy:bridge": "bun run scripts/deploy-bridge.ts"
+    "deploy:bridge": "bun run scripts/deploy-bridge.ts",
+    "configure:bridge": "bun run scripts/configure-bridge.ts"
   },
   "dependencies": {
     "@aeternity/aepp-sdk": "^14.0.0",

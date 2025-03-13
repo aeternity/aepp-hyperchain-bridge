@@ -77,7 +77,7 @@ async function configureContractsForTesting(
 }
 
 function saveDeployments(networkId: string, contracts: GenericContract[]) {
-  const content = fs.readFileSync(path.resolve("tests/deployments.json"));
+  const content = fs.readFileSync(path.resolve("tests/deployments-cache.json"));
   const deployments = JSON.parse(content.toString() || "[]");
   const timestamp = Date.now();
 
@@ -92,11 +92,11 @@ function saveDeployments(networkId: string, contracts: GenericContract[]) {
     });
   });
 
-  fs.writeFileSync("tests/deployments.json", JSON.stringify(deployments, null, 2));
+  fs.writeFileSync("tests/deployments-cache.json", JSON.stringify(deployments, null, 2));
 }
 
 function loadDeployments(networkId: string, contractNames: string[]) {
-  const content = fs.readFileSync(path.resolve("tests/deployments.json"));
+  const content = fs.readFileSync(path.resolve("tests/deployments-cache.json"));
   const deployments = JSON.parse(content.toString() || "[]");
 
   return contractNames.map(

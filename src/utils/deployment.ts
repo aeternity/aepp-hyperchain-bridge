@@ -1,4 +1,4 @@
-import deployments from "../../tests/deployments.json";
+import deployments from "../../tests/deployments-cache.json";
 
 export function getLastDeployedBridgeContract(networkId: string): ContractDeployment | undefined {
   return deployments

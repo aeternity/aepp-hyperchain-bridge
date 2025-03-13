@@ -19,7 +19,8 @@ main contract HyperchainBridge =
     amount		    : int,
     from			    : address,
     token			    : BridgeTokenInterface,
-    for_network   : string}
+    for_network   : string,
+    index         : int}
 
   record withdraw = {
     amount		    : int,
@@ -47,7 +48,12 @@ main contract HyperchainBridge =
   stateful entrypoint deposit(for_network: string, token: BridgeTokenInterface, amount: int) =
     require_registered_token(token)
     require_registered_network(for_network)
-    _deposit({amount = amount, from = Call.caller, token = token, for_network = for_network})
+    _deposit({
+      index       = List.length(state.deposits),
+      amount      = amount, 
+      from        = Call.caller, 
+      token       = token, 
+      for_network = for_network})
 
   /// @notice Withdraw tokens to finalize the bridging process
   /// @param from_network The network which tokens will be bridged from
@@ -57,7 +63,11 @@ main contract HyperchainBridge =
   /// @dev This function allows contract owner to withdraw tokens to finalize the bridging process 
   stateful entrypoint withdraw(from_network: string, token: BridgeTokenInterface, recipient: address, amount: int) =
     require_owner()
-    _withdraw({amount = amount, recipient = recipient, token = token, from_network = from_network})
+    _withdraw({
+      amount        = amount, 
+      recipient     = recipient, 
+      token         = token, 
+      from_network  = from_network})
 
   /// @notice Register a token to be used in the bridging process
   /// @param token The token to be registered
@@ -79,7 +89,7 @@ main contract HyperchainBridge =
     new_deposit.token.transfer_allowance(Call.caller, Contract.address, new_deposit.amount)
     put(state{deposits = state.deposits ++ [new_deposit]})
 
-  stateful function _withdraw(new_withdraw: withdraw) =
+  stateful function _withdraw(new_withdraw: withdraw) = 
     new_withdraw.token.transfer(new_withdraw.recipient, new_withdraw.amount)
     put(state{withdraws = state.withdraws ++ [new_withdraw]})
 
