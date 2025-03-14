@@ -20,7 +20,8 @@ export default function ConnectedView() {
       <NetworkSelect />
       <div className="border-aepink-100 ml-2 flex flex-row items-center overflow-hidden rounded-xl border text-sm font-medium text-white">
         <div className="px-2 text-gray-900">
-          {formatBalance(balance, currency.decimals)} {currency.symbol}
+          {formatBalance({ balance, decimals: currency.decimals, formatDecimals: 2 })}{" "}
+          {currency.symbol}
         </div>
         <div
           onClick={handleAddressClick}

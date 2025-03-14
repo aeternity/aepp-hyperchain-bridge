@@ -5,6 +5,7 @@ import {
   ListboxOption,
   ListboxDescription,
 } from "@/components/base/listbox";
+import { InformationCircleIcon } from "@heroicons/react/24/outline";
 
 interface Props {
   className?: string;
@@ -17,7 +18,15 @@ interface Props {
 export default function NetworkSelect({ networks, className, isLoading, onSelect }: Props) {
   return (
     <Field className={className}>
-      <Label>Destination Network</Label>
+      <Label className="flex flex-row">
+        <span>Destination Network</span>
+        <div
+          className="tooltip ml-1 self-center"
+          data-tip="Network where the token will be bridged to"
+        >
+          <InformationCircleIcon width={14} height={14} />
+        </div>
+      </Label>
 
       <Listbox
         className="cursor-pointer"

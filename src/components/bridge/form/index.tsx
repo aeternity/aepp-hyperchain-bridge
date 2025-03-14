@@ -17,19 +17,21 @@ export default function BridgeForm() {
   });
 
   return (
-    <div className="flex flex-1 flex-row flex-wrap gap-5">
-      <NetworkSelect
-        className="w-[290px] flex-1"
-        isLoading={isLoadingInitialBridgeConfig}
-        networks={registeredNetworks}
-        onSelect={setDestinationNetwork}
-      />
-      <TokenSelect
-        className="w-[290px] flex-1"
-        isLoading={isLoadingInitialBridgeConfig}
-        tokens={tokensWithBalances}
-        onSelect={setSelectedToken}
-      />
+    <div className="flex flex-1 flex-col gap-5">
+      <div className="flex flex-row flex-wrap gap-5">
+        <NetworkSelect
+          className="w-[290px] flex-1"
+          isLoading={isLoadingInitialBridgeConfig}
+          networks={registeredNetworks}
+          onSelect={setDestinationNetwork}
+        />
+        <TokenSelect
+          className="w-[290px] flex-1"
+          isLoading={isLoadingInitialBridgeConfig}
+          tokens={tokensWithBalances}
+          onSelect={setSelectedToken}
+        />
+      </div>
     </div>
   );
 }

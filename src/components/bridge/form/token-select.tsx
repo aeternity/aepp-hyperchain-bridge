@@ -5,7 +5,8 @@ import {
   ListboxOption,
   ListboxDescription,
 } from "@/components/base/listbox";
-import { shorten } from "@/utils/formatters";
+import { formatBalance, shorten } from "@/utils/formatters";
+import { InformationCircleIcon } from "@heroicons/react/24/outline";
 
 interface Props {
   tokens: Token[];
@@ -17,7 +18,12 @@ interface Props {
 export default function TokenSelect({ tokens, onSelect, className, isLoading }: Props) {
   return (
     <Field className={className}>
-      <Label>Token To Bridge</Label>
+      <Label className="flex flex-row">
+        <span>Token</span>
+        <div className="tooltip ml-1 self-center" data-tip="Token to be bridged">
+          <InformationCircleIcon width={14} height={14} />
+        </div>
+      </Label>
       <Listbox className="cursor-pointer" placeholder={isLoading ? "Loading..." : "Select a token"}>
         {tokens.map((token: Token) => (
           <ListboxOption
@@ -26,7 +32,11 @@ export default function TokenSelect({ tokens, onSelect, className, isLoading }: 
             className="cursor-pointer"
             onClick={() => onSelect(token)}
           >
-            <ListboxLabel>{`${token.balance} ${token.symbol} (${token.name})`}</ListboxLabel>
+            <ListboxLabel>
+              <span className="font-medium">{formatBalance({ balance: token.balance })}</span>
+              <span className="ml-1">{token.name}</span>
+              <span className="ml-1 font-medium">({token.symbol})</span>
+            </ListboxLabel>
             <ListboxDescription>{shorten(token.address)}</ListboxDescription>
           </ListboxOption>
         ))}
