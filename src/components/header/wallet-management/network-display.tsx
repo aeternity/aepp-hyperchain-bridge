@@ -5,7 +5,7 @@ import { WalletContext } from "@/context/wallet-provider";
 import { networks } from "@/constants/networks";
 import { getNetworkById } from "@/utils/filters";
 
-export default function NetworkSelect() {
+export default function NetworkDisplay() {
   const { networkId, requestNetworkChange } = useContext(WalletContext);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -13,8 +13,9 @@ export default function NetworkSelect() {
     <div className="relative mx-3 hidden text-sm min-sm:flex">
       <div
         // onClick={() => setIsOpen(!isOpen)}
-        className="flex cursor-pointer flex-row font-medium text-gray-900 select-none before:mr-2 before:inline-flex before:h-2 before:w-2 before:self-center before:rounded-full before:bg-green-300"
+        className="flex flex-row items-center"
       >
+        <div aria-label="success" className="status status-success mr-1 mb-0.5"></div>
         {getNetworkById(networkId)?.name}
         {/* <Image
           src="arrow_down.svg"

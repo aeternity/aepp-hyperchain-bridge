@@ -9,36 +9,50 @@ import { Button } from "@/components/base/button";
 import { mapTokensWithBalances } from "@/utils/mappers";
 import { BridgeContext } from "@/context/bridge-provider";
 import { validateForm } from "./utils";
+import BigNumber from "bignumber.js";
 
 export default function BridgeForm() {
-  const { registeredNetworks, registeredTokens, isLoadingInitialBridgeConfig, tokenBalances } =
-    useContext(BridgeContext);
+  const {
+    bridgeDeposit,
+    registeredNetworks,
+    tokensWithBalances,
+    isActionInProgress,
+    isLoadingInitialBridgeConfig,
+  } = useContext(BridgeContext);
 
   const [amount, setAmount] = useState("");
   const [selectedNetworkId, setSelectedNetworkId] = useState("");
-  const [selectedTokenAddress, setSelectedTokenAddress] = useState("");
-  const tokensWithBalances = mapTokensWithBalances(registeredTokens, tokenBalances);
-  const selectedTokenWithBalance = tokensWithBalances.find(byAddress(selectedTokenAddress));
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const hasErrors = Object.keys(errors).length > 0;
+  const [selectedTokenAddress, setSelectedTokenAddress] = useState("");
+  const selectedTokenWithBalance = tokensWithBalances.find(byAddress(selectedTokenAddress));
 
   const validate = () => validateForm(selectedNetworkId, selectedTokenAddress, amount, setErrors);
+  const hasErrors = (_errors: { [key: string]: string } = errors) =>
+    Object.keys(_errors).length > 0;
 
   useEffect(() => {
     setAmount("");
   }, [selectedTokenAddress]);
 
   useEffect(() => {
-    if (hasErrors) {
+    if (hasErrors()) {
       validate();
     }
   }, [selectedNetworkId, selectedTokenAddress, amount]);
 
   const handleBridgeClick = async () => {
-    validate();
-    if (!hasErrors) {
-      // Bridge funds
-      console.log("Bridge funds");
+    const _errors = validate();
+    if (!hasErrors(_errors)) {
+      const amountWithDecimals = new BigNumber(amount)
+        .shiftedBy(selectedTokenWithBalance?.decimals!)
+        .toString();
+
+      const isSucceeded = await bridgeDeposit(
+        selectedNetworkId,
+        selectedTokenAddress,
+        amountWithDecimals,
+      );
+      isSucceeded && setAmount("");
     }
   };
 
@@ -65,6 +79,7 @@ export default function BridgeForm() {
         max={selectedTokenWithBalance?.balance?.toNumber()}
       />
       <Button
+        disabled={isActionInProgress}
         className="w-[200px] cursor-pointer self-center"
         color="primary"
         onClick={handleBridgeClick}

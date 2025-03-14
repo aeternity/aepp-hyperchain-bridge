@@ -3,7 +3,7 @@ import { useContext, useState } from "react";
 
 import { shorten, formatBalance } from "@/utils/formatters";
 import { WalletContext } from "@/context/wallet-provider";
-import NetworkSelect from "./network-select";
+import NetworkDisplay from "./network-display";
 
 export default function ConnectedView() {
   const { address, balance, disconnect, currency } = useContext(WalletContext);
@@ -17,7 +17,7 @@ export default function ConnectedView() {
 
   return (
     <div className="flex flex-row items-center">
-      <NetworkSelect />
+      <NetworkDisplay />
       <div className="border-aepink ml-2 flex flex-row items-center overflow-hidden rounded-xl border text-sm font-medium text-white max-sm:mr-2">
         <div className="px-2 text-gray-900">
           {formatBalance({ balance, decimals: currency.decimals, formatDecimals: 2 })}{" "}

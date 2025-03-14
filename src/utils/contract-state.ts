@@ -17,7 +17,11 @@ export async function getRegisteredNetworksAndTokens(bridgeContract: GenericCont
 export async function getTokenMetaInfo(address: string) {
   const contract = await getContract(aeSdk, address as `ct_${string}`, Token_aci);
 
-  return contract.meta_info().then((result: any) => ({ ...result.decodedResult, address }));
+  return contract.meta_info().then((result: any) => ({
+    ...result.decodedResult,
+    decimals: parseInt(result.decodedResult.decimals),
+    address,
+  }));
 }
 
 export async function getRegisteredTokens(bridgeContract: GenericContract): Promise<Token[]> {
@@ -50,5 +54,29 @@ export async function getTokenBalance(token: Token, address: string) {
   const result = (await contract.balance(address)).decodedResult;
   const balance = result ? result.toString() : "0";
 
-  return new BigNumber(balance).shiftedBy(-token.decimals.toString());
+  return new BigNumber(balance).shiftedBy(-token.decimals);
+}
+
+export async function setTokenAllowance(
+  amount: string,
+  tokenAddress: string,
+  userAddress: string,
+  bridgeAddress: string,
+) {
+  const bridgeAccountAddress = bridgeAddress.replace("ct_", "ak_");
+  const contract = await getContract(aeSdk, tokenAddress as `ct_${string}`, Token_aci);
+  const allowanceResult = (
+    await contract.allowance({
+      from_account: userAddress,
+      for_account: bridgeAccountAddress,
+    })
+  ).decodedResult;
+
+  if (allowanceResult === undefined) {
+    await contract.create_allowance(bridgeAccountAddress, amount);
+  } else if (new BigNumber(allowanceResult.toString()).isLessThan(amount)) {
+    await contract.change_allowance(bridgeAccountAddress, amount);
+  } else {
+    return true;
+  }
 }

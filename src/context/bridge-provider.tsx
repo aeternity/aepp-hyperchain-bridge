@@ -6,29 +6,45 @@ import { WalletContext } from "./wallet-provider";
 import { BridgeContractStatus, GenericContract } from "@/types/contract";
 import { aeSdk, getContract } from "@/utils/ae-sdk";
 import { getBridgeContractAddress } from "@/utils/filters";
-import { getRegisteredNetworksAndTokens, getTokenBalances } from "@/utils/contract-state";
+import {
+  getRegisteredNetworksAndTokens,
+  getTokenBalances,
+  setTokenAllowance,
+} from "@/utils/contract-state";
+import { AppContext } from "./app-provider";
+import { mapTokensWithBalances } from "@/utils/mappers";
 
 import Bridge_aci from "../../contracts/aci/HyperchainBridge.json";
 
 export const BridgeContext = createContext({
-  bridgeContract: undefined as GenericContract | undefined,
-  registeredNetworks: [] as Network[],
+  isActionInProgress: false,
   registeredTokens: [] as Token[],
+  tokensWithBalances: [] as Token[],
   isLoadingInitialBridgeConfig: true,
-  bridgeContractStatus: BridgeContractStatus.IDLE,
+  registeredNetworks: [] as Network[],
   tokenBalances: [] as TokenBalance[],
+  bridgeContractStatus: BridgeContractStatus.IDLE,
+  bridgeDeposit: async (
+    networkId: string,
+    tokenAddress: string,
+    amount: string,
+  ): Promise<boolean | undefined> => {
+    return;
+  },
 });
 
 export default function BridgeProvider({ children }: { children: React.ReactNode }) {
   const { networkId, address } = useContext(WalletContext);
+  const { showError, showSuccess, showInfo } = useContext(AppContext);
+
   const [registeredTokens, setRegisteredTokens] = useState<Token[]>([]);
+  const [tokenBalances, setTokenBalances] = useState<TokenBalance[]>([]);
   const [bridgeContract, setBridgeContract] = useState<GenericContract>();
   const [registeredNetworks, setRegisteredNetworks] = useState<Network[]>([]);
-  const [isLoadingInitialBridgeConfig, setIsLoadingInitialBridgeConfig] = useState<boolean>(true);
-  const [bridgeContractStatus, setBridgeContractStatus] = useState<BridgeContractStatus>(
-    BridgeContractStatus.IDLE,
-  );
-  const [tokenBalances, setTokenBalances] = useState<TokenBalance[]>([]);
+  const [isLoadingInitialBridgeConfig, setIsLoadingInitialBridgeConfig] = useState(true);
+  const [bridgeContractStatus, setBridgeContractStatus] = useState(BridgeContractStatus.IDLE);
+  const tokensWithBalances = mapTokensWithBalances(registeredTokens, tokenBalances);
+  const [isActionInProgress, setIsActionInProgress] = useState(false);
 
   useEffect(() => {
     if (!networkId) return;
@@ -66,18 +82,44 @@ export default function BridgeProvider({ children }: { children: React.ReactNode
   useEffect(() => {
     if (!address || !registeredTokens.length) return;
 
-    getTokenBalances(registeredTokens, address).then(setTokenBalances);
-  }, [address, registeredTokens]);
+    if (!isActionInProgress) getTokenBalances(registeredTokens, address).then(setTokenBalances);
+  }, [address, registeredTokens, isActionInProgress]);
+
+  const bridgeDeposit = async (networkId: string, tokenAddress: string, amount: string) => {
+    if (!bridgeContract) return;
+
+    setIsActionInProgress(true);
+    try {
+      const alreadySet = await setTokenAllowance(
+        amount,
+        tokenAddress,
+        aeSdk.address,
+        bridgeContract.$options.address!,
+      );
+      !alreadySet && showInfo("Allowance is set successfully");
+      const result = await bridgeContract.deposit(networkId, tokenAddress, amount);
+
+      showSuccess(`Deposit ID:${result.decodedResult} is successful with tx hash: ${result.hash}`);
+      return true;
+    } catch (error: any) {
+      showError(error.message);
+      return false;
+    } finally {
+      setIsActionInProgress(false);
+    }
+  };
 
   return (
     <BridgeContext.Provider
       value={{
-        bridgeContract,
+        tokenBalances,
         registeredTokens,
         registeredNetworks,
-        isLoadingInitialBridgeConfig,
+        tokensWithBalances,
         bridgeContractStatus,
-        tokenBalances,
+        isLoadingInitialBridgeConfig,
+        isActionInProgress,
+        bridgeDeposit,
       }}
     >
       {children}

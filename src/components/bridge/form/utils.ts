@@ -19,4 +19,5 @@ export const validateForm = (
   }
 
   setErrors(_errors);
+  return _errors;
 };
