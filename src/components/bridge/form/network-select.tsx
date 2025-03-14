@@ -1,4 +1,4 @@
-import { Field, Label } from "@/components/base/fieldset";
+import { ErrorMessage, Field, Label } from "@/components/base/fieldset";
 import {
   Listbox,
   ListboxLabel,
@@ -11,10 +11,11 @@ interface Props {
   className?: string;
   networks: Network[];
   isLoading: boolean;
+  error?: string;
   onSelect: (networkId: string) => void;
 }
 
-export default function NetworkSelect({ networks, className, isLoading, onSelect }: Props) {
+export default function NetworkSelect({ networks, className, isLoading, error, onSelect }: Props) {
   return (
     <Field className={className}>
       <Label className="flex flex-row">
@@ -28,6 +29,7 @@ export default function NetworkSelect({ networks, className, isLoading, onSelect
       </Label>
 
       <Listbox
+        invalid={!!error}
         className="cursor-pointer"
         placeholder={isLoading ? "Loading..." : "Select a network"}
       >
@@ -43,6 +45,7 @@ export default function NetworkSelect({ networks, className, isLoading, onSelect
           </ListboxOption>
         ))}
       </Listbox>
+      {error && <ErrorMessage>{error}</ErrorMessage>}
     </Field>
   );
 }

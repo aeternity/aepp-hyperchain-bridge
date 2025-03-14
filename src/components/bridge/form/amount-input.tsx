@@ -1,4 +1,4 @@
-import { Field, Label } from "@/components/base/fieldset";
+import { ErrorMessage, Field, Label } from "@/components/base/fieldset";
 import { Input } from "@/components/base/input";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { use, useEffect } from "react";
@@ -6,10 +6,11 @@ import { use, useEffect } from "react";
 interface Props {
   amount: string;
   max?: number;
+  error?: string;
   onChange: (value: string) => void;
 }
 
-export default function AmountInput({ onChange, amount, max }: Props) {
+export default function AmountInput({ onChange, amount, max, error }: Props) {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const number = Number(event.target.value);
     if (isNaN(number) || number < 0) return;
@@ -32,11 +33,13 @@ export default function AmountInput({ onChange, amount, max }: Props) {
         </div>
       </Label>
       <Input
+        invalid={!!error}
         value={amount}
         onChange={handleChange}
         className="font-medium"
         placeholder="Enter amount"
       />
+      {error && <ErrorMessage>{error}</ErrorMessage>}
     </Field>
   );
 }

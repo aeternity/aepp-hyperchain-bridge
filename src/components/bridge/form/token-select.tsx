@@ -1,21 +1,22 @@
-import { Field, Label } from "@/components/base/fieldset";
+import { ErrorMessage, Field, Label } from "@/components/base/fieldset";
 import {
   Listbox,
   ListboxLabel,
   ListboxOption,
   ListboxDescription,
 } from "@/components/base/listbox";
-import { formatBalance, shorten } from "@/utils/formatters";
+import { formatBalance } from "@/utils/formatters";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 
 interface Props {
   tokens: Token[];
   className?: string;
   isLoading: boolean;
+  error?: string;
   onSelect: (address: string) => void;
 }
 
-export default function TokenSelect({ tokens, onSelect, className, isLoading }: Props) {
+export default function TokenSelect({ tokens, onSelect, className, isLoading, error }: Props) {
   return (
     <Field className={className}>
       <Label className="flex flex-row">
@@ -24,7 +25,11 @@ export default function TokenSelect({ tokens, onSelect, className, isLoading }: 
           <InformationCircleIcon width={14} height={14} />
         </div>
       </Label>
-      <Listbox className="cursor-pointer" placeholder={isLoading ? "Loading..." : "Select a token"}>
+      <Listbox
+        className="cursor-pointer"
+        placeholder={isLoading ? "Loading..." : "Select a token"}
+        invalid={!!error}
+      >
         {tokens.map((token: Token) => (
           <ListboxOption
             key={token.address}
@@ -41,6 +46,7 @@ export default function TokenSelect({ tokens, onSelect, className, isLoading }: 
           </ListboxOption>
         ))}
       </Listbox>
+      {error && <ErrorMessage>{error}</ErrorMessage>}
     </Field>
   );
 }
