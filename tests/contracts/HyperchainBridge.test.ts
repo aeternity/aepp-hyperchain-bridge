@@ -25,7 +25,13 @@ describe("HyperchainBridge", async () => {
       const { decodedResult: bridgeContractBalanceBefore } =
         await TestToken.balance(bridgeAccountAddress);
 
-      await Bridge.deposit("aehc_perf", testTokenAddress, 10e18);
+      const { decodedResult: depositsBefore } = await Bridge.deposits();
+      const { decodedResult: depositIndex } = await Bridge.deposit(
+        "aehc_perf",
+        testTokenAddress,
+        10e18,
+      );
+      expect(depositIndex).toBe(BigInt(depositsBefore.length));
 
       const { decodedResult: deposits } = await Bridge.deposits();
       const { decodedResult: bridgeContractBalance } =

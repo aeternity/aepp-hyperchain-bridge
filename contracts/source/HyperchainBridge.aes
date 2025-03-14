@@ -45,15 +45,17 @@ main contract HyperchainBridge =
   /// @param token The token to be bridged
   /// @param amount The amount of tokens to be bridged
   /// @dev This function allows users to deposit tokens to start the bridging process
-  stateful entrypoint deposit(for_network: string, token: BridgeTokenInterface, amount: int) =
+  stateful entrypoint deposit(for_network: string, token: BridgeTokenInterface, amount: int): int =
     require_registered_token(token)
     require_registered_network(for_network)
+    let index = List.length(state.deposits)
     _deposit({
-      index       = List.length(state.deposits),
+      index       = index,
       amount      = amount, 
       from        = Call.caller, 
       token       = token, 
       for_network = for_network})
+    index
 
   /// @notice Withdraw tokens to finalize the bridging process
   /// @param from_network The network which tokens will be bridged from
@@ -88,6 +90,7 @@ main contract HyperchainBridge =
   stateful function _deposit(new_deposit: deposit) =
     new_deposit.token.transfer_allowance(Call.caller, Contract.address, new_deposit.amount)
     put(state{deposits = state.deposits ++ [new_deposit]})
+
 
   stateful function _withdraw(new_withdraw: withdraw) = 
     new_withdraw.token.transfer(new_withdraw.recipient, new_withdraw.amount)
