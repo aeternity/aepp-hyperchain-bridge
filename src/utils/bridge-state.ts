@@ -47,7 +47,8 @@ export async function getTokenBalances(tokens: Token[], address: string): Promis
 
 export async function getTokenBalance(token: Token, address: string) {
   const contract = await getContract(aeSdk, token.address as `ct_${string}`, Token_aci);
-  const balance = (await contract.balance(address)).decodedResult.toString();
+  const result = (await contract.balance(address)).decodedResult;
+  const balance = result ? result.toString() : "0";
 
   return new BigNumber(balance).shiftedBy(-token.decimals.toString());
 }
