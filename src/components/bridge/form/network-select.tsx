@@ -11,15 +11,14 @@ interface Props {
   className?: string;
   networks: Network[];
   isLoading: boolean;
-  selectedNetwork?: Network;
-  onSelect: (item: Network) => void;
+  onSelect: (networkId: string) => void;
 }
 
 export default function NetworkSelect({ networks, className, isLoading, onSelect }: Props) {
   return (
     <Field className={className}>
       <Label className="flex flex-row">
-        <span>Destination Network</span>
+        <span className="font-semibold">Destination Network</span>
         <div
           className="tooltip ml-1 self-center"
           data-tip="Network where the token will be bridged to"
@@ -37,9 +36,9 @@ export default function NetworkSelect({ networks, className, isLoading, onSelect
             key={network.id}
             value={network.name}
             className="cursor-pointer"
-            onClick={() => onSelect(network)}
+            onClick={() => onSelect(network.id)}
           >
-            <ListboxLabel>{network.name}</ListboxLabel>
+            <ListboxLabel className="font-medium">{network.name}</ListboxLabel>
             <ListboxDescription>{network.url}</ListboxDescription>
           </ListboxOption>
         ))}

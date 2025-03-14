@@ -12,14 +12,14 @@ interface Props {
   tokens: Token[];
   className?: string;
   isLoading: boolean;
-  onSelect: (item: Token) => void;
+  onSelect: (address: string) => void;
 }
 
 export default function TokenSelect({ tokens, onSelect, className, isLoading }: Props) {
   return (
     <Field className={className}>
       <Label className="flex flex-row">
-        <span>Token</span>
+        <span className="font-semibold">Token</span>
         <div className="tooltip ml-1 self-center" data-tip="Token to be bridged">
           <InformationCircleIcon width={14} height={14} />
         </div>
@@ -30,14 +30,14 @@ export default function TokenSelect({ tokens, onSelect, className, isLoading }: 
             key={token.address}
             value={token.address}
             className="cursor-pointer"
-            onClick={() => onSelect(token)}
+            onClick={() => onSelect(token.address)}
           >
             <ListboxLabel>
               <span className="font-medium">{formatBalance({ balance: token.balance })}</span>
               <span className="ml-1">{token.name}</span>
               <span className="ml-1 font-medium">({token.symbol})</span>
             </ListboxLabel>
-            <ListboxDescription>{shorten(token.address)}</ListboxDescription>
+            <ListboxDescription>{token.address}</ListboxDescription>
           </ListboxOption>
         ))}
       </Listbox>
