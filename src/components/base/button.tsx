@@ -10,7 +10,7 @@ export default function Button({
   return (
     <div
       onClick={onClick}
-      className={`text-aepink-100 hover:bg-aepink-100 text-md cursor-pointer rounded-xl border px-2.5 py-1 font-medium hover:text-white ${className}`}
+      className={`text-aepink-100 hover:bg-aepink-100 cursor-pointer rounded-xl border px-2.5 py-1 text-sm font-medium hover:text-white ${className}`}
     >
       {children}
     </div>

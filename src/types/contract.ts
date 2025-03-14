@@ -4,7 +4,7 @@ import ContractWithMethods from "@aeternity/aepp-sdk/es/contract/Contract";
 export type GenericContract = ContractWithMethods<ContractMethodsBase>;
 
 export enum BridgeContractStatus {
-  LOADING,
-  NOT_AVAILABLE,
-  READY,
+  IDLE = "idle",
+  NOT_AVAILABLE = "not-available",
+  READY = "ready",
 }

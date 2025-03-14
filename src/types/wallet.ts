@@ -1,14 +1,14 @@
 export enum DetectionStatus {
-  IDLE,
-  DETECTING,
-  DETECTED,
-  FAILED,
+  IDLE = "idle",
+  DETECTING = "detecting",
+  DETECTED = "detected",
+  FAILED = "failed",
 }
 
 export enum ConnectionStatus {
-  IDLE,
-  CONNECTING,
-  CONNECTED,
-  DISCONNECTED,
-  FAILED,
+  IDLE = "idle",
+  CONNECTING = "connecting",
+  CONNECTED = "connected",
+  DISCONNECTED = "disconnected",
+  FAILED = "failed",
 }

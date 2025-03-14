@@ -17,7 +17,7 @@ interface Props {
 export default function TokenSelect({ tokens, onSelect, className, isLoading }: Props) {
   return (
     <Field className={className}>
-      <Label>Token</Label>
+      <Label>Token To Bridge</Label>
       <Listbox className="cursor-pointer" placeholder={isLoading ? "Loading..." : "Select a token"}>
         {tokens.map((token: Token) => (
           <ListboxOption

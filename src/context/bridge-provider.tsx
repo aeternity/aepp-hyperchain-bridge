@@ -6,7 +6,7 @@ import { WalletContext } from "./wallet-provider";
 import { BridgeContractStatus, GenericContract } from "@/types/contract";
 import { aeSdk, getContract } from "@/utils/ae-sdk";
 import { getBridgeContractAddress } from "@/utils/filters";
-import { getRegisteredNetworksAndTokens, getTokenBalances } from "@/utils/bridge-state";
+import { getRegisteredNetworksAndTokens, getTokenBalances } from "@/utils/contract-state";
 
 import Bridge_aci from "../../contracts/aci/HyperchainBridge.json";
 
@@ -15,7 +15,7 @@ export const BridgeContext = createContext({
   registeredNetworks: [] as Network[],
   registeredTokens: [] as Token[],
   isLoadingInitialBridgeConfig: true,
-  bridgeContractStatus: BridgeContractStatus.LOADING,
+  bridgeContractStatus: BridgeContractStatus.IDLE,
   tokenBalances: [] as TokenBalance[],
 });
 
@@ -26,7 +26,7 @@ export default function BridgeProvider({ children }: { children: React.ReactNode
   const [registeredNetworks, setRegisteredNetworks] = useState<Network[]>([]);
   const [isLoadingInitialBridgeConfig, setIsLoadingInitialBridgeConfig] = useState<boolean>(true);
   const [bridgeContractStatus, setBridgeContractStatus] = useState<BridgeContractStatus>(
-    BridgeContractStatus.LOADING,
+    BridgeContractStatus.IDLE,
   );
   const [tokenBalances, setTokenBalances] = useState<TokenBalance[]>([]);
 
