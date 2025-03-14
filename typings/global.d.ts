@@ -1,7 +1,5 @@
-type ContractWithMethods = import("@aeternity/aepp-sdk/es/contract/Contract").default;
-type ContractMethodsBase = import("@aeternity/aepp-sdk/es/contract/Contract").ContractMethodsBase;
+type BigNumber = import("bignumber.js").default;
 
-type GenericContract = ContractWithMethods<ContractMethodsBase>;
 type Wallet = Parameters<Parameters<typeof walletDetector>[1]>[0]["newWallet"];
 
 interface ContractDeployment {
@@ -18,6 +16,7 @@ interface Token {
   symbol: string;
   address: string;
   decimals: number;
+  balance?: BigNumber;
 }
 
 interface Network {
@@ -25,4 +24,9 @@ interface Network {
   url: string;
   name: string;
   compilerUrl: string;
+}
+
+interface TokenBalance {
+  address: string;
+  balance: BigNumber;
 }

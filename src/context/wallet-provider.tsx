@@ -4,21 +4,7 @@ import { createContext, useEffect, useState } from "react";
 import { AccountBase, SUBSCRIPTION_TYPES, WalletConnectorFrame } from "@aeternity/aepp-sdk";
 
 import { aeSdk, getConnector, getWallet } from "@/utils/ae-sdk";
-
-export enum DetectionStatus {
-  IDLE,
-  DETECTING,
-  DETECTED,
-  FAILED,
-}
-
-export enum ConnectionStatus {
-  IDLE,
-  CONNECTING,
-  CONNECTED,
-  DISCONNECTED,
-  FAILED,
-}
+import { ConnectionStatus, DetectionStatus } from "@/types/wallet";
 
 export const WalletContext = createContext({
   balance: "",

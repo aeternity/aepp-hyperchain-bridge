@@ -17,6 +17,7 @@
     "@aeternity/aepp-sdk": "^14.0.0",
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.2.0",
+    "bignumber.js": "^9.1.2",
     "clsx": "^2.1.1",
     "framer-motion": "^12.5.0",
     "next": "15.2.1",

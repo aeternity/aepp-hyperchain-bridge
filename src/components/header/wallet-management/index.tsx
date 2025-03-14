@@ -5,7 +5,8 @@ import { useContext } from "react";
 import ConnectButton from "./connect-button";
 import ConnectedView from "./connected-view";
 import InstallWalletButton from "./install-wallet-button";
-import { ConnectionStatus, DetectionStatus, WalletContext } from "@/context/wallet-provider";
+import { WalletContext } from "@/context/wallet-provider";
+import { ConnectionStatus, DetectionStatus } from "@/types/wallet";
 
 export default function WalletManagement() {
   const { connectionStatus, detectionStatus } = useContext(WalletContext);

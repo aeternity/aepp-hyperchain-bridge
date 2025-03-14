@@ -1,59 +1,85 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
+
 import { WalletContext } from "./wallet-provider";
-import { getLastDeployedBridgeContract } from "@/utils/deployment";
-import { Contract, ContractMethodsBase } from "@aeternity/aepp-sdk";
-import { aeSdk } from "@/utils/ae-sdk";
-import { networks } from "@/constants/networks";
+import { BridgeContractStatus, GenericContract } from "@/types/contract";
+import { aeSdk, getContract } from "@/utils/ae-sdk";
+import { getBridgeContractAddress } from "@/utils/filters";
+import { getRegisteredNetworksAndTokens, getTokenBalances } from "@/utils/bridge-state";
+
+import Bridge_aci from "../../contracts/aci/HyperchainBridge.json";
 
 export const BridgeContext = createContext({
-  bridgeContract: undefined as Contract<ContractMethodsBase> | undefined,
+  bridgeContract: undefined as GenericContract | undefined,
   registeredNetworks: [] as Network[],
   registeredTokens: [] as Token[],
+  isLoadingInitialBridgeConfig: true,
+  bridgeContractStatus: BridgeContractStatus.LOADING,
+  tokenBalances: [] as TokenBalance[],
 });
 
 export default function BridgeProvider({ children }: { children: React.ReactNode }) {
-  const { networkId } = useContext(WalletContext);
+  const { networkId, address } = useContext(WalletContext);
   const [registeredTokens, setRegisteredTokens] = useState<Token[]>([]);
+  const [bridgeContract, setBridgeContract] = useState<GenericContract>();
   const [registeredNetworks, setRegisteredNetworks] = useState<Network[]>([]);
-  const [bridgeContract, setBridgeContract] = useState<Contract<ContractMethodsBase>>();
+  const [isLoadingInitialBridgeConfig, setIsLoadingInitialBridgeConfig] = useState<boolean>(true);
+  const [bridgeContractStatus, setBridgeContractStatus] = useState<BridgeContractStatus>(
+    BridgeContractStatus.LOADING,
+  );
+  const [tokenBalances, setTokenBalances] = useState<TokenBalance[]>([]);
 
   useEffect(() => {
-    const deployment = getLastDeployedBridgeContract(networkId);
-    if (!deployment) return;
+    if (!networkId) return;
 
-    const initializeBridgeContract = async (deployment: ContractDeployment) => {
-      return await Contract.initialize({
-        ...aeSdk.getContext(),
-        address: deployment.address,
-        aci: deployment.aci,
-      });
-    };
+    const contractAddress = getBridgeContractAddress(networkId);
+    if (!contractAddress) {
+      setBridgeContract(undefined);
+      setBridgeContractStatus(BridgeContractStatus.NOT_AVAILABLE);
+      return;
+    }
 
-    initializeBridgeContract(deployment).then(setBridgeContract);
+    getContract(aeSdk, contractAddress, Bridge_aci).then((contract) => {
+      setBridgeContract(contract);
+      setBridgeContractStatus(BridgeContractStatus.READY);
+    });
   }, [networkId]);
 
   useEffect(() => {
-    if (!bridgeContract) return;
+    if (!bridgeContract) {
+      setRegisteredNetworks([]);
+      setRegisteredTokens([]);
+      return;
+    }
 
-    const getBridgeSettings = async () => {
-      const [registeredNetworksResult, registeredTokensResult] = await Promise.all([
-        bridgeContract.registered_networks(),
-        bridgeContract.registered_tokens(),
-      ]);
-
-      const registeredNetworks = registeredNetworksResult.decodedResult.map(
-        (networkId: string) => networks.find((n) => n.id === networkId)!,
-      );
-      setRegisteredNetworks(registeredNetworks);
-    };
-
-    getBridgeSettings();
+    setIsLoadingInitialBridgeConfig(true);
+    getRegisteredNetworksAndTokens(bridgeContract).then(
+      ({ registeredNetworks, registeredTokens }) => {
+        setRegisteredNetworks(registeredNetworks);
+        setRegisteredTokens(registeredTokens);
+        setIsLoadingInitialBridgeConfig(false);
+      },
+    );
   }, [bridgeContract]);
 
+  useEffect(() => {
+    if (!address || !registeredTokens.length) return;
+
+    getTokenBalances(registeredTokens, address).then(setTokenBalances);
+  }, [address, registeredTokens]);
+
   return (
-    <BridgeContext.Provider value={{ bridgeContract, registeredNetworks, registeredTokens }}>
+    <BridgeContext.Provider
+      value={{
+        bridgeContract,
+        registeredTokens,
+        registeredNetworks,
+        isLoadingInitialBridgeConfig,
+        bridgeContractStatus,
+        tokenBalances,
+      }}
+    >
       {children}
     </BridgeContext.Provider>
   );
