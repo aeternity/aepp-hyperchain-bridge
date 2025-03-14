@@ -10,26 +10,15 @@ import { shorten } from "@/utils/formatters";
 interface Props {
   tokens: Token[];
   className?: string;
-  selectedToken: Token;
   isLoading: boolean;
   onSelect: (item: Token) => void;
 }
 
-export default function TokenSelect({
-  tokens,
-  selectedToken,
-  onSelect,
-  className,
-  isLoading,
-}: Props) {
+export default function TokenSelect({ tokens, onSelect, className, isLoading }: Props) {
   return (
     <Field className={className}>
       <Label>Token</Label>
-      <Listbox
-        className="cursor-pointer"
-        value={selectedToken?.address}
-        placeholder={isLoading ? "Loading..." : "Select a token"}
-      >
+      <Listbox className="cursor-pointer" placeholder={isLoading ? "Loading..." : "Select a token"}>
         {tokens.map((token: Token) => (
           <ListboxOption
             key={token.address}

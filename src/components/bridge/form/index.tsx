@@ -21,14 +21,12 @@ export default function BridgeForm() {
         className="flex-1"
         isLoading={isLoadingInitialBridgeConfig}
         networks={registeredNetworks}
-        selectedNetwork={destinationNetwork}
         onSelect={setDestinationNetwork}
       />
       <TokenSelect
         className="flex-1"
         isLoading={isLoadingInitialBridgeConfig}
         tokens={tokensWithBalances}
-        selectedToken={selectedToken}
         onSelect={setSelectedToken}
       />
     </div>
