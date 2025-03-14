@@ -7,6 +7,7 @@ import { BridgeContext } from "@/context/bridge-provider";
 import AmountInput from "./amount-input";
 import { mapTokensWithBalances } from "@/utils/mappers";
 import { byAddress } from "@/utils/filters";
+import { Button } from "@/components/base/button";
 
 export default function BridgeForm() {
   const { registeredNetworks, registeredTokens, isLoadingInitialBridgeConfig, tokenBalances } =
@@ -36,12 +37,18 @@ export default function BridgeForm() {
         tokens={tokensWithBalances}
         onSelect={setSelectedTokenAddress}
       />
-
       <AmountInput
         onChange={setAmount}
         amount={amount}
         max={selectedTokenWithBalance?.balance?.toNumber()}
       />
+      <Button
+        className="w-fit cursor-pointer self-center"
+        color="primary"
+        onClick={() => console.log("")}
+      >
+        Bridge Funds
+      </Button>
     </div>
   );
 }

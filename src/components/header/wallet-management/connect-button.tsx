@@ -1,6 +1,6 @@
 import { useContext } from "react";
 
-import Button from "@/components/base/button";
+import OutlinedButton from "@/components/base/outlined-button";
 import { WalletContext } from "@/context/wallet-provider";
 import { ConnectionStatus } from "@/types/wallet";
 
@@ -10,8 +10,8 @@ export default function ConnectButton() {
   const connectingClass = isConnecting ? "animate-pulse" : "";
 
   return (
-    <Button onClick={connect} className={connectingClass}>
+    <OutlinedButton onClick={connect} className={connectingClass}>
       {isConnecting ? "Connecting..." : "Connect Wallet"}
-    </Button>
+    </OutlinedButton>
   );
 }

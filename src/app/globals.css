@@ -9,9 +9,12 @@
 }
 
 @theme {
-  --color-aepink-100: rgb(245, 39, 78);
-  --color-aepink-50: rgb(245, 39, 78, 0.5);
-  --color-aepink-10: rgb(245, 39, 78, 0.1);
+  --color-aepink: rgb(245, 39, 78);
+  --color-aepink-900: rgb(245, 39, 78, 0.9);
+  --color-aepink-700: rgb(245, 39, 78, 0.7);
+  --color-aepink-500: rgb(245, 39, 78, 0.5);
+  --color-aepink-300: rgb(245, 39, 78, 0.3);
+  --color-aepink-100: rgb(245, 39, 78, 0.1);
 }
 
 :root {

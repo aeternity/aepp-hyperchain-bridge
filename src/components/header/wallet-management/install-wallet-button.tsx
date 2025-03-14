@@ -1,9 +1,9 @@
-import Button from "@/components/base/button";
+import OutlinedButton from "@/components/base/outlined-button";
 
 export default function InstallWalletButton() {
   return (
-    <Button onClick={() => window.open("https://wallet.superhero.com/", "_blank")}>
+    <OutlinedButton onClick={() => window.open("https://wallet.superhero.com/", "_blank")}>
       Install Superhero Wallet
-    </Button>
+    </OutlinedButton>
   );
 }
