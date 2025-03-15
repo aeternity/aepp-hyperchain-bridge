@@ -4,9 +4,11 @@ import { OptionsObject, useSnackbar } from "notistack";
 import { createContext } from "react";
 
 export const AppContext = createContext({
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   showInfo: (message: string) => {},
   showError: (message: string) => {},
   showSuccess: (message: string) => {},
+  /* eslint-enable @typescript-eslint/no-unused-vars */
 });
 
 const defaultSettings: OptionsObject = {

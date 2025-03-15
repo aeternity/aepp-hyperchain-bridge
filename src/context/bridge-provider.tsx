@@ -25,9 +25,11 @@ export const BridgeContext = createContext({
   tokenBalances: [] as TokenBalance[],
   bridgeContractStatus: BridgeContractStatus.IDLE,
   bridgeDeposit: async (
+    /* eslint-disable @typescript-eslint/no-unused-vars */
     networkId: string,
     tokenAddress: string,
     amount: string,
+    /* eslint-enable @typescript-eslint/no-unused-vars */
   ): Promise<boolean | undefined> => {
     return;
   },
@@ -96,11 +98,12 @@ export default function BridgeProvider({ children }: { children: React.ReactNode
         aeSdk.address,
         bridgeContract.$options.address!,
       );
-      !alreadySet && showInfo("Allowance is set successfully");
+      if (!alreadySet) showInfo("Allowance is set successfully");
       const result = await bridgeContract.deposit(networkId, tokenAddress, amount);
 
       showSuccess(`Deposit ID:${result.decodedResult} is successful with tx hash: ${result.hash}`);
       return true;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       showError(error.message);
       return false;

@@ -18,7 +18,3 @@ export const formatBalance = ({
   if (!balance) return "";
   return new BigNumber(balance).shiftedBy(-decimals).toFormat(formatDecimals);
 };
-
-function numberWithCommas(x: number | string) {
-  return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-}

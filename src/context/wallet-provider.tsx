@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useEffect, useState } from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
 import { AccountBase, SUBSCRIPTION_TYPES, WalletConnectorFrame } from "@aeternity/aepp-sdk";
 
 import { aeSdk, getConnector, getWallet } from "@/utils/ae-sdk";
@@ -15,6 +15,7 @@ export const WalletContext = createContext({
   currency: { symbol: "", decimals: 0 },
   connect: () => {},
   disconnect: () => {},
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   requestNetworkChange: (networkId: string) => {},
 });
 
@@ -62,6 +63,20 @@ export default function WalletProvider({ children }: { children: React.ReactNode
     aeSdk.getBalance(address).then(setBalance);
   }, [networkId, address]);
 
+  const tryConnect = useCallback(async () => {
+    try {
+      setConnectionStatus(ConnectionStatus.CONNECTING);
+
+      if (connector && connector.isConnected) {
+        await connector.subscribeAccounts("subscribe" as SUBSCRIPTION_TYPES, "current");
+        setConnectionStatus(ConnectionStatus.CONNECTED);
+      }
+    } catch (error) {
+      setConnectionStatus(ConnectionStatus.FAILED);
+      console.error(error);
+    }
+  }, [connector, setConnectionStatus]);
+
   useEffect(() => {
     if (!connector) return;
 
@@ -88,20 +103,7 @@ export default function WalletProvider({ children }: { children: React.ReactNode
     return () => {
       connector.removeAllListeners();
     };
-  }, [connector]);
-
-  const tryConnect = async () => {
-    try {
-      setConnectionStatus(ConnectionStatus.CONNECTING);
-
-      if (connector && connector.isConnected) {
-        await connector.subscribeAccounts("subscribe" as SUBSCRIPTION_TYPES, "current");
-        setConnectionStatus(ConnectionStatus.CONNECTED);
-      }
-    } catch (error) {
-      setConnectionStatus(ConnectionStatus.FAILED);
-    }
-  };
+  }, [connector, tryConnect]);
 
   const connect = async () => {
     tryConnect();

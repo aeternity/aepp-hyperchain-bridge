@@ -1,19 +1,15 @@
-import { useContext, useEffect, useState } from "react";
+import BigNumber from "bignumber.js";
+import { useCallback, useContext, useEffect, useState } from "react";
 
+import { validateForm } from "./utils";
 import TokenSelect from "./token-select";
 import AmountInput from "./amount-input";
-import NetworkSelect from "./network-select";
-
 import { byAddress } from "@/utils/filters";
+import NetworkSelect from "./network-select";
 import { Button } from "@/components/base/button";
-import { mapTokensWithBalances } from "@/utils/mappers";
 import { BridgeContext } from "@/context/bridge-provider";
-import { validateForm } from "./utils";
-import BigNumber from "bignumber.js";
-import { WalletContext } from "@/context/wallet-provider";
 
 export default function BridgeForm() {
-  const { address } = useContext(WalletContext);
   const {
     bridgeDeposit,
     registeredNetworks,
@@ -26,11 +22,16 @@ export default function BridgeForm() {
   const [selectedNetworkId, setSelectedNetworkId] = useState("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [selectedTokenAddress, setSelectedTokenAddress] = useState("");
-  const selectedTokenWithBalance = tokensWithBalances.find(byAddress(selectedTokenAddress));
+  const selectedTokenWithBalance = tokensWithBalances.find(byAddress(selectedTokenAddress))!;
 
-  const validate = () => validateForm(selectedNetworkId, selectedTokenAddress, amount, setErrors);
-  const hasErrors = (_errors: { [key: string]: string } = errors) =>
-    Object.keys(_errors).length > 0;
+  const validate = useCallback(
+    () => validateForm(selectedNetworkId, selectedTokenAddress, amount, setErrors),
+    [selectedNetworkId, selectedTokenAddress, amount],
+  );
+  const hasErrors = useCallback(
+    (_errors: { [key: string]: string } = errors) => Object.keys(_errors).length > 0,
+    [errors],
+  );
 
   useEffect(() => {
     setAmount("");
@@ -40,13 +41,13 @@ export default function BridgeForm() {
     if (hasErrors()) {
       validate();
     }
-  }, [selectedNetworkId, selectedTokenAddress, amount]);
+  }, [selectedNetworkId, selectedTokenAddress, amount, hasErrors, validate]);
 
   const handleBridgeClick = async () => {
     const _errors = validate();
     if (!hasErrors(_errors)) {
       const amountWithDecimals = new BigNumber(amount)
-        .shiftedBy(selectedTokenWithBalance?.decimals!)
+        .shiftedBy(selectedTokenWithBalance.decimals)
         .toString();
 
       const isSucceeded = await bridgeDeposit(
@@ -54,7 +55,7 @@ export default function BridgeForm() {
         selectedTokenAddress,
         amountWithDecimals,
       );
-      isSucceeded && setAmount("");
+      if (isSucceeded) setAmount("");
     }
   };
 

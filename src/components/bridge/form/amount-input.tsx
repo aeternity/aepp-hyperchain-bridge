@@ -1,7 +1,8 @@
-import { ErrorMessage, Field, Label } from "@/components/base/fieldset";
+import { useEffect } from "react";
+
 import { Input } from "@/components/base/input";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
-import { use, useEffect } from "react";
+import { ErrorMessage, Field, Label } from "@/components/base/fieldset";
 
 interface Props {
   amount: string;
@@ -23,7 +24,7 @@ export default function AmountInput({ onChange, amount, max, error, className }:
     if (max !== undefined && Number(amount) > max) {
       onChange(max.toString());
     }
-  }, [amount, max]);
+  }, [amount, max, onChange]);
 
   return (
     <Field className={className}>
