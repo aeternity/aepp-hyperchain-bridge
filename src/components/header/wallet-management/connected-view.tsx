@@ -36,7 +36,7 @@ export default function ConnectedView() {
         height={30}
         stroke="red"
         strokeWidth={2.5}
-        className="hover:bg-aepink-100 mx-2 cursor-pointer rounded-sm p-1.5"
+        className="hover:bg-aepink-100 mx-2 cursor-pointer rounded-sm p-1"
       />
     </div>
   );
