@@ -60,35 +60,37 @@ export default function BridgeForm() {
   };
 
   return (
-    <div className="flex flex-1 flex-col gap-6">
-      <NetworkSelect
-        error={errors?.network}
-        className="w-full max-sm:w-fit"
-        isLoading={isLoadingInitialBridgeConfig}
-        networks={registeredNetworks}
-        onSelect={setSelectedNetworkId}
-      />
-      <TokenSelect
-        className="w-full max-sm:w-fit"
-        error={errors?.token}
-        isLoading={isLoadingInitialBridgeConfig}
-        tokens={tokensWithBalances}
-        onSelect={setSelectedTokenAddress}
-      />
-      <AmountInput
-        error={errors.amount}
-        onChange={setAmount}
-        amount={amount}
-        max={selectedTokenWithBalance?.balance?.toNumber()}
-      />
-      <Button
-        disabled={isActionInProgress}
-        className="w-[200px] cursor-pointer self-center"
-        color="primary"
-        onClick={handleBridgeClick}
-      >
-        Confirm Transaction
-      </Button>
-    </div>
+    <fieldset className="fieldset rounded-sm bg-gray-50 p-4 shadow-sm">
+      <div className="flex flex-1 flex-col gap-6">
+        <NetworkSelect
+          error={errors?.network}
+          className="w-full max-sm:w-fit"
+          isLoading={isLoadingInitialBridgeConfig}
+          networks={registeredNetworks}
+          onSelect={setSelectedNetworkId}
+        />
+        <TokenSelect
+          className="w-full max-sm:w-fit"
+          error={errors?.token}
+          isLoading={isLoadingInitialBridgeConfig}
+          tokens={tokensWithBalances}
+          onSelect={setSelectedTokenAddress}
+        />
+        <AmountInput
+          error={errors.amount}
+          onChange={setAmount}
+          amount={amount}
+          max={selectedTokenWithBalance?.balance?.toNumber()}
+        />
+        <Button
+          disabled={isActionInProgress}
+          className="w-[200px] cursor-pointer self-center"
+          color="primary"
+          onClick={handleBridgeClick}
+        >
+          Confirm Transaction
+        </Button>
+      </div>
+    </fieldset>
   );
 }

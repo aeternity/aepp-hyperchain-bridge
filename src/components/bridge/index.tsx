@@ -6,6 +6,7 @@ import { BridgeContext } from "@/context/bridge-provider";
 import { BridgeContractStatus } from "@/types/contract";
 import { WalletContext } from "@/context/wallet-provider";
 import { ConnectionStatus, DetectionStatus } from "@/types/wallet";
+import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
 export default function Bridge() {
   const { bridgeContractStatus } = useContext(BridgeContext);
@@ -17,7 +18,10 @@ export default function Bridge() {
     connectionStatus === ConnectionStatus.FAILED;
 
   const displayMessage = (message: string) => (
-    <div className="text-aepink mt-15 text-center text-2xl font-medium">{message}</div>
+    <div className="alert mt-15 flex w-full flex-wrap items-center justify-center text-center text-2xl font-medium text-white max-sm:flex-row">
+      <ExclamationTriangleIcon stroke="white" width={30} height={30} />
+      <span>{message}</span>
+    </div>
   );
 
   return (
