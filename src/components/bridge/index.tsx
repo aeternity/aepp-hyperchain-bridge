@@ -18,8 +18,8 @@ export default function Bridge() {
     connectionStatus === ConnectionStatus.FAILED;
 
   const displayMessage = (message: string) => (
-    <div className="alert mt-15 flex w-full flex-wrap items-center justify-center text-center text-2xl font-medium text-white max-sm:flex-row">
-      <ExclamationTriangleIcon stroke="white" width={30} height={30} />
+    <div className="mt-15 flex w-full flex-wrap items-center justify-center gap-2 border-t border-b p-4 text-center text-2xl font-medium text-black max-sm:flex-row">
+      <ExclamationTriangleIcon stroke="black" width={30} height={30} />
       <span>{message}</span>
     </div>
   );
