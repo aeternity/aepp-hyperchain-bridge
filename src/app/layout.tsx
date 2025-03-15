@@ -1,6 +1,6 @@
 "use client";
 
-import "./globals.css";
+import "../../public/globals.css";
 import { SnackbarProvider } from "notistack";
 
 import Footer from "@/components/footer";

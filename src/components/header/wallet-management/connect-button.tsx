@@ -10,7 +10,7 @@ export default function ConnectButton() {
   const connectingClass = isConnecting ? "animate-pulse" : "";
 
   return (
-    <OutlinedButton onClick={connect} className={connectingClass}>
+    <OutlinedButton onClick={connect} className={`mr-2 ${connectingClass}`}>
       {isConnecting ? "Connecting..." : "Connect Wallet"}
     </OutlinedButton>
   );

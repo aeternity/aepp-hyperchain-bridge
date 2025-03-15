@@ -6,7 +6,13 @@ export default function Header() {
     <header className="flex flex-col md:flex">
       <div className="border-b border-gray-200">
         <div className="flex h-16 items-center justify-between md:px-20">
-          <Image src="hyperchains_logo.svg" alt="Hyperchain Bridge" width={190} height={30} />
+          <div className="flex items-center font-semibold">
+            <Image src="hc-logo.svg" alt="Hyperchain Bridge" width={40} height={40} />
+            <div className="flex flex-col max-sm:hidden">
+              <span className="mt-[-5px] text-lg">Hyperchains</span>
+              <span className="mt-[-8px] text-xs">Bridge</span>
+            </div>
+          </div>
           <WalletManagement />
         </div>
       </div>

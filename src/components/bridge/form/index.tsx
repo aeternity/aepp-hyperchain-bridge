@@ -60,14 +60,14 @@ export default function BridgeForm() {
     <div className="flex flex-1 flex-col gap-6">
       <NetworkSelect
         error={errors?.network}
-        className="w-fit flex-1"
+        className="w-full max-sm:w-fit"
         isLoading={isLoadingInitialBridgeConfig}
         networks={registeredNetworks}
         onSelect={setSelectedNetworkId}
       />
       <TokenSelect
+        className="w-full max-sm:w-fit"
         error={errors?.token}
-        className="flex-1"
         isLoading={isLoadingInitialBridgeConfig}
         tokens={tokensWithBalances}
         onSelect={setSelectedTokenAddress}
@@ -84,7 +84,7 @@ export default function BridgeForm() {
         color="primary"
         onClick={handleBridgeClick}
       >
-        Bridge Funds
+        Confirm Transaction
       </Button>
     </div>
   );

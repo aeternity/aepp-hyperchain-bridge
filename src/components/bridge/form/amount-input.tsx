@@ -7,10 +7,11 @@ interface Props {
   amount: string;
   max?: number;
   error?: string;
+  className?: string;
   onChange: (value: string) => void;
 }
 
-export default function AmountInput({ onChange, amount, max, error }: Props) {
+export default function AmountInput({ onChange, amount, max, error, className }: Props) {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const number = Number(event.target.value);
     if (isNaN(number) || number < 0) return;
@@ -25,7 +26,7 @@ export default function AmountInput({ onChange, amount, max, error }: Props) {
   }, [amount, max]);
 
   return (
-    <Field>
+    <Field className={className}>
       <Label className="flex flex-row">
         <span className="font-semibold">Amount</span>
         <div className="tooltip ml-1 self-center" data-tip="Amount of tokens to be bridged">

@@ -17,7 +17,7 @@ export default function Bridge() {
     connectionStatus === ConnectionStatus.FAILED;
 
   const displayMessage = (message: string) => (
-    <div className="mt-15 text-center text-2xl font-medium">{message}</div>
+    <div className="text-aepink mt-15 text-center text-2xl font-medium">{message}</div>
   );
 
   return (

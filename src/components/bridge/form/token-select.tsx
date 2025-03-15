@@ -42,7 +42,7 @@ export default function TokenSelect({ tokens, onSelect, className, isLoading, er
               <span className="ml-1">{token.name}</span>
               <span className="ml-1 font-medium">({token.symbol})</span>
             </ListboxLabel>
-            <ListboxDescription>{token.address}</ListboxDescription>
+            <ListboxDescription className="max-sm:hidden">{token.address}</ListboxDescription>
           </ListboxOption>
         ))}
       </Listbox>
