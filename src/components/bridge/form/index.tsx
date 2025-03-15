@@ -10,8 +10,10 @@ import { mapTokensWithBalances } from "@/utils/mappers";
 import { BridgeContext } from "@/context/bridge-provider";
 import { validateForm } from "./utils";
 import BigNumber from "bignumber.js";
+import { WalletContext } from "@/context/wallet-provider";
 
 export default function BridgeForm() {
+  const { address } = useContext(WalletContext);
   const {
     bridgeDeposit,
     registeredNetworks,

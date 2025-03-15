@@ -20,7 +20,7 @@ export default function AmountInput({ onChange, amount, max, error, className }:
   };
 
   useEffect(() => {
-    if (max && Number(amount) > max) {
+    if (max !== undefined && Number(amount) > max) {
       onChange(max.toString());
     }
   }, [amount, max]);
