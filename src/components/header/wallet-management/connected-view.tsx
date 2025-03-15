@@ -19,7 +19,7 @@ export default function ConnectedView() {
     <div className="flex flex-row items-center">
       <NetworkDisplay />
       <div className="border-aepink ml-2 flex flex-row items-center overflow-hidden rounded-xl border text-sm font-medium text-white">
-        <div className="px-2 text-gray-900">
+        <div className="px-2 font-semibold text-gray-900">
           {formatBalance({ balance, decimals: currency.decimals, formatDecimals: 2 })}{" "}
           {currency.symbol}
         </div>
