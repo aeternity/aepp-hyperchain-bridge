@@ -1,41 +1,14 @@
 {
   "name": "aepp-hyperchain-bridge",
-  "version": "0.1.0",
   "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "dev:web": "next dev --turbopack",
-    "build:web": "next build",
-    "start:web": "next start",
-    "lint": "next lint",
-    "tests": "bun test --timeout 20000",
-    "deploy:token": "bun run scripts/deploy-token.ts",
-    "deploy:bridge": "bun run scripts/deploy-bridge.ts",
-    "configure:bridge": "bun run scripts/configure-bridge.ts"
-  },
-  "dependencies": {
-    "@aeternity/aepp-sdk": "^14.0.0",
-    "@headlessui/react": "^2.2.0",
-    "@heroicons/react": "^2.2.0",
-    "bignumber.js": "^9.1.2",
-    "clsx": "^2.1.1",
-    "framer-motion": "^12.5.0",
-    "next": "15.2.1",
-    "notistack": "^3.0.2",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
-  },
-  "devDependencies": {
-    "@eslint/eslintrc": "^3",
-    "@tailwindcss/postcss": "^4",
-    "@types/bun": "^1.2.4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "daisyui": "^5.0.4",
-    "eslint": "^9",
-    "eslint-config-next": "15.2.1",
-    "prettier-plugin-tailwindcss": "^0.6.11",
-    "tailwindcss": "^4.0.13",
-    "typescript": "^5"
+    "deploy:token": "bun run packages/contracts/scripts/deploy-token.ts",
+    "deploy:bridge": "bun run packages/contracts/scripts/deploy-bridge.ts",
+    "setup:bridge": "bun run packages/contracts/scripts/setup-bridge.ts",
+    "test:contracts": "cd packages/contracts && bun run test",
+    "dev:web": "cd packages/web && bun run dev"
   }
 }
