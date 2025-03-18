@@ -21,9 +21,9 @@ export enum ConnectionStatus {
 }
 
 export enum BridgeContractStatus {
-  CHECKING = "checking",
-  READY = "ready",
-  NOT_AVAILABLE = "not-available",
+  LOADING = "loading",
+  NOT_AVAILABLE = "not_available",
+  AVAILABLE = "available",
 }
 
 export interface TokenBalance {

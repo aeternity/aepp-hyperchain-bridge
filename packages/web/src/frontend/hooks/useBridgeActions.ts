@@ -33,12 +33,12 @@ const useBridgeActions = () => {
         showSuccess(
           `Deposit ID:${result.decodedResult} is successful with tx hash: ${result.hash}`
         );
+        setIsActionInProgress(false);
         return true;
       } catch (error) {
+        setIsActionInProgress(false);
         showError(error.message);
         return false;
-      } finally {
-        setIsActionInProgress(false);
       }
     },
     [bridgeContract, showError, showInfo, showSuccess]

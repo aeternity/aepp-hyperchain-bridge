@@ -1,7 +1,7 @@
 export const BRIDGE_CONTRACTS = [
   {
     networkId: "ae_uat",
-    address: "ct_ea8D2DbzfWVBjTkxDoXYFZR3wAUQMc9ji743LRWmZBAx33Yow",
+    address: "ct_EkAzKjXNnaPiL4SziKaDBF2rkWMX8dSwDnj1dvFE1Xzposn9d",
   },
   {
     networkId: "aehc_perf",

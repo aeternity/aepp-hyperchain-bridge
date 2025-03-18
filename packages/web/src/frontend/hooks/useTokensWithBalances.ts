@@ -1,5 +1,5 @@
 import { Token } from "@aepp-hyperchain-bridge/shared";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useCallback } from "react";
 import { WalletContext } from "../context/wallet-provider";
 import BigNumber from "bignumber.js";
 import { mapTokensWithBalances } from "../utils/mappers";
@@ -12,12 +12,16 @@ const useTokensWithBalances = () => {
   const [tokensWithBalances, setTokensWithBalances] = useState<Token[]>([]);
 
   useEffect(() => {
+    reload();
+  }, [tokens, address]);
+
+  const reload = useCallback(() => {
     fetchBalances(tokens, address)
       .then((tokenBalances) => mapTokensWithBalances(tokens, tokenBalances))
       .then(setTokensWithBalances);
   }, [tokens, address]);
 
-  return tokensWithBalances;
+  return { tokensWithBalances, reload };
 };
 
 const fetchBalances = async (tokens: Token[], userAddress: string) => {

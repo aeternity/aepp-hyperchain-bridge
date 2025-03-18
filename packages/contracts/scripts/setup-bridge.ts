@@ -4,7 +4,7 @@ import { parseArguments } from "./helper";
 import { createSdkInstance, getContract } from "@aepp-hyperchain-bridge/shared";
 import HyperchainBridge_aci from "../aci/HyperchainBridge.json";
 
-// Usage: bun setup:bridge --network ae_uat --address ct_ea8D2DbzfWVBjTkxDoXYFZR3wAUQMc9ji743LRWmZBAx33Yow --tokensToRegister ct_2c7JasaDqYKYXCXHmD7YnokYbUNwMyNenTJVuZU76wChRLQdJA --tokensToRegister ct_jcbziWjsTb9CEkBub6n8d12ZaTtjg49a2mdawPc6H9gBT8FVg --tokensToRegister ct_2THHu4bzSmZELX6nhoRuV3yhuHja3FEr7owPZt7KPiHU7RFyJY --networksToRegister aehc_perf --networksToRegister ae_mainnet
+// Usage: bun setup:bridge --network ae_uat --address ct_EkAzKjXNnaPiL4SziKaDBF2rkWMX8dSwDnj1dvFE1Xzposn9d --tokensToRegister ct_2c7JasaDqYKYXCXHmD7YnokYbUNwMyNenTJVuZU76wChRLQdJA --tokensToRegister ct_jcbziWjsTb9CEkBub6n8d12ZaTtjg49a2mdawPc6H9gBT8FVg --tokensToRegister ct_2THHu4bzSmZELX6nhoRuV3yhuHja3FEr7owPZt7KPiHU7RFyJY --networksToRegister aehc_perf --networksToRegister ae_mainnet
 
 const {
   parsed: { network },

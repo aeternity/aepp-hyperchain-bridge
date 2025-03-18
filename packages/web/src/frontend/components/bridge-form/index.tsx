@@ -11,9 +11,9 @@ import useRegisteredNetworks from "@/frontend/hooks/useRegisteredNetworks";
 import useBridgeActions from "@/frontend/hooks/useBridgeActions";
 
 export default function BridgeForm() {
-  const tokens = useTokensWithBalances();
   const networks = useRegisteredNetworks();
   const { isActionInProgress, deposit } = useBridgeActions();
+  const { tokensWithBalances: tokens, reload } = useTokensWithBalances();
 
   const [amount, setAmount] = useState("");
   const [selectedNetworkId, setSelectedNetworkId] = useState("");
@@ -49,7 +49,10 @@ export default function BridgeForm() {
         selectedTokenAddress,
         amountWithDecimals
       );
-      if (isSucceeded) setAmount("");
+      if (isSucceeded) {
+        reload();
+        setAmount("");
+      }
     } else {
       setErrors(_errors);
     }

@@ -37,7 +37,11 @@ export default function TokenSelect({
         <option disabled={true}>Select a token</option>
         {tokens.map(({ address, balance, name, decimals, symbol }) => (
           <option key={address} value={address}>
-            {`${formatBalance({ balance, decimals })} ${symbol} (${name})`}
+            {`${formatBalance({
+              balance,
+              decimals,
+              formatDecimals: 2,
+            })} ${symbol} (${name})`}
           </option>
         ))}
       </select>

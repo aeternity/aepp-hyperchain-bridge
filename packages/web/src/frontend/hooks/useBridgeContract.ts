@@ -8,31 +8,32 @@ import {
 import { walletSdk } from "../utils/wallet-sdk";
 import { WalletContext } from "../context/wallet-provider";
 import { HyperchainBridge_aci } from "@aepp-hyperchain-bridge/contracts";
+import { BridgeContractStatus } from "../types";
 
 const useBridgeContract = () => {
   const { address, networkId } = useContext(WalletContext);
   const [bridgeContract, setBridgeContract] = useState<BridgeContract>();
-  const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState(BridgeContractStatus.LOADING);
 
   useEffect(() => {
-    setLoading(true);
+    if (!networkId) return;
 
     const contractAddress = getBridgeContractAddress(networkId);
     if (!contractAddress) {
-      setLoading(false);
       setBridgeContract(null);
+      setStatus(BridgeContractStatus.NOT_AVAILABLE);
       return;
     }
 
     getContract(walletSdk, contractAddress, HyperchainBridge_aci).then(
       (contract) => {
         setBridgeContract(contract);
-        setLoading(false);
+        setStatus(BridgeContractStatus.AVAILABLE);
       }
     );
   }, [address, networkId]);
 
-  return { bridgeContract, loading };
+  return { bridgeContract, status };
 };
 
 export default useBridgeContract;
