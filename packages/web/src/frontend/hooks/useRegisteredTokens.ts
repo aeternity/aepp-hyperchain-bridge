@@ -4,7 +4,7 @@ import useBridgeContract from "./useBridgeContract";
 import { getTokenContract } from "../utils/contract";
 
 const useRegisteredTokens = () => {
-  const bridgeContract = useBridgeContract();
+  const { bridgeContract } = useBridgeContract();
   const [tokens, setTokens] = useState<Token[]>([]);
 
   useEffect(() => {

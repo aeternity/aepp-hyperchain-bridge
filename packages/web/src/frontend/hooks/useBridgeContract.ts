@@ -9,17 +9,17 @@ import { walletSdk } from "../utils/wallet-sdk";
 import { WalletContext } from "../context/wallet-provider";
 import { HyperchainBridge_aci } from "@aepp-hyperchain-bridge/contracts";
 
-// This hook is used to get the bridge contract instance
-// based on the current network and user address
-// Returns the bridge contract instance or null if the contract is not deployed
-// or undefined if the contract is being loaded
-const useBridgeContract = (): BridgeContract | null | undefined => {
-  const { address: userAddress, networkId } = useContext(WalletContext);
+const useBridgeContract = () => {
+  const { address, networkId } = useContext(WalletContext);
   const [bridgeContract, setBridgeContract] = useState<BridgeContract>();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
+
     const contractAddress = getBridgeContractAddress(networkId);
     if (!contractAddress) {
+      setLoading(false);
       setBridgeContract(null);
       return;
     }
@@ -27,11 +27,12 @@ const useBridgeContract = (): BridgeContract | null | undefined => {
     getContract(walletSdk, contractAddress, HyperchainBridge_aci).then(
       (contract) => {
         setBridgeContract(contract);
+        setLoading(false);
       }
     );
-  }, [userAddress, networkId]);
+  }, [address, networkId]);
 
-  return bridgeContract;
+  return { bridgeContract, loading };
 };
 
 export default useBridgeContract;

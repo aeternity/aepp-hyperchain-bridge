@@ -4,7 +4,7 @@ import useBridgeContract from "./useBridgeContract";
 import { getNetworkById } from "@aepp-hyperchain-bridge/shared";
 
 const useRegisteredNetworks = () => {
-  const bridgeContract = useBridgeContract();
+  const { bridgeContract } = useBridgeContract();
   const [networks, setNetworks] = useState<Network[]>([]);
 
   useEffect(() => {

@@ -8,16 +8,16 @@ import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import useBridgeContract from "../hooks/useBridgeContract";
 
 export default function Bridge() {
-  const bridgeContract = useBridgeContract();
+  const { bridgeContract, loading } = useBridgeContract();
   const { connectionStatus, detectionStatus } = useContext(WalletContext);
 
-  const shouldShowWalletConnectMessage =
+  const walletNotConnected =
     connectionStatus === ConnectionStatus.CONNECTING ||
     connectionStatus === ConnectionStatus.DISCONNECTED ||
     connectionStatus === ConnectionStatus.FAILED;
 
   const displayMessage = (message: string) => (
-    <div className="border-aepink-700 mt-15 flex w-full flex-wrap items-center justify-center gap-2 border-t border-b p-4 text-center text-2xl font-medium text-black max-sm:flex-row">
+    <div className="border-aepink-100 mt-15 flex w-full flex-wrap items-center justify-center gap-2 border-t border-b p-4 text-center text-2xl font-medium text-black max-sm:flex-row">
       <ExclamationTriangleIcon stroke="black" width={30} height={30} />
       <span>{message}</span>
     </div>
@@ -31,12 +31,14 @@ export default function Bridge() {
           "Failed to detect wallet. Please install and connect Superhero wallet"
         )}
 
-      {shouldShowWalletConnectMessage
-        ? displayMessage("Please connect your wallet to use the bridge")
-        : !!bridgeContract && <BridgeForm />}
-
-      {bridgeContract === null &&
-        displayMessage("Bridge contract is not available for this network :(")}
+      {walletNotConnected ? (
+        displayMessage("Please connect your wallet to use the bridge")
+      ) : bridgeContract ? (
+        <BridgeForm />
+      ) : (
+        !loading &&
+        displayMessage("Bridge contract is not available for this network :(")
+      )}
     </div>
   );
 }

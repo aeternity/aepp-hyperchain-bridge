@@ -5,7 +5,7 @@ import { setTokenAllowance } from "../utils/contract";
 import { walletSdk } from "../utils/wallet-sdk";
 
 const useBridgeActions = () => {
-  const bridgeContract = useBridgeContract();
+  const { bridgeContract } = useBridgeContract();
   const { showError, showInfo, showSuccess } = useContext(AppContext);
   const [isActionInProgress, setIsActionInProgress] = useState(false);
 
