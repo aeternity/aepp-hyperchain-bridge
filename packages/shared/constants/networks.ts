@@ -8,6 +8,7 @@ export const AE_MAINNET: Network = {
   id: "ae_mainnet",
   name: "Mainnet",
   url: "https://mainnet.aeternity.io/",
+  mdwUrl: "https://mainnet.aeternity.io/mdw",
   ...networkDefaults,
 };
 
@@ -15,6 +16,7 @@ export const AE_TESTNET: Network = {
   id: "ae_uat",
   name: "Testnet",
   url: "https://testnet.aeternity.io/",
+  mdwUrl: "https://testnet.aeternity.io/mdw",
   ...networkDefaults,
 };
 
@@ -22,6 +24,7 @@ export const HC_PERF: Network = {
   id: "aehc_perf",
   name: "HC Perf",
   url: "https://perf.hyperchains.aeternity.io/",
+  mdwUrl: "https://perf.hyperchains.aeternity.io:8443",
   ...networkDefaults,
 };
 

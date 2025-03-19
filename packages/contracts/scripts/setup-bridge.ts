@@ -1,10 +1,13 @@
 import assert from "node:assert";
 
 import { parseArguments } from "./helper";
-import { createSdkInstance, getContract } from "@aepp-hyperchain-bridge/shared";
-import HyperchainBridge_aci from "../aci/HyperchainBridge.json";
+import {
+  createSdkInstance,
+  getContract,
+  HyperchainBridge_aci,
+} from "@aepp-hyperchain-bridge/shared";
 
-// Usage: bun setup:bridge --network ae_uat --address ct_EkAzKjXNnaPiL4SziKaDBF2rkWMX8dSwDnj1dvFE1Xzposn9d --tokensToRegister ct_2c7JasaDqYKYXCXHmD7YnokYbUNwMyNenTJVuZU76wChRLQdJA --tokensToRegister ct_jcbziWjsTb9CEkBub6n8d12ZaTtjg49a2mdawPc6H9gBT8FVg --tokensToRegister ct_2THHu4bzSmZELX6nhoRuV3yhuHja3FEr7owPZt7KPiHU7RFyJY --networksToRegister aehc_perf --networksToRegister ae_mainnet
+// Usage: bun setup:bridge --network aehc_perf --address ct_Yaiok5GciaDZqzoMUfnarNbdpC7zE8fMKSfSjCiYEkXEaScYJ --tokensToRegister ct_PbQLmgjPJDoH3eCKRXpDzpuSddc8jBeB1RJXBSwTw3PVd7zSJ --tokensToRegister ct_2uALHMBJKQcr6LkDwEiHawViyjnV2vK93SGNkuctRXfyY9j7QW --tokensToRegister ct_S9fLDmc8GRKFhXj4gAHvQ6ttMYxCYfEc4JC5JnLpxhTkL5kpr --networksToRegister aehc_perf --networksToRegister ae_mainnet
 
 const {
   parsed: { network },

@@ -2,10 +2,11 @@ import { resolve } from "path";
 import { readFileSync, writeFileSync, existsSync } from "fs";
 
 import { getFileSystem, Contract, AeSdk } from "@aeternity/aepp-sdk";
-import type { GenericContract } from "@aepp-hyperchain-bridge/shared";
-
-import HyperchainBridge_aci from "./aci/HyperchainBridge.json";
-import BridgeToken_aci from "./aci/BridgeToken.json";
+import {
+  type GenericContract,
+  HyperchainBridge_aci,
+  BridgeToken_aci,
+} from "@aepp-hyperchain-bridge/shared";
 
 export const BRIDGE_SOURCE_PATH = resolve(
   __dirname,
@@ -16,7 +17,8 @@ export const DEPLOYMENTS_CACHE_PATH = resolve(
   __dirname,
   "./deployments-cache.json"
 );
-export const ACI_FOLDER_PATH = resolve(__dirname, "./aci");
+
+export const ACI_FOLDER_PATH = resolve(__dirname, "../shared/aci");
 
 export async function setupContracts(aeSdk: AeSdk) {
   // Account addresses

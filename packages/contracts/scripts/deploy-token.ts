@@ -3,16 +3,17 @@ import { writeFileSync } from "fs";
 
 import { createSdkInstance } from "@aepp-hyperchain-bridge/shared";
 import { parseArguments, deployContract, parseNumberValue } from "./helper";
+import { ACI_FOLDER_PATH } from "..";
 
-// Usage: bun deploy:token --network ae_uat --name TestToken1 --symbol TT1 --decimals 18 --balance 10000 --saveAci
+// Usage: bun deploy:token --network aehc_perf --name TestToken --symbol TST --decimals 9 --balance 10000 --saveAci
 
 const {
   parsed: { network },
   values,
 } = parseArguments();
 
-const sourcePath = resolve(__dirname, "../src/BridgeToken.aes");
-const aciPath = resolve(__dirname, "../aci/BridgeToken.json");
+const sourcePath = resolve(__dirname, "../source/BridgeToken.aes");
+const aciPath = `${ACI_FOLDER_PATH}/BridgeToken.json`;
 
 const name = values.name;
 const symbol = values.symbol;

@@ -1,7 +1,48 @@
-"use server";
+import {
+  BRIDGE_CONTRACTS,
+  BridgeContract,
+} from "@aepp-hyperchain-bridge/shared";
+import { getContractRow, insertDeposits } from "../db/helper";
+import getBridgeContract from "../utils/get-contract-instance";
 
-export default function syncEvents() {
-  // This function will be called when the server starts
-  // and will sync events from the blockchain to the database
-  console.log("Syncing events...");
+export default async function syncEvents() {
+  for (const { address, networkId } of BRIDGE_CONTRACTS) {
+    const bridgeContract = await getBridgeContract(networkId, address);
+
+    const contractRow = getContractRow(address, networkId);
+
+    const contractDepositCount = parseInt(
+      (await bridgeContract.deposits_count()).decodedResult
+    );
+
+    let startSyncFromIndex, endSyncAtIndex;
+
+    if (contractRow.last_synced_deposit_id === null) {
+      startSyncFromIndex = 0;
+      endSyncAtIndex = contractDepositCount - 1;
+    } else if (contractRow.last_synced_deposit_id < contractDepositCount - 1) {
+      startSyncFromIndex = contractRow.last_synced_deposit_id + 1;
+      endSyncAtIndex = contractDepositCount - 1;
+    } else {
+      continue;
+    }
+
+    const deposits = await getContractDeposits(
+      bridgeContract,
+      startSyncFromIndex,
+      endSyncAtIndex
+    );
+
+    insertDeposits(networkId, address, deposits);
+  }
+}
+
+async function getContractDeposits(
+  contract: BridgeContract,
+  from: number,
+  to: number
+) {
+  if (to < from) return [];
+
+  return (await contract.get_deposits_between(from, to)).decodedResult;
 }

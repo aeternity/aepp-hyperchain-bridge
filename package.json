@@ -9,6 +9,7 @@
     "deploy:bridge": "bun run packages/contracts/scripts/deploy-bridge.ts",
     "setup:bridge": "bun run packages/contracts/scripts/setup-bridge.ts",
     "test:contracts": "cd packages/contracts && bun run test",
-    "dev": "cd packages/web && bun run dev"
+    "dev": "cd packages/web && bun run dev",
+    "start": "cd packages/web && bun run start"
   }
 }

@@ -1,15 +1,14 @@
 {
   "name": "@aepp-hyperchain-bridge/web",
   "type": "module",
-  "main": "src/index.tsx",
-  "module": "src/index.tsx",
+  "main": "src/app.ts",
+  "module": "src/app.ts",
   "scripts": {
-    "dev": "bun --hot src/index.tsx",
-    "start": "NODE_ENV=production bun src/index.tsx",
+    "dev": "bun --hot src/app.ts",
+    "start": "NODE_ENV=production bun src/app.ts",
     "build": "bun run build.ts"
   },
   "dependencies": {
-    "@aepp-hyperchain-bridge/contracts": "file:../contracts",
     "@aepp-hyperchain-bridge/shared": "file:../shared",
     "@aeternity/aepp-sdk": "^14.0.0",
     "@heroicons/react": "^2.2.0",

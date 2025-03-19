@@ -37,8 +37,17 @@ main contract HyperchainBridge =
 
   entrypoint withdraws(): list(withdraw) = state.withdraws
   entrypoint deposits(): list(deposit) = state.deposits
+  entrypoint deposits_count(): int = List.length(state.deposits)
+  entrypoint withdraws_count(): int = List.length(state.withdraws)
+  entrypoint get_deposit(index: int) = List.nth(index, state.deposits)
+  entrypoint get_withdraw(index: int) = List.nth(index, state.withdraws)
+  entrypoint get_deposits_between(start: int, end: int) = 
+    let ids = [start..end]
+    List.filter((x) => List.contains(x.index, ids), state.deposits)
+
   entrypoint registered_tokens(): list(BridgeTokenInterface) = state.registered_tokens
   entrypoint registered_networks(): list(string) = state.registered_networks
+  entrypoint owner(): address = state.owner
 
   /// @notice Deposit tokens to start the bridging process
   /// @param for_network The network which tokens will be bridged to

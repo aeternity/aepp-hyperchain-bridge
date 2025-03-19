@@ -12,6 +12,7 @@ export interface Network {
   id: string;
   url: string;
   name: string;
+  mdwUrl: string;
   compilerUrl: string;
 }
 
