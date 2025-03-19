@@ -1,13 +1,13 @@
 import { useContext } from "react";
 
-import BridgeForm from "@/frontend/components/bridge-form";
-import FormTitle from "@/frontend/components/bridge-form/title";
+import BridgeForm from "@/components/bridge-form";
+import FormTitle from "@/components/bridge-form/title";
 import {
   BridgeContractStatus,
   ConnectionStatus,
   DetectionStatus,
-} from "@/frontend/types";
-import { WalletContext } from "@/frontend/context/wallet-provider";
+} from "@/utils/types";
+import { WalletContext } from "@/context/wallet-provider";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import useBridgeContract from "../hooks/useBridgeContract";
 

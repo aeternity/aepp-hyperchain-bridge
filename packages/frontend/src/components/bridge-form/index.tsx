@@ -6,9 +6,9 @@ import TokenSelect from "./token-select";
 import AmountInput from "./amount-input";
 import NetworkSelect from "./network-select";
 import { byAddress } from "@aepp-hyperchain-bridge/shared";
-import useTokensWithBalances from "@/frontend/hooks/useTokensWithBalances";
-import useRegisteredNetworks from "@/frontend/hooks/useRegisteredNetworks";
-import useBridgeActions from "@/frontend/hooks/useBridgeActions";
+import useTokensWithBalances from "@/hooks/useTokensWithBalances";
+import useRegisteredNetworks from "@/hooks/useRegisteredNetworks";
+import useBridgeActions from "@/hooks/useBridgeActions";
 
 export default function BridgeForm() {
   const networks = useRegisteredNetworks();

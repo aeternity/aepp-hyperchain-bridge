@@ -1,8 +1,8 @@
 import { useContext, useState } from "react";
 import PowerIcon from "@heroicons/react/24/outline/PowerIcon";
 
-import { shorten, formatBalance } from "@/frontend/utils/formatters";
-import { WalletContext } from "@/frontend/context/wallet-provider";
+import { shorten, formatBalance } from "@/utils/formatters";
+import { WalletContext } from "@/context/wallet-provider";
 import NetworkDisplay from "./network-display";
 
 export default function ConnectedView() {

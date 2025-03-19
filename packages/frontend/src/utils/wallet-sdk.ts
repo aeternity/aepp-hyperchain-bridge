@@ -8,7 +8,7 @@ import {
 } from "@aeternity/aepp-sdk";
 
 import { ALL_NETWORKS, networkDefaults } from "@aepp-hyperchain-bridge/shared";
-import { Wallet } from "../types";
+import { Wallet } from "./types";
 
 export const walletSdk = new AeSdk({
   onCompiler: new CompilerHttp(networkDefaults.compilerUrl),

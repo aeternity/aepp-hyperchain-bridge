@@ -1,7 +1,7 @@
 import { useContext } from "react";
 
 import { getNetworkById } from "@aepp-hyperchain-bridge/shared";
-import { WalletContext } from "@/frontend/context/wallet-provider";
+import { WalletContext } from "@/context/wallet-provider";
 
 export default function NetworkDisplay() {
   const { networkId } = useContext(WalletContext);

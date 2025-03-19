@@ -1,12 +1,13 @@
 import { resolve } from "path";
 import { readFileSync, writeFileSync, existsSync } from "fs";
 
-import { getFileSystem, Contract, AeSdk } from "@aeternity/aepp-sdk";
+import { Contract, AeSdk } from "@aeternity/aepp-sdk";
 import {
   type GenericContract,
   HyperchainBridge_aci,
   BridgeToken_aci,
 } from "@aepp-hyperchain-bridge/shared";
+import getFileSystem from "./getFileSystem";
 
 export const BRIDGE_SOURCE_PATH = resolve(
   __dirname,

@@ -1,8 +1,8 @@
 import { useContext } from "react";
 
-import Button from "@/frontend/components/base/button";
-import { WalletContext } from "@/frontend/context/wallet-provider";
-import { ConnectionStatus } from "@/frontend/types";
+import Button from "@/components/base/button";
+import { WalletContext } from "@/context/wallet-provider";
+import { ConnectionStatus } from "@/utils/types";
 
 export default function ConnectButton() {
   const { connect, connectionStatus } = useContext(WalletContext);

@@ -1,5 +1,5 @@
 {
-  "name": "@aepp-hyperchain-bridge/shared",
+  "name": "backend",
   "module": "index.ts",
   "type": "module",
   "devDependencies": {
@@ -7,9 +7,5 @@
   },
   "peerDependencies": {
     "typescript": "^5"
-  },
-  "dependencies": {
-    "@aeternity/aepp-sdk": "^14.0.0",
-    "bignumber.js": "^9.1.2"
   }
 }

@@ -1,5 +1,5 @@
 import { Token } from "@aepp-hyperchain-bridge/shared";
-import { TokenBalance } from "../types";
+import { TokenBalance } from "./types";
 
 export const mapTokensWithBalances = (
   registeredTokens: Token[],

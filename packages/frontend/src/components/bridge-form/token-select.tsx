@@ -1,4 +1,4 @@
-import { formatBalance } from "@/frontend/utils/formatters";
+import { formatBalance } from "@/utils/formatters";
 import { Token } from "@aepp-hyperchain-bridge/shared";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 

@@ -1,5 +1,5 @@
 {
-  "name": "@aepp-hyperchain-bridge/web",
+  "name": "@aepp-hyperchain-bridge/frontend",
   "type": "module",
   "main": "src/server.ts",
   "module": "src/server.ts",

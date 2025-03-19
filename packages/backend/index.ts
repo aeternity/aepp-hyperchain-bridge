@@ -1,14 +1,11 @@
 import { serve } from "bun";
-import index from "./public/index.html";
-import syncEvents from "./backend/service/sync-events";
-import initDb from "./backend/db/init";
+import syncEvents from "./src/service/sync-events";
+import initDb from "./src/db/init";
 
 initDb();
 
 const server = serve({
   routes: {
-    "/*": index,
-
     "/api/sync": {
       async GET() {
         const result = await syncEvents();

@@ -8,7 +8,7 @@ import {
 import { walletSdk } from "../utils/wallet-sdk";
 import { WalletContext } from "../context/wallet-provider";
 import { HyperchainBridge_aci } from "@aepp-hyperchain-bridge/contracts";
-import { BridgeContractStatus } from "../types";
+import { BridgeContractStatus } from "../utils/types";
 
 const useBridgeContract = () => {
   const { address, networkId } = useContext(WalletContext);

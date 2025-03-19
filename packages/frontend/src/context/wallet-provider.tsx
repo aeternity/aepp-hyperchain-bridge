@@ -5,7 +5,7 @@ import {
   WalletConnectorFrame,
 } from "@aeternity/aepp-sdk";
 
-import { ConnectionStatus, DetectionStatus, Wallet } from "../types";
+import { ConnectionStatus, DetectionStatus, Wallet } from "../utils/types";
 import { getConnector, getWallet, walletSdk } from "../utils/wallet-sdk";
 
 export const WalletContext = createContext({

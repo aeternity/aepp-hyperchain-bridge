@@ -3,8 +3,8 @@ import { useContext } from "react";
 import ConnectButton from "./connect-button";
 import ConnectedView from "./connected-view";
 import InstallWalletButton from "./install-wallet-button";
-import { WalletContext } from "@/frontend/context/wallet-provider";
-import { ConnectionStatus, DetectionStatus } from "@/frontend/types";
+import { WalletContext } from "@/context/wallet-provider";
+import { ConnectionStatus, DetectionStatus } from "@/utils/types";
 
 export default function WalletManagement() {
   const { connectionStatus, detectionStatus } = useContext(WalletContext);
