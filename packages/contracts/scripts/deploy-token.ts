@@ -5,7 +5,7 @@ import { createSdkInstance } from "@aepp-hyperchain-bridge/shared";
 import { parseArguments, deployContract, parseNumberValue } from "./helper";
 import { ACI_FOLDER_PATH } from "..";
 
-// Usage: bun deploy:token --network aehc_perf --name TestToken --symbol TST --decimals 9 --balance 10000 --saveAci
+// Usage: bun deploy:token --network hc_devnet --name TestToken --symbol TST --decimals 9 --balance 10000 --saveAci
 
 const {
   parsed: { network },

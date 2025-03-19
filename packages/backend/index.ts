@@ -5,6 +5,7 @@ import initDb from "./src/db/init";
 initDb();
 
 const server = serve({
+  port: 3001,
   routes: {
     "/api/sync": {
       async GET() {
@@ -20,4 +21,4 @@ const server = serve({
   development: process.env.NODE_ENV !== "production",
 });
 
-console.log(`🚀 Server running at ${server.url}`);
+console.log(`🚀 Backend running at ${server.url}`);

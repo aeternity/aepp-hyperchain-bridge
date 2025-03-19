@@ -4,7 +4,7 @@ export const BRIDGE_CONTRACTS = [
     address: "ct_2cZXqJL7sE7xHHAZsABhm5XBq6xQcAy9DZquiyQvrwJ3WV4Mgj",
   },
   {
-    networkId: "aehc_perf",
-    address: "ct_Yaiok5GciaDZqzoMUfnarNbdpC7zE8fMKSfSjCiYEkXEaScYJ",
+    networkId: "hc_devnet",
+    address: "ct_29HcZriT4qxxR8WeFiiqDVjDG7riHpjh6WXupgbWLLPPvJ3Thh",
   },
 ];

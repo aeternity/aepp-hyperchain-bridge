@@ -20,12 +20,12 @@ export const AE_TESTNET: Network = {
   ...networkDefaults,
 };
 
-export const HC_PERF: Network = {
-  id: "aehc_perf",
-  name: "HC Perf",
-  url: "https://perf.hyperchains.aeternity.io/",
-  mdwUrl: "https://perf.hyperchains.aeternity.io:8443",
+export const HC_DEV: Network = {
+  id: "hc_devnet",
+  name: "HC Devnet Local",
+  url: "http://localhost:23013/",
+  mdwUrl: "http://localhost:24000",
   ...networkDefaults,
 };
 
-export const ALL_NETWORKS = [AE_MAINNET, AE_TESTNET, HC_PERF];
+export const ALL_NETWORKS = [AE_MAINNET, AE_TESTNET, HC_DEV];

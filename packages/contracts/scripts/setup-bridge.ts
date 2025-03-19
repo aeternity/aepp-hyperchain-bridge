@@ -7,7 +7,7 @@ import {
   HyperchainBridge_aci,
 } from "@aepp-hyperchain-bridge/shared";
 
-// Usage: bun setup:bridge --network aehc_perf --address ct_Yaiok5GciaDZqzoMUfnarNbdpC7zE8fMKSfSjCiYEkXEaScYJ --tokensToRegister ct_PbQLmgjPJDoH3eCKRXpDzpuSddc8jBeB1RJXBSwTw3PVd7zSJ --tokensToRegister ct_2uALHMBJKQcr6LkDwEiHawViyjnV2vK93SGNkuctRXfyY9j7QW --tokensToRegister ct_S9fLDmc8GRKFhXj4gAHvQ6ttMYxCYfEc4JC5JnLpxhTkL5kpr --networksToRegister aehc_perf --networksToRegister ae_mainnet
+// Usage: bun setup:bridge --network hc_devnet --address ct_29HcZriT4qxxR8WeFiiqDVjDG7riHpjh6WXupgbWLLPPvJ3Thh --tokensToRegister ct_gBJsmAigCfk2FGjwaxijNZy8bh59ZMt1SdtXzPaCNixZwb5rp --tokensToRegister ct_25xJ1jdD8X2S7gUUGZV347TaitkXSVFV1q2pLZ4wU3hFWxGsRw --networksToRegister ae_uat --networksToRegister ae_mainnet
 
 const {
   parsed: { network },

@@ -1,12 +1,15 @@
 import {
   BRIDGE_CONTRACTS,
-  BridgeContract,
+  type BridgeContract,
 } from "@aepp-hyperchain-bridge/shared";
 import { getContractRow, insertDeposits } from "../db/helper";
 import getBridgeContract from "../utils/get-contract-instance";
 
 export default async function syncEvents() {
   for (const { address, networkId } of BRIDGE_CONTRACTS) {
+    console.log(
+      `Syncing events for contract ${address} on network ${networkId}`
+    );
     const bridgeContract = await getBridgeContract(networkId, address);
 
     const contractRow = getContractRow(address, networkId);
