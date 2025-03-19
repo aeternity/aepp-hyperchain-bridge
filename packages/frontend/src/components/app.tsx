@@ -1,13 +1,13 @@
-import "./public/globals.css";
+import "../public/globals.css";
 
 import { SnackbarProvider } from "notistack";
 
-import Footer from "./components/footer";
-import Header from "./components/header";
-import AppProvider from "./context/app-provider";
-import WalletProvider from "./context/wallet-provider";
+import Footer from "./footer";
+import Header from "./header";
+import AppProvider from "../context/app-provider";
+import WalletProvider from "../context/wallet-provider";
 
-import Bridge from "./pages/bridge";
+import Bridge from "../pages/bridge";
 
 export default function App() {
   return (

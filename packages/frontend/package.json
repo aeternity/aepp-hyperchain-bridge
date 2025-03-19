@@ -1,12 +1,12 @@
 {
   "name": "@aepp-hyperchain-bridge/frontend",
   "type": "module",
-  "main": "src/server.ts",
-  "module": "src/server.ts",
+  "main": "src/index.ts",
+  "module": "src/index.ts",
   "scripts": {
-    "dev": "bun --hot src/server.ts",
-    "start": "NODE_ENV=production bun src/server.ts",
-    "build": "bun run build.ts"
+    "dev": "bun --hot src/index.ts",
+    "start": "NODE_ENV=production bun src/index.ts",
+    "build": "bun run build.ts --outdir=dist --minify --source-map=linked"
   },
   "dependencies": {
     "@aepp-hyperchain-bridge/shared": "file:../shared",

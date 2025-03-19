@@ -2,6 +2,7 @@ import { serve } from "bun";
 import index from "./index.html";
 
 const server = serve({
+  port: 3000,
   routes: {
     "/*": index,
   },
@@ -9,4 +10,4 @@ const server = serve({
   development: process.env.NODE_ENV !== "production",
 });
 
-console.log(`🚀 Server running at ${server.url}`);
+console.log(`🚀 Frontend running at ${server.url}`);
