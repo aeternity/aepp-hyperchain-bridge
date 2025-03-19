@@ -3,6 +3,7 @@ import syncEvents from "./src/service/sync-events";
 import initDb from "./src/db/init";
 
 initDb();
+setInterval(syncEvents, 10_000);
 
 const server = serve({
   port: 3001,
