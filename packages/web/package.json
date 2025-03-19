@@ -1,11 +1,11 @@
 {
   "name": "@aepp-hyperchain-bridge/web",
   "type": "module",
-  "main": "src/app.ts",
-  "module": "src/app.ts",
+  "main": "src/server.ts",
+  "module": "src/server.ts",
   "scripts": {
-    "dev": "bun --hot src/app.ts",
-    "start": "NODE_ENV=production bun src/app.ts",
+    "dev": "bun --hot src/server.ts",
+    "start": "NODE_ENV=production bun src/server.ts",
     "build": "bun run build.ts"
   },
   "dependencies": {

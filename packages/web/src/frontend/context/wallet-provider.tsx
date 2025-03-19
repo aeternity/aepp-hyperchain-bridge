@@ -1,5 +1,3 @@
-"use client";
-
 import { createContext, useCallback, useEffect, useState } from "react";
 import {
   AccountBase,
