@@ -27,7 +27,8 @@ const useBridgeActions = () => {
         const result = await bridgeContract.deposit(
           destinationNetworkId,
           tokenAddress,
-          amount
+          amount,
+          { ttl: 0 }
         );
 
         showSuccess(
