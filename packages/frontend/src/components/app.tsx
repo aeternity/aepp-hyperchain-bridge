@@ -1,4 +1,4 @@
-import "../public/globals.css";
+import "../../assets/globals.css";
 
 import { SnackbarProvider } from "notistack";
 

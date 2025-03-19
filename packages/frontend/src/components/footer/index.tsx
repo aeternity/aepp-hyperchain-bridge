@@ -1,4 +1,4 @@
-import aeLogo from "@/public/ae-logo.svg";
+import aeLogo from "@/assets/ae-logo.svg";
 
 export default function Footer() {
   return (

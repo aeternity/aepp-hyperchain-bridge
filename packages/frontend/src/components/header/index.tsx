@@ -1,4 +1,4 @@
-import hcLogo from "@/public/hc-logo.svg";
+import hcLogo from "@/assets/hc-logo.svg";
 import WalletManagement from "./wallet-management";
 
 export default function Header() {
