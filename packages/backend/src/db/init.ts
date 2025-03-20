@@ -24,11 +24,12 @@ export default function initDb() {
     -- Create the deposits table
     CREATE TABLE IF NOT EXISTS deposits (
       idx INTEGER NOT NULL,
-      contract_address VARCHAR(64) NOT NULL,
+      tx_hash VARCHAR(100) NOT NULL,
       amount VARCHAR(100) NOT NULL,
       from_address VARCHAR(64) NOT NULL,
       token_address VARCHAR(64) NOT NULL,
       for_network_id VARCHAR(64) NOT NULL,
+      contract_address VARCHAR(64) NOT NULL,
       PRIMARY KEY (idx, contract_address)
     );
   `

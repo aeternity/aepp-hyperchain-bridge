@@ -1,7 +1,7 @@
 import { useContext } from "react";
 
 import BridgeForm from "@/components/bridge-form";
-import FormTitle from "@/components/bridge-form/title";
+import Title from "@/components/base/title";
 import {
   BridgeContractStatus,
   ConnectionStatus,
@@ -52,9 +52,14 @@ export default function Bridge() {
   };
 
   return (
-    <div className="mt-12 mb-9 flex flex-1 flex-col max-sm:my-5 md:my-20 md:w-[600px]">
-      <FormTitle />
-      {content()}
-    </div>
+    <main className="flex flex-1 flex-row">
+      <div className=" mt-12 mb-9 flex-col max-sm:my-5 md:my-20 md:w-[600px] max-w-screen-2xl xl:px-0 px-4 m-auto">
+        <Title
+          title="Bridge"
+          subtitle="Bridge your assets between Aeternity mainnet and Hyperchains"
+        />
+        {content()}
+      </div>
+    </main>
   );
 }

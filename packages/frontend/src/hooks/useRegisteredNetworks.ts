@@ -12,7 +12,7 @@ const useRegisteredNetworks = () => {
       bridgeContract
         .registered_networks()
         .then((result) => result.decodedResult)
-        .then((networkIds) => networkIds.map(getNetworkById))
+        .then((networkIds) => networkIds.map(getNetworkById).filter(Boolean))
         .then(setNetworks);
     } else {
       setNetworks([]);

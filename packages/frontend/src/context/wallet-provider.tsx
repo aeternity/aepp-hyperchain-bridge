@@ -58,7 +58,7 @@ export default function WalletProvider({
 
   useEffect(() => {
     walletSdk.getNodeInfo().then((info) => {
-      fetch(`${info.url}v3/currency`)
+      fetch(`${info.url}/v3/currency`)
         .then((res) => res.json())
         .then((data) =>
           setCurrency({

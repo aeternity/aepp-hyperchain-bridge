@@ -9,6 +9,7 @@ import { byAddress } from "@aepp-hyperchain-bridge/shared";
 import useTokensWithBalances from "@/hooks/useTokensWithBalances";
 import useRegisteredNetworks from "@/hooks/useRegisteredNetworks";
 import useBridgeActions from "@/hooks/useBridgeActions";
+import TransactionHistory from "../transaction-history";
 
 export default function BridgeForm() {
   const networks = useRegisteredNetworks();
@@ -83,14 +84,17 @@ export default function BridgeForm() {
             .shiftedBy(-selectedToken.decimals)
             ?.toNumber()}
         />
+
         <button
           disabled={isActionInProgress}
-          className="btn bg-aepink text-white font-medium w-[200px] mb-4 mt-2"
+          className="btn bg-aepink text-white font-medium w-[200px] mb-2 mt-2"
           color="primary"
           onClick={handleBridgeClick}
         >
           Confirm Transaction
         </button>
+
+        <TransactionHistory />
       </div>
     </fieldset>
   );

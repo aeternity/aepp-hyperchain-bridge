@@ -1,26 +1,32 @@
 import "../../assets/globals.css";
 
 import { SnackbarProvider } from "notistack";
+import {
+  QueryClient,
+  useInfiniteQuery,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 
 import Footer from "./footer";
 import Header from "./header";
-import AppProvider from "../context/app-provider";
-import WalletProvider from "../context/wallet-provider";
-
 import Bridge from "../pages/bridge";
+import AppProvider from "@/context/app-provider";
+import WalletProvider from "@/context/wallet-provider";
+
+const queryClient = new QueryClient();
 
 export default function App() {
   return (
     <SnackbarProvider>
       <AppProvider>
         <WalletProvider>
-          <div className="flex min-h-screen flex-col">
-            <Header />
-            <main className="max-w-screen-2xl flex-1 self-center px-4 xl:px-0">
+          <QueryClientProvider client={queryClient}>
+            <div className="flex min-h-screen flex-col">
+              <Header />
               <Bridge />
-            </main>
-            <Footer />
-          </div>
+              <Footer />
+            </div>
+          </QueryClientProvider>
         </WalletProvider>
       </AppProvider>
     </SnackbarProvider>

@@ -14,6 +14,7 @@ export interface Network {
   name: string;
   mdwUrl: string;
   compilerUrl: string;
+  explorerUrl: string;
 }
 
 export interface Token {

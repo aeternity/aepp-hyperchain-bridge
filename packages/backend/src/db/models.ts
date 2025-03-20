@@ -12,4 +12,5 @@ export class DepositRow {
   from_address: string;
   token_address: string;
   for_network_id: string;
+  tx_hash: string;
 }
