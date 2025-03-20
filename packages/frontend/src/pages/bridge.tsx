@@ -52,8 +52,9 @@ export default function Bridge() {
   };
 
   return (
-    <main className="flex flex-1 flex-row">
-      <div className=" mt-12 mb-9 flex-col max-sm:my-5 md:my-20 md:w-[600px] max-w-screen-2xl xl:px-0 px-4 m-auto">
+    <main className="relative flex flex-1 flex-row overflow-hidden">
+      <div className="absolute w-[200%] h-[200%] top-[-50%] left-[-50%] bg-[url(../assets/hc-logo.svg)] bg-[auto_50px] z-[0] opacity-5 rotate-[30deg] bg-repeat-space"></div>
+      <div className=" mt-12 mb-9 flex-col max-sm:my-5 md:my-20 md:w-[600px] max-w-screen-2xl xl:px-0 px-4 m-auto z-10">
         <Title
           title="Bridge"
           subtitle="Bridge your assets between Aeternity mainnet and Hyperchains"

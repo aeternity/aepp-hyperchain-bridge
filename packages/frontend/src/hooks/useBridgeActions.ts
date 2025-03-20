@@ -28,7 +28,7 @@ const useBridgeActions = () => {
           destinationNetworkId,
           tokenAddress,
           amount,
-          { ttl: 0 }
+          { ttl: 30 }
         );
 
         showSuccess(

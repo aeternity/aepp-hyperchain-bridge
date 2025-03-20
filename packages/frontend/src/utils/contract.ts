@@ -23,9 +23,9 @@ export async function setTokenAllowance(
   ).decodedResult;
 
   if (allowanceResult === undefined) {
-    await contract.create_allowance(bridgeAccountAddress, amount);
+    await contract.create_allowance(bridgeAccountAddress, amount, { ttl: 30 });
   } else if (new BigNumber(allowanceResult.toString()).isLessThan(amount)) {
-    await contract.change_allowance(bridgeAccountAddress, amount);
+    await contract.change_allowance(bridgeAccountAddress, amount, { ttl: 30 });
   } else {
     return true;
   }

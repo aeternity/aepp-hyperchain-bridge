@@ -1,10 +1,10 @@
 export const BRIDGE_CONTRACTS = [
   {
     networkId: "ae_uat",
-    address: "ct_2cZXqJL7sE7xHHAZsABhm5XBq6xQcAy9DZquiyQvrwJ3WV4Mgj",
+    address: "ct_2fi1rcyFZdbkXsqFBxD2CS8NBDDaLWUzMyhZruYn9RKm2pRPaV",
   },
   {
     networkId: "hc_devnet",
-    address: "ct_29HcZriT4qxxR8WeFiiqDVjDG7riHpjh6WXupgbWLLPPvJ3Thh",
+    address: "ct_2fi1rcyFZdbkXsqFBxD2CS8NBDDaLWUzMyhZruYn9RKm2pRPaV",
   },
 ];
