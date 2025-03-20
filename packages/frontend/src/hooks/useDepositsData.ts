@@ -7,8 +7,10 @@ import {
 } from "@aepp-hyperchain-bridge/shared";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { transactionToDeposit } from "@/utils/mappers";
+import useRegisteredTokens from "./useRegisteredTokens";
 
 export default function useDepositsData() {
+  const tokens = useRegisteredTokens();
   const { networkId, address } = useContext(WalletContext);
   const queryKey = ["deposit-transactions", networkId, address];
 
@@ -35,9 +37,12 @@ export default function useDepositsData() {
     getNextPageParam: (lastPage) => lastPage.next,
   });
 
-  const deposits = isFetched
-    ? data.pages.flatMap((tx) => tx.data).map(transactionToDeposit(networkId))
-    : [];
+  const deposits =
+    isFetched && !!tokens.length
+      ? data.pages
+          .flatMap((tx) => tx.data)
+          .map(transactionToDeposit(networkId, tokens))
+      : [];
 
   return {
     deposits,

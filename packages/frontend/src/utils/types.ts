@@ -1,3 +1,4 @@
+import { Network, Token } from "@aepp-hyperchain-bridge/shared";
 import { walletDetector } from "@aeternity/aepp-sdk";
 import BigNumber from "bignumber.js";
 
@@ -52,10 +53,10 @@ export interface TransactionsResult {
 
 export interface Deposit {
   idx: number;
-  amount: BigNumber;
-  tokenAddress: string;
-  destinationNetworkId: string;
+  token: Token;
   txHash: string;
-  fromNetworkId: string;
+  amount: BigNumber;
   timestamp: number;
+  toNetwork: Network;
+  fromNetwork: Network;
 }

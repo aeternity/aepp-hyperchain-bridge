@@ -4,7 +4,7 @@ import { createSdkInstance } from "@aepp-hyperchain-bridge/shared";
 import { ACI_FOLDER_PATH, BRIDGE_SOURCE_PATH } from "..";
 import { parseArguments, deployContract } from "./helper";
 
-// Usage: bun deploy:bridge --network aehc_perf --saveAci
+// Usage: bun deploy:bridge --network hc_devnet --saveAci
 
 const {
   parsed: { network },

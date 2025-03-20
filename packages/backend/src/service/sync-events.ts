@@ -1,8 +1,6 @@
 import {
   BRIDGE_CONTRACTS,
-  getContractAddressByNetworkId,
   type BridgeContract,
-  type Network,
 } from "@aepp-hyperchain-bridge/shared";
 import { getContractRow, insertDeposits } from "../db/helper";
 import getBridgeContract from "../utils/get-contract-instance";

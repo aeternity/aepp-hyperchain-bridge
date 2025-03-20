@@ -39,16 +39,18 @@ export default function TransactionHistory() {
           aria-label="close sidebar"
           className="drawer-overlay"
         ></label>
-        <div className="bg-base-200 text-base-content min-h-full w-100 p-4">
+        <div className="bg-base-200 text-base-content h-dvh w-100 flex-col flex-1 overflow-hidden">
           <Title
+            className="flex-col p-5 !m-0 h-28 shadow-lg"
             title="History"
             subtitle="History of your bridge transactions"
           />
-
-          {isFetched && (
-            <TransactionList isFetching={isFetching} deposits={deposits} />
-          )}
-          <div ref={ref}></div>
+          <div className="flex flex-1 flex-col overflow-scroll h-[calc(100%-7rem)]">
+            {isFetched && (
+              <TransactionList isFetching={isFetching} deposits={deposits} />
+            )}
+            <div ref={ref}></div>
+          </div>
         </div>
       </div>
     </div>
