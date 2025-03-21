@@ -39,7 +39,7 @@ export default function TransactionHistory() {
           aria-label="close sidebar"
           className="drawer-overlay"
         ></label>
-        <div className="bg-base-200 text-base-content h-dvh w-100 flex-col flex-1 overflow-hidden">
+        <div className="bg-base-200 text-base-content h-dvh w-100 max-sm:w-80 flex-col flex-1 overflow-hidden">
           <Title
             className="flex-col p-5 !m-0 h-28 shadow-lg"
             title="History"
