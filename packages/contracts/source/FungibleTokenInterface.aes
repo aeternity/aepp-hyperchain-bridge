@@ -1,4 +1,4 @@
-contract interface BridgeTokenInterface =
+contract interface FungibleTokenInterface =
   record meta_info =
     { name : string
     , symbol : string
@@ -33,4 +33,4 @@ contract interface BridgeTokenInterface =
   stateful entrypoint swap                 : ()                      => unit
   entrypoint check_swap                    : (address)               => int
   entrypoint swapped                       : ()                      => map(address, int)
-  stateful entrypoint set_owner            : (address)        => unit
+  stateful entrypoint set_owner            : (address)               => unit

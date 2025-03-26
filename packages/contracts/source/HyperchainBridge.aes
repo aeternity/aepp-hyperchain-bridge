@@ -1,125 +1,246 @@
 @compiler >= 6
 
+include "Pair.aes"
 include "List.aes"
-include "./BridgeTokenInterface.aes"
+include "String.aes"
+include "./FungibleToken.aes"
 
 /// @title Bridge contract for Hyperchain
-/// @notice This contract allows users to bridge tokens between Aeternity mainnet and Hyperchains
+/// @notice This contract allows users to bridge tokens between Aeternity chains
 /// @author Yusuf Seyrek
-/// @dev This contract is a bridge contract for Hyperchain. It allows users to deposit tokens from Aeternity mainnet to Hyperchain and withdraw tokens from Hyperchain to Aeternity mainnet.
-main contract HyperchainBridge = 
+/// @dev This contract is a bridge contract created for Hyperchains. It allows users to deposit tokens from any Aeternity chain and claim them on another Aeternity chain.
+payable main contract HyperchainBridge = 
   record state = {
-    owner 						  : address,
-    deposits 					  : list(deposit),
-    withdraws 				  : list(withdraw),
-    registered_tokens   : list(BridgeTokenInterface),
-    registered_networks : list(string)}
-  
+    owner         : address,
+    deposits      : list(deposit),
+    child_tokens  : list(child_token),
+    claims        : list(claim),
+    token_ref     : FungibleToken }
+
+  datatype token_type = Native | Child | Standard
+
   record deposit = {
-    amount		    : int,
-    from			    : address,
-    token			    : BridgeTokenInterface,
-    for_network   : string,
-    index         : int}
+    idx             : int,
+    amount          : int,
+    from            : address,
+    token           : option(FungibleToken),
+    token_type      : token_type,
+    for_network     : network,
+    original_token  : option(child_token) }
 
-  record withdraw = {
-    amount		    : int,
-    recipient	    : address,
-    token			    : BridgeTokenInterface,
-    from_network  : string}
+  record claim = {
+    deposit           : deposit,
+    deposit_tx_hash   : string,
+    deposit_network   : network,
+    deposit_token_meta: token_meta }
 
-  entrypoint init(): state = {
-    owner               = Call.caller, 
-    deposits            = [], 
-    withdraws           = [], 
-    registered_networks = [],
-    registered_tokens   = []}
+  record child_token = {
+    ct                : FungibleToken,
+    is_native         : bool,
+    original_token    : option(FungibleToken),
+    origin_network    : network }
 
-  entrypoint withdraws(): list(withdraw) = state.withdraws
+  record token_meta = {
+    id        : option(FungibleToken),
+    name      : string,
+    symbol    : string,
+    decimals  : int }
+
+  record network = {
+    id    : string,
+    url   : string, 
+    name  : string }
+
+  stateful entrypoint init(): state = { 
+    claims        = [],
+    deposits      = [],
+    child_tokens  = [],
+    owner         = Call.caller,
+    token_ref     = Chain.create(
+      "HyperchainBridgeToken", 18, "HBT", None): FungibleToken }
+
+  entrypoint claims(): list(claim) = state.claims
   entrypoint deposits(): list(deposit) = state.deposits
-  entrypoint deposits_count(): int = List.length(state.deposits)
-  entrypoint withdraws_count(): int = List.length(state.withdraws)
-  entrypoint get_deposit(index: int) = List.nth(index, state.deposits)
-  entrypoint get_withdraw(index: int) = List.nth(index, state.withdraws)
-  entrypoint get_deposits_between(start: int, end: int) = 
-    let ids = [start..end]
-    List.filter((x) => List.contains(x.index, ids), state.deposits)
+  entrypoint child_tokens(): list(child_token) = state.child_tokens
+  
+  payable stateful entrypoint deposit(
+    for_network: network, 
+    amount: int, 
+    token: option(FungibleToken), 
+    token_type: token_type
+    ): int =      
+    switch(token_type)
+      Native => 
+        require_valid_amount(amount)
+        Chain.spend(Contract.address, amount)
+      Child => 
+        require_child_token(token)
+        Option.force(token).transfer_allowance(
+          Call.caller, Contract.address, amount)
+        Option.force(token).burn(amount)
+      Standard => 
+        require_standard_aex9(token)
+        Option.force(token).transfer_allowance(
+          Call.caller, Contract.address, amount)
 
-  entrypoint registered_tokens(): list(BridgeTokenInterface) = state.registered_tokens
-  entrypoint registered_networks(): list(string) = state.registered_networks
-  entrypoint owner(): address = state.owner
+    let idx = List.length(state.deposits)
+    let new_deposit = { 
+      idx = idx, 
+      token = token, 
+      amount = amount, 
+      from = Call.caller, 
+      token_type = token_type,
+      for_network = for_network,
+      original_token = get_child_token(token) }
 
-  /// @notice Deposit tokens to start the bridging process
-  /// @param for_network The network which tokens will be bridged to
-  /// @param token The token to be bridged
-  /// @param amount The amount of tokens to be bridged
-  /// @dev This function allows users to deposit tokens to start the bridging process
-  stateful entrypoint deposit(for_network: string, token: BridgeTokenInterface, amount: int): int =
-    require_registered_token(token)
-    require_registered_network(for_network)
-    let index = List.length(state.deposits)
-    _deposit({
-      index       = index,
-      amount      = amount, 
-      from        = Call.caller, 
-      token       = token, 
-      for_network = for_network})
-    index
-
-  /// @notice Withdraw tokens to finalize the bridging process
-  /// @param from_network The network which tokens will be bridged from
-  /// @param token The token to be bridged
-  /// @param recipient The address to receive the tokens
-  /// @param amount The amount of tokens to be bridged
-  /// @dev This function allows contract owner to withdraw tokens to finalize the bridging process 
-  stateful entrypoint withdraw(from_network: string, token: BridgeTokenInterface, recipient: address, amount: int) =
-    require_owner()
-    _withdraw({
-      amount        = amount, 
-      recipient     = recipient, 
-      token         = token, 
-      from_network  = from_network})
-
-  /// @notice Register a token to be used in the bridging process
-  /// @param token The token to be registered
-  /// @dev This function allows contract owner to register a token to be used in the bridging process
-  stateful entrypoint register_token(token: BridgeTokenInterface) =
-    require_owner()
-    require_token_not_registered(token)
-    put(state{registered_tokens = state.registered_tokens ++ [token]})
-
-  /// @notice Register a network to be used in the bridging process
-  /// @param network The network to be registered
-  /// @dev This function allows contract owner to register a network to be used in the bridging process
-  stateful entrypoint register_network(network: string) =
-    require_owner()
-    require_network_not_registered(network)
-    put(state{registered_networks = state.registered_networks ++ [network] })
-
-  stateful function _deposit(new_deposit: deposit) =
-    new_deposit.token.transfer_allowance(Call.caller, Contract.address, new_deposit.amount)
     put(state{deposits = state.deposits ++ [new_deposit]})
+    idx
+
+  stateful entrypoint claim(arg: claim, timestamp: int, sig: signature): child_token =
+    require_valid_claim(arg, timestamp, sig)
+      
+    let out_token = 
+      if (arg.deposit.token_type == Child)
+        let child_token_out = Option.force(arg.deposit.original_token)
+
+        if (child_token_out.is_native) 
+          Chain.spend(arg.deposit.from, arg.deposit.amount)
+        else 
+            Option.force(child_token_out.original_token) // check this line
+              .mint(arg.deposit.from, arg.deposit.amount)
+
+        child_token_out
+      else
+        switch(search_child_token(arg))
+          None => create_child_token_and_mint(arg)
+          Some(found) =>
+            found.ct.mint(arg.deposit.from, arg.deposit.amount)
+            found
+      
+    put(state{claims = state.claims ++ [arg]})
+    out_token
 
 
-  stateful function _withdraw(new_withdraw: withdraw) = 
-    new_withdraw.token.transfer(new_withdraw.recipient, new_withdraw.amount)
-    put(state{withdraws = state.withdraws ++ [new_withdraw]})
+  stateful function create_child_token_and_mint(arg: claim) =
+    let deployed_token = Chain.clone(
+      ref=state.token_ref,
+      String.concat("Bridged ", arg.deposit_token_meta.name), 
+      arg.deposit_token_meta.decimals,
+      String.concat("b", arg.deposit_token_meta.symbol),
+      String.to_int(Int.to_str(arg.deposit.amount))): FungibleToken
+
+    deployed_token.transfer(arg.deposit.from, arg.deposit.amount)
+
+    let is_native = arg.deposit.token_type == Native
+    let child_token = { 
+      ct = deployed_token, 
+      original_token = if (!is_native) arg.deposit_token_meta.id else None,
+      is_native = is_native,
+      origin_network = arg.deposit_network }
+
+    put(state{child_tokens = state.child_tokens ++ [child_token]})
+    child_token
+
+
+  entrypoint claim_to_msg(arg: claim, t: int): string =
+    let token_type_str = switch(arg.deposit.token_type)
+        Native => "native"
+        Child => "child"
+        Standard => "standard"
+
+    let token_id = 
+      switch(arg.deposit_token_meta.id)
+        None => ""
+        Some(ct) => get_contract_address_string(ct)
+          
+    let original_token = 
+      switch(arg.deposit.original_token)
+        None => ""
+        Some(t) => String.concats([
+          get_contract_address_string(t.ct),
+          if (t.is_native) "true" else "false",
+          if (Option.is_some(t.original_token)) 
+            get_contract_address_string(Option.force(t.original_token))
+          else "",
+          t.origin_network.id,
+          t.origin_network.url
+          ])
+
+    let msg = String.concats([
+      Int.to_str(arg.deposit.idx), 
+      arg.deposit_tx_hash,
+      token_type_str,
+      Int.to_str(arg.deposit.amount),
+      token_id,
+      Int.to_str(arg.deposit_token_meta.decimals),
+      arg.deposit.for_network.id,
+      arg.deposit.for_network.url,
+      arg.deposit_network.id,
+      arg.deposit_network.url,
+      Address.to_str(arg.deposit.from),
+      original_token,
+      Int.to_str(t)])
+
+    String.to_lower(msg)
+
+
+  function require_child_token(token: option(FungibleToken)) =
+    require(is_child_token(token), "NOT_CHILD_TOKEN")
 
   function require_owner() =
     require(Call.caller == state.owner, "ONLY_OWNER_CALL_ALLOWED")
 
-  function require_registered_network(network: string) =
-    require(List.contains(network, state.registered_networks), "NETWORK_NOT_REGISTERED")
+  function require_standard_aex9(token: option(FungibleToken)) =
+    require(List.contains(
+      "allowances", 
+      Option.force(token).aex9_extensions()), "TOKEN_NOT_STANDARD_AEX9")
 
-  function require_registered_token(token: BridgeTokenInterface) =
-    require(List.contains(token, state.registered_tokens), "TOKEN_NOT_REGISTERED")
+  function require_valid_amount(amount: int) =
+    require(amount > 0, "INVALID_AMOUNT")
+    require(Call.value == amount, "CALL_VALUE_AND_AMOUNT_NOT_EQUAL")
 
-  function require_token_not_registered(token: BridgeTokenInterface) =
-    require(!List.contains(token, state.registered_tokens), "TOKEN_ALREADY_REGISTERED")
+  function require_valid_claim(arg: claim, timestamp: int, sig: signature) =
+    //check new fields
+    require(!check_claim_exists(arg), "CLAIM_ALREADY_PROCESSED")
+    require(timestamp > 0, "INVALID_TIMESTAMP")
+    require(arg.deposit.idx >= 0, "INVALID_DEPOSIT_INDEX")
+    require(arg.deposit.amount > 0, "INVALID_AMOUNT")
+    require(Chain.network_id == arg.deposit.for_network.id, "INVALID_NETWORK_ID")
+    require(Chain.timestamp - timestamp < 600000, "TIMESTAMP_EXPIRED")
+    require(arg.deposit.from == Call.caller, "INVALID_DEPOSITOR")
+    if (arg.deposit.token_type == Child)
+      require(Option.is_some(arg.deposit.original_token), 
+        "ORIGINAL_TOKEN_NOT_PROVIDED")
 
-  function require_network_not_registered(network: string) =
-    require(!List.contains(network, state.registered_networks), "NETWORK_ALREADY_REGISTERED")
+    require(
+      Crypto.verify_sig(
+        String.to_bytes(claim_to_msg(arg, timestamp)), state.owner, sig), 
+        "INVALID_SIGNATURE")
 
+  function check_claim_exists(arg: claim) =
+    List.find(
+      (c) => c.deposit.idx == arg.deposit.idx &&
+        c.deposit_tx_hash == arg.deposit_tx_hash &&
+        c.deposit.for_network.id == arg.deposit.for_network.id &&
+        c.deposit.for_network.url == arg.deposit.for_network.url
+      ,state.claims) != None
+
+  entrypoint get_child_token(token: option(FungibleToken)) =
+    if (Option.is_none(token)) None
+    else List.find((p) => p.ct == Option.force(token), state.child_tokens)
+
+  entrypoint search_child_token(arg: claim) =
+    let is_native = arg.deposit.token_type == Native
+    List.find(
+      (t) => t.original_token == arg.deposit_token_meta.id && 
+        t.origin_network.id == arg.deposit_network.id && 
+        t.origin_network.url == arg.deposit_network.url &&
+        t.is_native == is_native
+      ,state.child_tokens)
   
+  function is_child_token(token: option(FungibleToken)) =
+    get_child_token(token) != None
 
-
+  function get_contract_address_string(ct: FungibleToken): string = 
+    let _id = Pair.snd(String.split(2, Address.to_str(ct.address)))
+    String.concat("ct", _id)

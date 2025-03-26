@@ -1,1052 +1,2566 @@
-[
-  {
-    "networkId": "ae_uat",
-    "address": "ct_rTJ9XPv4BXNv41KpxUTSEFzHkmiK4AiBkmDdTxaWemCaZ5f27",
-    "timestamp": 1742138181814,
-    "name": "HyperchainBridge",
-    "aci": [
-      {
-        "namespace": {
-          "name": "ListInternal",
-          "typedefs": []
-        }
-      },
-      {
-        "namespace": {
-          "name": "List",
-          "typedefs": []
-        }
-      },
-      {
-        "contract": {
-          "event": {
-            "variant": [
-              {
-                "Transfer": [
-                  "address",
-                  "address",
-                  "int"
-                ]
-              },
-              {
-                "Allowance": [
-                  "address",
-                  "address",
-                  "int"
-                ]
-              },
-              {
-                "Burn": [
-                  "address",
-                  "int"
-                ]
-              },
-              {
-                "Mint": [
-                  "address",
-                  "int"
-                ]
-              },
-              {
-                "Swap": [
-                  "address",
-                  "int"
-                ]
-              }
-            ]
-          },
-          "functions": [
-            {
-              "arguments": [],
-              "name": "aex9_extensions",
-              "payable": false,
-              "returns": {
-                "list": [
-                  "string"
-                ]
-              },
-              "stateful": false
-            },
-            {
-              "arguments": [],
-              "name": "meta_info",
-              "payable": false,
-              "returns": "BridgeTokenInterface.meta_info",
-              "stateful": false
-            },
-            {
-              "arguments": [],
-              "name": "total_supply",
-              "payable": false,
-              "returns": "int",
-              "stateful": false
-            },
-            {
-              "arguments": [],
-              "name": "owner",
-              "payable": false,
-              "returns": "address",
-              "stateful": false
-            },
-            {
-              "arguments": [],
-              "name": "balances",
-              "payable": false,
-              "returns": {
-                "map": [
-                  "address",
-                  "int"
-                ]
-              },
-              "stateful": false
-            },
-            {
-              "arguments": [
+{
+  "ae_uat": {
+    "bridge": {
+      "address": "ct_2HSPzVSSN9NWJV1mTRWEnC2HT5nmwkbyU9YDcZXfWsj1Bx4veR",
+      "aci": [
+        {
+          "namespace": {
+            "name": "Pair",
+            "typedefs": []
+          }
+        },
+        {
+          "namespace": {
+            "name": "ListInternal",
+            "typedefs": []
+          }
+        },
+        {
+          "namespace": {
+            "name": "List",
+            "typedefs": []
+          }
+        },
+        {
+          "namespace": {
+            "name": "String",
+            "typedefs": []
+          }
+        },
+        {
+          "namespace": {
+            "name": "Option",
+            "typedefs": []
+          }
+        },
+        {
+          "contract": {
+            "event": {
+              "variant": [
                 {
-                  "name": "_1",
-                  "type": "address"
-                }
-              ],
-              "name": "balance",
-              "payable": false,
-              "returns": {
-                "option": [
-                  "int"
-                ]
-              },
-              "stateful": false
-            },
-            {
-              "arguments": [
-                {
-                  "name": "_1",
-                  "type": "address"
-                },
-                {
-                  "name": "_2",
-                  "type": "int"
-                }
-              ],
-              "name": "transfer",
-              "payable": false,
-              "returns": "unit",
-              "stateful": true
-            },
-            {
-              "arguments": [],
-              "name": "allowances",
-              "payable": false,
-              "returns": "BridgeTokenInterface.allowances",
-              "stateful": false
-            },
-            {
-              "arguments": [
-                {
-                  "name": "_1",
-                  "type": "BridgeTokenInterface.allowance_accounts"
-                }
-              ],
-              "name": "allowance",
-              "payable": false,
-              "returns": {
-                "option": [
-                  "int"
-                ]
-              },
-              "stateful": false
-            },
-            {
-              "arguments": [
-                {
-                  "name": "_1",
-                  "type": "address"
-                }
-              ],
-              "name": "allowance_for_caller",
-              "payable": false,
-              "returns": {
-                "option": [
-                  "int"
-                ]
-              },
-              "stateful": false
-            },
-            {
-              "arguments": [
-                {
-                  "name": "_1",
-                  "type": "address"
-                },
-                {
-                  "name": "_2",
-                  "type": "address"
-                },
-                {
-                  "name": "_3",
-                  "type": "int"
-                }
-              ],
-              "name": "transfer_allowance",
-              "payable": false,
-              "returns": "unit",
-              "stateful": true
-            },
-            {
-              "arguments": [
-                {
-                  "name": "_1",
-                  "type": "address"
-                },
-                {
-                  "name": "_2",
-                  "type": "int"
-                }
-              ],
-              "name": "create_allowance",
-              "payable": false,
-              "returns": "unit",
-              "stateful": true
-            },
-            {
-              "arguments": [
-                {
-                  "name": "_1",
-                  "type": "address"
-                },
-                {
-                  "name": "_2",
-                  "type": "int"
-                }
-              ],
-              "name": "change_allowance",
-              "payable": false,
-              "returns": "unit",
-              "stateful": true
-            },
-            {
-              "arguments": [
-                {
-                  "name": "_1",
-                  "type": "address"
-                }
-              ],
-              "name": "reset_allowance",
-              "payable": false,
-              "returns": "unit",
-              "stateful": true
-            },
-            {
-              "arguments": [
-                {
-                  "name": "_1",
-                  "type": "int"
-                }
-              ],
-              "name": "burn",
-              "payable": false,
-              "returns": "unit",
-              "stateful": true
-            },
-            {
-              "arguments": [
-                {
-                  "name": "_1",
-                  "type": "address"
-                },
-                {
-                  "name": "_2",
-                  "type": "int"
-                }
-              ],
-              "name": "mint",
-              "payable": false,
-              "returns": "unit",
-              "stateful": true
-            },
-            {
-              "arguments": [],
-              "name": "swap",
-              "payable": false,
-              "returns": "unit",
-              "stateful": true
-            },
-            {
-              "arguments": [
-                {
-                  "name": "_1",
-                  "type": "address"
-                }
-              ],
-              "name": "check_swap",
-              "payable": false,
-              "returns": "int",
-              "stateful": false
-            },
-            {
-              "arguments": [],
-              "name": "swapped",
-              "payable": false,
-              "returns": {
-                "map": [
-                  "address",
-                  "int"
-                ]
-              },
-              "stateful": false
-            },
-            {
-              "arguments": [
-                {
-                  "name": "_1",
-                  "type": "address"
-                }
-              ],
-              "name": "set_owner",
-              "payable": false,
-              "returns": "unit",
-              "stateful": true
-            }
-          ],
-          "kind": "contract_interface",
-          "name": "BridgeTokenInterface",
-          "payable": false,
-          "typedefs": [
-            {
-              "name": "meta_info",
-              "typedef": {
-                "record": [
-                  {
-                    "name": "name",
-                    "type": "string"
-                  },
-                  {
-                    "name": "symbol",
-                    "type": "string"
-                  },
-                  {
-                    "name": "decimals",
-                    "type": "int"
-                  }
-                ]
-              },
-              "vars": []
-            },
-            {
-              "name": "allowance_accounts",
-              "typedef": {
-                "record": [
-                  {
-                    "name": "from_account",
-                    "type": "address"
-                  },
-                  {
-                    "name": "for_account",
-                    "type": "address"
-                  }
-                ]
-              },
-              "vars": []
-            },
-            {
-              "name": "allowances",
-              "typedef": {
-                "map": [
-                  "BridgeTokenInterface.allowance_accounts",
-                  "int"
-                ]
-              },
-              "vars": []
-            }
-          ]
-        }
-      },
-      {
-        "contract": {
-          "functions": [
-            {
-              "arguments": [],
-              "name": "init",
-              "payable": false,
-              "returns": "HyperchainBridge.state",
-              "stateful": false
-            },
-            {
-              "arguments": [],
-              "name": "withdraws",
-              "payable": false,
-              "returns": {
-                "list": [
-                  "HyperchainBridge.withdraw"
-                ]
-              },
-              "stateful": false
-            },
-            {
-              "arguments": [],
-              "name": "deposits",
-              "payable": false,
-              "returns": {
-                "list": [
-                  "HyperchainBridge.deposit"
-                ]
-              },
-              "stateful": false
-            },
-            {
-              "arguments": [],
-              "name": "registered_tokens",
-              "payable": false,
-              "returns": {
-                "list": [
-                  "BridgeTokenInterface"
-                ]
-              },
-              "stateful": false
-            },
-            {
-              "arguments": [],
-              "name": "registered_networks",
-              "payable": false,
-              "returns": {
-                "list": [
-                  "string"
-                ]
-              },
-              "stateful": false
-            },
-            {
-              "arguments": [
-                {
-                  "name": "for_network",
-                  "type": "string"
-                },
-                {
-                  "name": "token",
-                  "type": "BridgeTokenInterface"
-                },
-                {
-                  "name": "amount",
-                  "type": "int"
-                }
-              ],
-              "name": "deposit",
-              "payable": false,
-              "returns": "int",
-              "stateful": true
-            },
-            {
-              "arguments": [
-                {
-                  "name": "from_network",
-                  "type": "string"
-                },
-                {
-                  "name": "token",
-                  "type": "BridgeTokenInterface"
-                },
-                {
-                  "name": "recipient",
-                  "type": "address"
-                },
-                {
-                  "name": "amount",
-                  "type": "int"
-                }
-              ],
-              "name": "withdraw",
-              "payable": false,
-              "returns": {
-                "tuple": []
-              },
-              "stateful": true
-            },
-            {
-              "arguments": [
-                {
-                  "name": "token",
-                  "type": "BridgeTokenInterface"
-                }
-              ],
-              "name": "register_token",
-              "payable": false,
-              "returns": {
-                "tuple": []
-              },
-              "stateful": true
-            },
-            {
-              "arguments": [
-                {
-                  "name": "network",
-                  "type": "string"
-                }
-              ],
-              "name": "register_network",
-              "payable": false,
-              "returns": {
-                "tuple": []
-              },
-              "stateful": true
-            }
-          ],
-          "kind": "contract_main",
-          "name": "HyperchainBridge",
-          "payable": false,
-          "state": {
-            "record": [
-              {
-                "name": "owner",
-                "type": "address"
-              },
-              {
-                "name": "deposits",
-                "type": {
-                  "list": [
-                    "HyperchainBridge.deposit"
+                  "Transfer": [
+                    "address",
+                    "address",
+                    "int"
                   ]
-                }
-              },
-              {
-                "name": "withdraws",
-                "type": {
-                  "list": [
-                    "HyperchainBridge.withdraw"
+                },
+                {
+                  "Allowance": [
+                    "address",
+                    "address",
+                    "int"
                   ]
-                }
-              },
-              {
-                "name": "registered_tokens",
-                "type": {
-                  "list": [
-                    "BridgeTokenInterface"
+                },
+                {
+                  "Burn": [
+                    "address",
+                    "int"
                   ]
-                }
-              },
-              {
-                "name": "registered_networks",
-                "type": {
-                  "list": [
-                    "string"
+                },
+                {
+                  "Mint": [
+                    "address",
+                    "int"
                   ]
-                }
-              }
-            ]
-          },
-          "typedefs": [
-            {
-              "name": "deposit",
-              "typedef": {
-                "record": [
-                  {
-                    "name": "amount",
-                    "type": "int"
-                  },
-                  {
-                    "name": "from",
-                    "type": "address"
-                  },
-                  {
-                    "name": "token",
-                    "type": "BridgeTokenInterface"
-                  },
-                  {
-                    "name": "for_network",
-                    "type": "string"
-                  },
-                  {
-                    "name": "index",
-                    "type": "int"
-                  }
-                ]
-              },
-              "vars": []
-            },
-            {
-              "name": "withdraw",
-              "typedef": {
-                "record": [
-                  {
-                    "name": "amount",
-                    "type": "int"
-                  },
-                  {
-                    "name": "recipient",
-                    "type": "address"
-                  },
-                  {
-                    "name": "token",
-                    "type": "BridgeTokenInterface"
-                  },
-                  {
-                    "name": "from_network",
-                    "type": "string"
-                  }
-                ]
-              },
-              "vars": []
-            }
-          ]
-        }
-      }
-    ]
-  },
-  {
-    "networkId": "ae_uat",
-    "address": "ct_2pp7hdwwBBajv9YY8kACBgBYtoSPoEdr1E8fPPaBVUKioJyLYw",
-    "timestamp": 1742138184344,
-    "name": "BridgeToken",
-    "aci": [
-      {
-        "namespace": {
-          "name": "Option",
-          "typedefs": []
-        }
-      },
-      {
-        "namespace": {
-          "name": "ListInternal",
-          "typedefs": []
-        }
-      },
-      {
-        "namespace": {
-          "name": "List",
-          "typedefs": []
-        }
-      },
-      {
-        "namespace": {
-          "name": "String",
-          "typedefs": []
-        }
-      },
-      {
-        "contract": {
-          "event": {
-            "variant": [
-              {
-                "Transfer": [
-                  "address",
-                  "address",
-                  "int"
-                ]
-              },
-              {
-                "Allowance": [
-                  "address",
-                  "address",
-                  "int"
-                ]
-              },
-              {
-                "Burn": [
-                  "address",
-                  "int"
-                ]
-              },
-              {
-                "Mint": [
-                  "address",
-                  "int"
-                ]
-              },
-              {
-                "Swap": [
-                  "address",
-                  "int"
-                ]
-              }
-            ]
-          },
-          "functions": [
-            {
-              "arguments": [],
-              "name": "aex9_extensions",
-              "payable": false,
-              "returns": {
-                "list": [
-                  "string"
-                ]
-              },
-              "stateful": false
-            },
-            {
-              "arguments": [
-                {
-                  "name": "name",
-                  "type": "string"
                 },
                 {
-                  "name": "decimals",
-                  "type": "int"
-                },
-                {
-                  "name": "symbol",
-                  "type": "string"
-                },
-                {
-                  "name": "initial_owner_balance",
-                  "type": {
-                    "option": [
-                      "int"
-                    ]
-                  }
-                }
-              ],
-              "name": "init",
-              "payable": false,
-              "returns": "BridgeToken.state",
-              "stateful": false
-            },
-            {
-              "arguments": [],
-              "name": "meta_info",
-              "payable": false,
-              "returns": "BridgeToken.meta_info",
-              "stateful": false
-            },
-            {
-              "arguments": [],
-              "name": "total_supply",
-              "payable": false,
-              "returns": "int",
-              "stateful": false
-            },
-            {
-              "arguments": [],
-              "name": "owner",
-              "payable": false,
-              "returns": "address",
-              "stateful": false
-            },
-            {
-              "arguments": [],
-              "name": "balances",
-              "payable": false,
-              "returns": "BridgeToken.balances",
-              "stateful": false
-            },
-            {
-              "arguments": [
-                {
-                  "name": "account",
-                  "type": "address"
-                }
-              ],
-              "name": "balance",
-              "payable": false,
-              "returns": {
-                "option": [
-                  "int"
-                ]
-              },
-              "stateful": false
-            },
-            {
-              "arguments": [],
-              "name": "swapped",
-              "payable": false,
-              "returns": {
-                "map": [
-                  "address",
-                  "int"
-                ]
-              },
-              "stateful": false
-            },
-            {
-              "arguments": [],
-              "name": "allowances",
-              "payable": false,
-              "returns": "BridgeToken.allowances",
-              "stateful": false
-            },
-            {
-              "arguments": [
-                {
-                  "name": "allowance_accounts",
-                  "type": "BridgeToken.allowance_accounts"
-                }
-              ],
-              "name": "allowance",
-              "payable": false,
-              "returns": {
-                "option": [
-                  "int"
-                ]
-              },
-              "stateful": false
-            },
-            {
-              "arguments": [
-                {
-                  "name": "from_account",
-                  "type": "address"
-                }
-              ],
-              "name": "allowance_for_caller",
-              "payable": false,
-              "returns": {
-                "option": [
-                  "int"
-                ]
-              },
-              "stateful": false
-            },
-            {
-              "arguments": [
-                {
-                  "name": "from_account",
-                  "type": "address"
-                },
-                {
-                  "name": "to_account",
-                  "type": "address"
-                },
-                {
-                  "name": "value",
-                  "type": "int"
-                }
-              ],
-              "name": "transfer_allowance",
-              "payable": false,
-              "returns": {
-                "tuple": []
-              },
-              "stateful": true
-            },
-            {
-              "arguments": [
-                {
-                  "name": "for_account",
-                  "type": "address"
-                },
-                {
-                  "name": "value",
-                  "type": "int"
-                }
-              ],
-              "name": "create_allowance",
-              "payable": false,
-              "returns": {
-                "tuple": []
-              },
-              "stateful": true
-            },
-            {
-              "arguments": [
-                {
-                  "name": "for_account",
-                  "type": "address"
-                },
-                {
-                  "name": "value_change",
-                  "type": "int"
-                }
-              ],
-              "name": "change_allowance",
-              "payable": false,
-              "returns": {
-                "tuple": []
-              },
-              "stateful": true
-            },
-            {
-              "arguments": [
-                {
-                  "name": "for_account",
-                  "type": "address"
-                }
-              ],
-              "name": "reset_allowance",
-              "payable": false,
-              "returns": {
-                "tuple": []
-              },
-              "stateful": true
-            },
-            {
-              "arguments": [
-                {
-                  "name": "to_account",
-                  "type": "address"
-                },
-                {
-                  "name": "value",
-                  "type": "int"
-                }
-              ],
-              "name": "transfer",
-              "payable": false,
-              "returns": {
-                "tuple": []
-              },
-              "stateful": true
-            },
-            {
-              "arguments": [
-                {
-                  "name": "value",
-                  "type": "int"
-                }
-              ],
-              "name": "burn",
-              "payable": false,
-              "returns": {
-                "tuple": []
-              },
-              "stateful": true
-            },
-            {
-              "arguments": [
-                {
-                  "name": "account",
-                  "type": "address"
-                },
-                {
-                  "name": "value",
-                  "type": "int"
-                }
-              ],
-              "name": "mint",
-              "payable": false,
-              "returns": {
-                "tuple": []
-              },
-              "stateful": true
-            },
-            {
-              "arguments": [],
-              "name": "swap",
-              "payable": false,
-              "returns": {
-                "tuple": []
-              },
-              "stateful": true
-            },
-            {
-              "arguments": [
-                {
-                  "name": "account",
-                  "type": "address"
-                }
-              ],
-              "name": "check_swap",
-              "payable": false,
-              "returns": "int",
-              "stateful": true
-            },
-            {
-              "arguments": [
-                {
-                  "name": "owner",
-                  "type": "address"
-                }
-              ],
-              "name": "set_owner",
-              "payable": false,
-              "returns": {
-                "tuple": []
-              },
-              "stateful": true
-            }
-          ],
-          "kind": "contract_main",
-          "name": "BridgeToken",
-          "payable": false,
-          "state": {
-            "record": [
-              {
-                "name": "owner",
-                "type": "address"
-              },
-              {
-                "name": "total_supply",
-                "type": "int"
-              },
-              {
-                "name": "balances",
-                "type": "BridgeToken.balances"
-              },
-              {
-                "name": "meta_info",
-                "type": "BridgeToken.meta_info"
-              },
-              {
-                "name": "allowances",
-                "type": "BridgeToken.allowances"
-              },
-              {
-                "name": "swapped",
-                "type": {
-                  "map": [
+                  "Swap": [
                     "address",
                     "int"
                   ]
                 }
-              }
-            ]
-          },
-          "typedefs": [
-            {
-              "name": "meta_info",
-              "typedef": {
-                "record": [
+              ]
+            },
+            "functions": [
+              {
+                "arguments": [],
+                "name": "aex9_extensions",
+                "payable": false,
+                "returns": {
+                  "list": [
+                    "string"
+                  ]
+                },
+                "stateful": false
+              },
+              {
+                "arguments": [],
+                "name": "get_self_address",
+                "payable": false,
+                "returns": "address",
+                "stateful": false
+              },
+              {
+                "arguments": [
                   {
                     "name": "name",
                     "type": "string"
+                  },
+                  {
+                    "name": "decimals",
+                    "type": "int"
                   },
                   {
                     "name": "symbol",
                     "type": "string"
                   },
                   {
-                    "name": "decimals",
-                    "type": "int"
+                    "name": "initial_owner_balance",
+                    "type": {
+                      "option": [
+                        "int"
+                      ]
+                    }
                   }
-                ]
+                ],
+                "name": "init",
+                "payable": false,
+                "returns": "FungibleToken.state",
+                "stateful": false
               },
-              "vars": []
-            },
-            {
-              "name": "allowance_accounts",
-              "typedef": {
-                "record": [
+              {
+                "arguments": [
+                  {
+                    "name": "new_owner",
+                    "type": "address"
+                  }
+                ],
+                "name": "set_owner",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [],
+                "name": "meta_info",
+                "payable": false,
+                "returns": "FungibleToken.meta_info",
+                "stateful": false
+              },
+              {
+                "arguments": [],
+                "name": "total_supply",
+                "payable": false,
+                "returns": "int",
+                "stateful": false
+              },
+              {
+                "arguments": [],
+                "name": "owner",
+                "payable": false,
+                "returns": "address",
+                "stateful": false
+              },
+              {
+                "arguments": [],
+                "name": "balances",
+                "payable": false,
+                "returns": "FungibleToken.balances",
+                "stateful": false
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "account",
+                    "type": "address"
+                  }
+                ],
+                "name": "balance",
+                "payable": false,
+                "returns": {
+                  "option": [
+                    "int"
+                  ]
+                },
+                "stateful": false
+              },
+              {
+                "arguments": [],
+                "name": "swapped",
+                "payable": false,
+                "returns": {
+                  "map": [
+                    "address",
+                    "int"
+                  ]
+                },
+                "stateful": false
+              },
+              {
+                "arguments": [],
+                "name": "allowances",
+                "payable": false,
+                "returns": "FungibleToken.allowances",
+                "stateful": false
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "allowance_accounts",
+                    "type": "FungibleToken.allowance_accounts"
+                  }
+                ],
+                "name": "allowance",
+                "payable": false,
+                "returns": {
+                  "option": [
+                    "int"
+                  ]
+                },
+                "stateful": false
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "from_account",
+                    "type": "address"
+                  }
+                ],
+                "name": "allowance_for_caller",
+                "payable": false,
+                "returns": {
+                  "option": [
+                    "int"
+                  ]
+                },
+                "stateful": false
+              },
+              {
+                "arguments": [
                   {
                     "name": "from_account",
                     "type": "address"
                   },
                   {
+                    "name": "to_account",
+                    "type": "address"
+                  },
+                  {
+                    "name": "value",
+                    "type": "int"
+                  }
+                ],
+                "name": "transfer_allowance",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "for_account",
+                    "type": "address"
+                  },
+                  {
+                    "name": "value",
+                    "type": "int"
+                  }
+                ],
+                "name": "create_allowance",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "for_account",
+                    "type": "address"
+                  },
+                  {
+                    "name": "value_change",
+                    "type": "int"
+                  }
+                ],
+                "name": "change_allowance",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [
+                  {
                     "name": "for_account",
                     "type": "address"
                   }
-                ]
+                ],
+                "name": "reset_allowance",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
               },
-              "vars": []
+              {
+                "arguments": [
+                  {
+                    "name": "to_account",
+                    "type": "address"
+                  },
+                  {
+                    "name": "value",
+                    "type": "int"
+                  }
+                ],
+                "name": "transfer",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "value",
+                    "type": "int"
+                  }
+                ],
+                "name": "burn",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "account",
+                    "type": "address"
+                  },
+                  {
+                    "name": "value",
+                    "type": "int"
+                  }
+                ],
+                "name": "mint",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [],
+                "name": "swap",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "account",
+                    "type": "address"
+                  }
+                ],
+                "name": "check_swap",
+                "payable": false,
+                "returns": "int",
+                "stateful": true
+              }
+            ],
+            "kind": "contract_child",
+            "name": "FungibleToken",
+            "payable": false,
+            "state": {
+              "record": [
+                {
+                  "name": "owner",
+                  "type": "address"
+                },
+                {
+                  "name": "total_supply",
+                  "type": "int"
+                },
+                {
+                  "name": "balances",
+                  "type": "FungibleToken.balances"
+                },
+                {
+                  "name": "meta_info",
+                  "type": "FungibleToken.meta_info"
+                },
+                {
+                  "name": "allowances",
+                  "type": "FungibleToken.allowances"
+                },
+                {
+                  "name": "swapped",
+                  "type": {
+                    "map": [
+                      "address",
+                      "int"
+                    ]
+                  }
+                }
+              ]
             },
-            {
-              "name": "balances",
-              "typedef": {
-                "map": [
-                  "address",
-                  "int"
-                ]
+            "typedefs": [
+              {
+                "name": "meta_info",
+                "typedef": {
+                  "record": [
+                    {
+                      "name": "name",
+                      "type": "string"
+                    },
+                    {
+                      "name": "symbol",
+                      "type": "string"
+                    },
+                    {
+                      "name": "decimals",
+                      "type": "int"
+                    }
+                  ]
+                },
+                "vars": []
               },
-              "vars": []
+              {
+                "name": "allowance_accounts",
+                "typedef": {
+                  "record": [
+                    {
+                      "name": "from_account",
+                      "type": "address"
+                    },
+                    {
+                      "name": "for_account",
+                      "type": "address"
+                    }
+                  ]
+                },
+                "vars": []
+              },
+              {
+                "name": "balances",
+                "typedef": {
+                  "map": [
+                    "address",
+                    "int"
+                  ]
+                },
+                "vars": []
+              },
+              {
+                "name": "allowances",
+                "typedef": {
+                  "map": [
+                    "FungibleToken.allowance_accounts",
+                    "int"
+                  ]
+                },
+                "vars": []
+              }
+            ]
+          }
+        },
+        {
+          "contract": {
+            "functions": [
+              {
+                "arguments": [],
+                "name": "init",
+                "payable": false,
+                "returns": "HyperchainBridge.state",
+                "stateful": true
+              },
+              {
+                "arguments": [],
+                "name": "claims",
+                "payable": false,
+                "returns": {
+                  "list": [
+                    "HyperchainBridge.claim"
+                  ]
+                },
+                "stateful": false
+              },
+              {
+                "arguments": [],
+                "name": "deposits",
+                "payable": false,
+                "returns": {
+                  "list": [
+                    "HyperchainBridge.deposit"
+                  ]
+                },
+                "stateful": false
+              },
+              {
+                "arguments": [],
+                "name": "child_tokens",
+                "payable": false,
+                "returns": {
+                  "list": [
+                    "HyperchainBridge.child_token"
+                  ]
+                },
+                "stateful": false
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "for_network",
+                    "type": "HyperchainBridge.network"
+                  },
+                  {
+                    "name": "amount",
+                    "type": "int"
+                  },
+                  {
+                    "name": "token",
+                    "type": {
+                      "option": [
+                        "FungibleToken"
+                      ]
+                    }
+                  },
+                  {
+                    "name": "token_type",
+                    "type": "HyperchainBridge.token_type"
+                  }
+                ],
+                "name": "deposit",
+                "payable": true,
+                "returns": "int",
+                "stateful": true
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "arg",
+                    "type": "HyperchainBridge.claim"
+                  },
+                  {
+                    "name": "timestamp",
+                    "type": "int"
+                  },
+                  {
+                    "name": "sig",
+                    "type": "signature"
+                  }
+                ],
+                "name": "claim",
+                "payable": false,
+                "returns": "HyperchainBridge.child_token",
+                "stateful": true
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "arg",
+                    "type": "HyperchainBridge.claim"
+                  },
+                  {
+                    "name": "t",
+                    "type": "int"
+                  }
+                ],
+                "name": "claim_to_msg",
+                "payable": false,
+                "returns": "string",
+                "stateful": false
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "token",
+                    "type": {
+                      "option": [
+                        "FungibleToken"
+                      ]
+                    }
+                  }
+                ],
+                "name": "get_child_token",
+                "payable": false,
+                "returns": {
+                  "option": [
+                    "HyperchainBridge.child_token"
+                  ]
+                },
+                "stateful": false
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "arg",
+                    "type": "HyperchainBridge.claim"
+                  }
+                ],
+                "name": "search_child_token",
+                "payable": false,
+                "returns": {
+                  "option": [
+                    "HyperchainBridge.child_token"
+                  ]
+                },
+                "stateful": false
+              }
+            ],
+            "kind": "contract_main",
+            "name": "HyperchainBridge",
+            "payable": true,
+            "state": {
+              "record": [
+                {
+                  "name": "owner",
+                  "type": "address"
+                },
+                {
+                  "name": "deposits",
+                  "type": {
+                    "list": [
+                      "HyperchainBridge.deposit"
+                    ]
+                  }
+                },
+                {
+                  "name": "child_tokens",
+                  "type": {
+                    "list": [
+                      "HyperchainBridge.child_token"
+                    ]
+                  }
+                },
+                {
+                  "name": "claims",
+                  "type": {
+                    "list": [
+                      "HyperchainBridge.claim"
+                    ]
+                  }
+                },
+                {
+                  "name": "token_ref",
+                  "type": "FungibleToken"
+                }
+              ]
             },
-            {
-              "name": "allowances",
-              "typedef": {
-                "map": [
-                  "BridgeToken.allowance_accounts",
-                  "int"
-                ]
+            "typedefs": [
+              {
+                "name": "token_type",
+                "typedef": {
+                  "variant": [
+                    {
+                      "Native": []
+                    },
+                    {
+                      "Child": []
+                    },
+                    {
+                      "Standard": []
+                    }
+                  ]
+                },
+                "vars": []
               },
-              "vars": []
-            }
-          ]
+              {
+                "name": "deposit",
+                "typedef": {
+                  "record": [
+                    {
+                      "name": "idx",
+                      "type": "int"
+                    },
+                    {
+                      "name": "amount",
+                      "type": "int"
+                    },
+                    {
+                      "name": "from",
+                      "type": "address"
+                    },
+                    {
+                      "name": "token",
+                      "type": {
+                        "option": [
+                          "FungibleToken"
+                        ]
+                      }
+                    },
+                    {
+                      "name": "token_type",
+                      "type": "HyperchainBridge.token_type"
+                    },
+                    {
+                      "name": "for_network",
+                      "type": "HyperchainBridge.network"
+                    },
+                    {
+                      "name": "original_token",
+                      "type": {
+                        "option": [
+                          "HyperchainBridge.child_token"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                "vars": []
+              },
+              {
+                "name": "claim",
+                "typedef": {
+                  "record": [
+                    {
+                      "name": "deposit",
+                      "type": "HyperchainBridge.deposit"
+                    },
+                    {
+                      "name": "deposit_tx_hash",
+                      "type": "string"
+                    },
+                    {
+                      "name": "deposit_network",
+                      "type": "HyperchainBridge.network"
+                    },
+                    {
+                      "name": "deposit_token_meta",
+                      "type": "HyperchainBridge.token_meta"
+                    }
+                  ]
+                },
+                "vars": []
+              },
+              {
+                "name": "child_token",
+                "typedef": {
+                  "record": [
+                    {
+                      "name": "ct",
+                      "type": "FungibleToken"
+                    },
+                    {
+                      "name": "is_native",
+                      "type": "bool"
+                    },
+                    {
+                      "name": "original_token",
+                      "type": {
+                        "option": [
+                          "FungibleToken"
+                        ]
+                      }
+                    },
+                    {
+                      "name": "origin_network",
+                      "type": "HyperchainBridge.network"
+                    }
+                  ]
+                },
+                "vars": []
+              },
+              {
+                "name": "token_meta",
+                "typedef": {
+                  "record": [
+                    {
+                      "name": "id",
+                      "type": {
+                        "option": [
+                          "FungibleToken"
+                        ]
+                      }
+                    },
+                    {
+                      "name": "name",
+                      "type": "string"
+                    },
+                    {
+                      "name": "symbol",
+                      "type": "string"
+                    },
+                    {
+                      "name": "decimals",
+                      "type": "int"
+                    }
+                  ]
+                },
+                "vars": []
+              },
+              {
+                "name": "network",
+                "typedef": {
+                  "record": [
+                    {
+                      "name": "id",
+                      "type": "string"
+                    },
+                    {
+                      "name": "url",
+                      "type": "string"
+                    },
+                    {
+                      "name": "name",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "vars": []
+              }
+            ]
+          }
         }
-      }
-    ]
+      ]
+    },
+    "token": {
+      "address": "ct_E1rdaXF1BtrW7ruwapxWzz7WXLbGMsJpNtV6D6Hdq7trkr8sR",
+      "aci": [
+        {
+          "namespace": {
+            "name": "Option",
+            "typedefs": []
+          }
+        },
+        {
+          "namespace": {
+            "name": "ListInternal",
+            "typedefs": []
+          }
+        },
+        {
+          "namespace": {
+            "name": "List",
+            "typedefs": []
+          }
+        },
+        {
+          "namespace": {
+            "name": "String",
+            "typedefs": []
+          }
+        },
+        {
+          "contract": {
+            "event": {
+              "variant": [
+                {
+                  "Transfer": [
+                    "address",
+                    "address",
+                    "int"
+                  ]
+                },
+                {
+                  "Allowance": [
+                    "address",
+                    "address",
+                    "int"
+                  ]
+                },
+                {
+                  "Burn": [
+                    "address",
+                    "int"
+                  ]
+                },
+                {
+                  "Mint": [
+                    "address",
+                    "int"
+                  ]
+                },
+                {
+                  "Swap": [
+                    "address",
+                    "int"
+                  ]
+                }
+              ]
+            },
+            "functions": [
+              {
+                "arguments": [],
+                "name": "aex9_extensions",
+                "payable": false,
+                "returns": {
+                  "list": [
+                    "string"
+                  ]
+                },
+                "stateful": false
+              },
+              {
+                "arguments": [],
+                "name": "get_self_address",
+                "payable": false,
+                "returns": "address",
+                "stateful": false
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "name",
+                    "type": "string"
+                  },
+                  {
+                    "name": "decimals",
+                    "type": "int"
+                  },
+                  {
+                    "name": "symbol",
+                    "type": "string"
+                  },
+                  {
+                    "name": "initial_owner_balance",
+                    "type": {
+                      "option": [
+                        "int"
+                      ]
+                    }
+                  }
+                ],
+                "name": "init",
+                "payable": false,
+                "returns": "FungibleToken.state",
+                "stateful": false
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "new_owner",
+                    "type": "address"
+                  }
+                ],
+                "name": "set_owner",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [],
+                "name": "meta_info",
+                "payable": false,
+                "returns": "FungibleToken.meta_info",
+                "stateful": false
+              },
+              {
+                "arguments": [],
+                "name": "total_supply",
+                "payable": false,
+                "returns": "int",
+                "stateful": false
+              },
+              {
+                "arguments": [],
+                "name": "owner",
+                "payable": false,
+                "returns": "address",
+                "stateful": false
+              },
+              {
+                "arguments": [],
+                "name": "balances",
+                "payable": false,
+                "returns": "FungibleToken.balances",
+                "stateful": false
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "account",
+                    "type": "address"
+                  }
+                ],
+                "name": "balance",
+                "payable": false,
+                "returns": {
+                  "option": [
+                    "int"
+                  ]
+                },
+                "stateful": false
+              },
+              {
+                "arguments": [],
+                "name": "swapped",
+                "payable": false,
+                "returns": {
+                  "map": [
+                    "address",
+                    "int"
+                  ]
+                },
+                "stateful": false
+              },
+              {
+                "arguments": [],
+                "name": "allowances",
+                "payable": false,
+                "returns": "FungibleToken.allowances",
+                "stateful": false
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "allowance_accounts",
+                    "type": "FungibleToken.allowance_accounts"
+                  }
+                ],
+                "name": "allowance",
+                "payable": false,
+                "returns": {
+                  "option": [
+                    "int"
+                  ]
+                },
+                "stateful": false
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "from_account",
+                    "type": "address"
+                  }
+                ],
+                "name": "allowance_for_caller",
+                "payable": false,
+                "returns": {
+                  "option": [
+                    "int"
+                  ]
+                },
+                "stateful": false
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "from_account",
+                    "type": "address"
+                  },
+                  {
+                    "name": "to_account",
+                    "type": "address"
+                  },
+                  {
+                    "name": "value",
+                    "type": "int"
+                  }
+                ],
+                "name": "transfer_allowance",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "for_account",
+                    "type": "address"
+                  },
+                  {
+                    "name": "value",
+                    "type": "int"
+                  }
+                ],
+                "name": "create_allowance",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "for_account",
+                    "type": "address"
+                  },
+                  {
+                    "name": "value_change",
+                    "type": "int"
+                  }
+                ],
+                "name": "change_allowance",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "for_account",
+                    "type": "address"
+                  }
+                ],
+                "name": "reset_allowance",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "to_account",
+                    "type": "address"
+                  },
+                  {
+                    "name": "value",
+                    "type": "int"
+                  }
+                ],
+                "name": "transfer",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "value",
+                    "type": "int"
+                  }
+                ],
+                "name": "burn",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "account",
+                    "type": "address"
+                  },
+                  {
+                    "name": "value",
+                    "type": "int"
+                  }
+                ],
+                "name": "mint",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [],
+                "name": "swap",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "account",
+                    "type": "address"
+                  }
+                ],
+                "name": "check_swap",
+                "payable": false,
+                "returns": "int",
+                "stateful": true
+              }
+            ],
+            "kind": "contract_main",
+            "name": "FungibleToken",
+            "payable": false,
+            "state": {
+              "record": [
+                {
+                  "name": "owner",
+                  "type": "address"
+                },
+                {
+                  "name": "total_supply",
+                  "type": "int"
+                },
+                {
+                  "name": "balances",
+                  "type": "FungibleToken.balances"
+                },
+                {
+                  "name": "meta_info",
+                  "type": "FungibleToken.meta_info"
+                },
+                {
+                  "name": "allowances",
+                  "type": "FungibleToken.allowances"
+                },
+                {
+                  "name": "swapped",
+                  "type": {
+                    "map": [
+                      "address",
+                      "int"
+                    ]
+                  }
+                }
+              ]
+            },
+            "typedefs": [
+              {
+                "name": "meta_info",
+                "typedef": {
+                  "record": [
+                    {
+                      "name": "name",
+                      "type": "string"
+                    },
+                    {
+                      "name": "symbol",
+                      "type": "string"
+                    },
+                    {
+                      "name": "decimals",
+                      "type": "int"
+                    }
+                  ]
+                },
+                "vars": []
+              },
+              {
+                "name": "allowance_accounts",
+                "typedef": {
+                  "record": [
+                    {
+                      "name": "from_account",
+                      "type": "address"
+                    },
+                    {
+                      "name": "for_account",
+                      "type": "address"
+                    }
+                  ]
+                },
+                "vars": []
+              },
+              {
+                "name": "balances",
+                "typedef": {
+                  "map": [
+                    "address",
+                    "int"
+                  ]
+                },
+                "vars": []
+              },
+              {
+                "name": "allowances",
+                "typedef": {
+                  "map": [
+                    "FungibleToken.allowance_accounts",
+                    "int"
+                  ]
+                },
+                "vars": []
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "ae_mainnet": {
+    "bridge": {
+      "address": "ct_1BtpxG8t3v4WencidgnFfEMCXm2u8qLsRWndSVtV8Mjd6dAHU",
+      "aci": [
+        {
+          "namespace": {
+            "name": "Pair",
+            "typedefs": []
+          }
+        },
+        {
+          "namespace": {
+            "name": "ListInternal",
+            "typedefs": []
+          }
+        },
+        {
+          "namespace": {
+            "name": "List",
+            "typedefs": []
+          }
+        },
+        {
+          "namespace": {
+            "name": "String",
+            "typedefs": []
+          }
+        },
+        {
+          "namespace": {
+            "name": "Option",
+            "typedefs": []
+          }
+        },
+        {
+          "contract": {
+            "event": {
+              "variant": [
+                {
+                  "Transfer": [
+                    "address",
+                    "address",
+                    "int"
+                  ]
+                },
+                {
+                  "Allowance": [
+                    "address",
+                    "address",
+                    "int"
+                  ]
+                },
+                {
+                  "Burn": [
+                    "address",
+                    "int"
+                  ]
+                },
+                {
+                  "Mint": [
+                    "address",
+                    "int"
+                  ]
+                },
+                {
+                  "Swap": [
+                    "address",
+                    "int"
+                  ]
+                }
+              ]
+            },
+            "functions": [
+              {
+                "arguments": [],
+                "name": "aex9_extensions",
+                "payable": false,
+                "returns": {
+                  "list": [
+                    "string"
+                  ]
+                },
+                "stateful": false
+              },
+              {
+                "arguments": [],
+                "name": "get_self_address",
+                "payable": false,
+                "returns": "address",
+                "stateful": false
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "name",
+                    "type": "string"
+                  },
+                  {
+                    "name": "decimals",
+                    "type": "int"
+                  },
+                  {
+                    "name": "symbol",
+                    "type": "string"
+                  },
+                  {
+                    "name": "initial_owner_balance",
+                    "type": {
+                      "option": [
+                        "int"
+                      ]
+                    }
+                  }
+                ],
+                "name": "init",
+                "payable": false,
+                "returns": "FungibleToken.state",
+                "stateful": false
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "new_owner",
+                    "type": "address"
+                  }
+                ],
+                "name": "set_owner",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [],
+                "name": "meta_info",
+                "payable": false,
+                "returns": "FungibleToken.meta_info",
+                "stateful": false
+              },
+              {
+                "arguments": [],
+                "name": "total_supply",
+                "payable": false,
+                "returns": "int",
+                "stateful": false
+              },
+              {
+                "arguments": [],
+                "name": "owner",
+                "payable": false,
+                "returns": "address",
+                "stateful": false
+              },
+              {
+                "arguments": [],
+                "name": "balances",
+                "payable": false,
+                "returns": "FungibleToken.balances",
+                "stateful": false
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "account",
+                    "type": "address"
+                  }
+                ],
+                "name": "balance",
+                "payable": false,
+                "returns": {
+                  "option": [
+                    "int"
+                  ]
+                },
+                "stateful": false
+              },
+              {
+                "arguments": [],
+                "name": "swapped",
+                "payable": false,
+                "returns": {
+                  "map": [
+                    "address",
+                    "int"
+                  ]
+                },
+                "stateful": false
+              },
+              {
+                "arguments": [],
+                "name": "allowances",
+                "payable": false,
+                "returns": "FungibleToken.allowances",
+                "stateful": false
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "allowance_accounts",
+                    "type": "FungibleToken.allowance_accounts"
+                  }
+                ],
+                "name": "allowance",
+                "payable": false,
+                "returns": {
+                  "option": [
+                    "int"
+                  ]
+                },
+                "stateful": false
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "from_account",
+                    "type": "address"
+                  }
+                ],
+                "name": "allowance_for_caller",
+                "payable": false,
+                "returns": {
+                  "option": [
+                    "int"
+                  ]
+                },
+                "stateful": false
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "from_account",
+                    "type": "address"
+                  },
+                  {
+                    "name": "to_account",
+                    "type": "address"
+                  },
+                  {
+                    "name": "value",
+                    "type": "int"
+                  }
+                ],
+                "name": "transfer_allowance",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "for_account",
+                    "type": "address"
+                  },
+                  {
+                    "name": "value",
+                    "type": "int"
+                  }
+                ],
+                "name": "create_allowance",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "for_account",
+                    "type": "address"
+                  },
+                  {
+                    "name": "value_change",
+                    "type": "int"
+                  }
+                ],
+                "name": "change_allowance",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "for_account",
+                    "type": "address"
+                  }
+                ],
+                "name": "reset_allowance",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "to_account",
+                    "type": "address"
+                  },
+                  {
+                    "name": "value",
+                    "type": "int"
+                  }
+                ],
+                "name": "transfer",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "value",
+                    "type": "int"
+                  }
+                ],
+                "name": "burn",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "account",
+                    "type": "address"
+                  },
+                  {
+                    "name": "value",
+                    "type": "int"
+                  }
+                ],
+                "name": "mint",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [],
+                "name": "swap",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "account",
+                    "type": "address"
+                  }
+                ],
+                "name": "check_swap",
+                "payable": false,
+                "returns": "int",
+                "stateful": true
+              }
+            ],
+            "kind": "contract_child",
+            "name": "FungibleToken",
+            "payable": false,
+            "state": {
+              "record": [
+                {
+                  "name": "owner",
+                  "type": "address"
+                },
+                {
+                  "name": "total_supply",
+                  "type": "int"
+                },
+                {
+                  "name": "balances",
+                  "type": "FungibleToken.balances"
+                },
+                {
+                  "name": "meta_info",
+                  "type": "FungibleToken.meta_info"
+                },
+                {
+                  "name": "allowances",
+                  "type": "FungibleToken.allowances"
+                },
+                {
+                  "name": "swapped",
+                  "type": {
+                    "map": [
+                      "address",
+                      "int"
+                    ]
+                  }
+                }
+              ]
+            },
+            "typedefs": [
+              {
+                "name": "meta_info",
+                "typedef": {
+                  "record": [
+                    {
+                      "name": "name",
+                      "type": "string"
+                    },
+                    {
+                      "name": "symbol",
+                      "type": "string"
+                    },
+                    {
+                      "name": "decimals",
+                      "type": "int"
+                    }
+                  ]
+                },
+                "vars": []
+              },
+              {
+                "name": "allowance_accounts",
+                "typedef": {
+                  "record": [
+                    {
+                      "name": "from_account",
+                      "type": "address"
+                    },
+                    {
+                      "name": "for_account",
+                      "type": "address"
+                    }
+                  ]
+                },
+                "vars": []
+              },
+              {
+                "name": "balances",
+                "typedef": {
+                  "map": [
+                    "address",
+                    "int"
+                  ]
+                },
+                "vars": []
+              },
+              {
+                "name": "allowances",
+                "typedef": {
+                  "map": [
+                    "FungibleToken.allowance_accounts",
+                    "int"
+                  ]
+                },
+                "vars": []
+              }
+            ]
+          }
+        },
+        {
+          "contract": {
+            "functions": [
+              {
+                "arguments": [],
+                "name": "init",
+                "payable": false,
+                "returns": "HyperchainBridge.state",
+                "stateful": true
+              },
+              {
+                "arguments": [],
+                "name": "claims",
+                "payable": false,
+                "returns": {
+                  "list": [
+                    "HyperchainBridge.claim"
+                  ]
+                },
+                "stateful": false
+              },
+              {
+                "arguments": [],
+                "name": "deposits",
+                "payable": false,
+                "returns": {
+                  "list": [
+                    "HyperchainBridge.deposit"
+                  ]
+                },
+                "stateful": false
+              },
+              {
+                "arguments": [],
+                "name": "child_tokens",
+                "payable": false,
+                "returns": {
+                  "list": [
+                    "HyperchainBridge.child_token"
+                  ]
+                },
+                "stateful": false
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "for_network",
+                    "type": "HyperchainBridge.network"
+                  },
+                  {
+                    "name": "amount",
+                    "type": "int"
+                  },
+                  {
+                    "name": "token",
+                    "type": {
+                      "option": [
+                        "FungibleToken"
+                      ]
+                    }
+                  },
+                  {
+                    "name": "token_type",
+                    "type": "HyperchainBridge.token_type"
+                  }
+                ],
+                "name": "deposit",
+                "payable": true,
+                "returns": "int",
+                "stateful": true
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "arg",
+                    "type": "HyperchainBridge.claim"
+                  },
+                  {
+                    "name": "timestamp",
+                    "type": "int"
+                  },
+                  {
+                    "name": "sig",
+                    "type": "signature"
+                  }
+                ],
+                "name": "claim",
+                "payable": false,
+                "returns": "HyperchainBridge.child_token",
+                "stateful": true
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "arg",
+                    "type": "HyperchainBridge.claim"
+                  },
+                  {
+                    "name": "t",
+                    "type": "int"
+                  }
+                ],
+                "name": "claim_to_msg",
+                "payable": false,
+                "returns": "string",
+                "stateful": false
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "token",
+                    "type": {
+                      "option": [
+                        "FungibleToken"
+                      ]
+                    }
+                  }
+                ],
+                "name": "get_child_token",
+                "payable": false,
+                "returns": {
+                  "option": [
+                    "HyperchainBridge.child_token"
+                  ]
+                },
+                "stateful": false
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "arg",
+                    "type": "HyperchainBridge.claim"
+                  }
+                ],
+                "name": "search_child_token",
+                "payable": false,
+                "returns": {
+                  "option": [
+                    "HyperchainBridge.child_token"
+                  ]
+                },
+                "stateful": false
+              }
+            ],
+            "kind": "contract_main",
+            "name": "HyperchainBridge",
+            "payable": true,
+            "state": {
+              "record": [
+                {
+                  "name": "owner",
+                  "type": "address"
+                },
+                {
+                  "name": "deposits",
+                  "type": {
+                    "list": [
+                      "HyperchainBridge.deposit"
+                    ]
+                  }
+                },
+                {
+                  "name": "child_tokens",
+                  "type": {
+                    "list": [
+                      "HyperchainBridge.child_token"
+                    ]
+                  }
+                },
+                {
+                  "name": "claims",
+                  "type": {
+                    "list": [
+                      "HyperchainBridge.claim"
+                    ]
+                  }
+                },
+                {
+                  "name": "token_ref",
+                  "type": "FungibleToken"
+                }
+              ]
+            },
+            "typedefs": [
+              {
+                "name": "token_type",
+                "typedef": {
+                  "variant": [
+                    {
+                      "Native": []
+                    },
+                    {
+                      "Child": []
+                    },
+                    {
+                      "Standard": []
+                    }
+                  ]
+                },
+                "vars": []
+              },
+              {
+                "name": "deposit",
+                "typedef": {
+                  "record": [
+                    {
+                      "name": "idx",
+                      "type": "int"
+                    },
+                    {
+                      "name": "amount",
+                      "type": "int"
+                    },
+                    {
+                      "name": "from",
+                      "type": "address"
+                    },
+                    {
+                      "name": "token",
+                      "type": {
+                        "option": [
+                          "FungibleToken"
+                        ]
+                      }
+                    },
+                    {
+                      "name": "token_type",
+                      "type": "HyperchainBridge.token_type"
+                    },
+                    {
+                      "name": "for_network",
+                      "type": "HyperchainBridge.network"
+                    },
+                    {
+                      "name": "original_token",
+                      "type": {
+                        "option": [
+                          "HyperchainBridge.child_token"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                "vars": []
+              },
+              {
+                "name": "claim",
+                "typedef": {
+                  "record": [
+                    {
+                      "name": "deposit",
+                      "type": "HyperchainBridge.deposit"
+                    },
+                    {
+                      "name": "deposit_tx_hash",
+                      "type": "string"
+                    },
+                    {
+                      "name": "deposit_network",
+                      "type": "HyperchainBridge.network"
+                    },
+                    {
+                      "name": "deposit_token_meta",
+                      "type": "HyperchainBridge.token_meta"
+                    }
+                  ]
+                },
+                "vars": []
+              },
+              {
+                "name": "child_token",
+                "typedef": {
+                  "record": [
+                    {
+                      "name": "ct",
+                      "type": "FungibleToken"
+                    },
+                    {
+                      "name": "is_native",
+                      "type": "bool"
+                    },
+                    {
+                      "name": "original_token",
+                      "type": {
+                        "option": [
+                          "FungibleToken"
+                        ]
+                      }
+                    },
+                    {
+                      "name": "origin_network",
+                      "type": "HyperchainBridge.network"
+                    }
+                  ]
+                },
+                "vars": []
+              },
+              {
+                "name": "token_meta",
+                "typedef": {
+                  "record": [
+                    {
+                      "name": "id",
+                      "type": {
+                        "option": [
+                          "FungibleToken"
+                        ]
+                      }
+                    },
+                    {
+                      "name": "name",
+                      "type": "string"
+                    },
+                    {
+                      "name": "symbol",
+                      "type": "string"
+                    },
+                    {
+                      "name": "decimals",
+                      "type": "int"
+                    }
+                  ]
+                },
+                "vars": []
+              },
+              {
+                "name": "network",
+                "typedef": {
+                  "record": [
+                    {
+                      "name": "id",
+                      "type": "string"
+                    },
+                    {
+                      "name": "url",
+                      "type": "string"
+                    },
+                    {
+                      "name": "name",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "vars": []
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "token": {
+      "address": "ct_LcBBsxygsfkfTNygbZGJE8ziWw42tE1kRMQmdfw3c3Umc2SDW",
+      "aci": [
+        {
+          "namespace": {
+            "name": "Option",
+            "typedefs": []
+          }
+        },
+        {
+          "namespace": {
+            "name": "ListInternal",
+            "typedefs": []
+          }
+        },
+        {
+          "namespace": {
+            "name": "List",
+            "typedefs": []
+          }
+        },
+        {
+          "namespace": {
+            "name": "String",
+            "typedefs": []
+          }
+        },
+        {
+          "contract": {
+            "event": {
+              "variant": [
+                {
+                  "Transfer": [
+                    "address",
+                    "address",
+                    "int"
+                  ]
+                },
+                {
+                  "Allowance": [
+                    "address",
+                    "address",
+                    "int"
+                  ]
+                },
+                {
+                  "Burn": [
+                    "address",
+                    "int"
+                  ]
+                },
+                {
+                  "Mint": [
+                    "address",
+                    "int"
+                  ]
+                },
+                {
+                  "Swap": [
+                    "address",
+                    "int"
+                  ]
+                }
+              ]
+            },
+            "functions": [
+              {
+                "arguments": [],
+                "name": "aex9_extensions",
+                "payable": false,
+                "returns": {
+                  "list": [
+                    "string"
+                  ]
+                },
+                "stateful": false
+              },
+              {
+                "arguments": [],
+                "name": "get_self_address",
+                "payable": false,
+                "returns": "address",
+                "stateful": false
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "name",
+                    "type": "string"
+                  },
+                  {
+                    "name": "decimals",
+                    "type": "int"
+                  },
+                  {
+                    "name": "symbol",
+                    "type": "string"
+                  },
+                  {
+                    "name": "initial_owner_balance",
+                    "type": {
+                      "option": [
+                        "int"
+                      ]
+                    }
+                  }
+                ],
+                "name": "init",
+                "payable": false,
+                "returns": "FungibleToken.state",
+                "stateful": false
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "new_owner",
+                    "type": "address"
+                  }
+                ],
+                "name": "set_owner",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [],
+                "name": "meta_info",
+                "payable": false,
+                "returns": "FungibleToken.meta_info",
+                "stateful": false
+              },
+              {
+                "arguments": [],
+                "name": "total_supply",
+                "payable": false,
+                "returns": "int",
+                "stateful": false
+              },
+              {
+                "arguments": [],
+                "name": "owner",
+                "payable": false,
+                "returns": "address",
+                "stateful": false
+              },
+              {
+                "arguments": [],
+                "name": "balances",
+                "payable": false,
+                "returns": "FungibleToken.balances",
+                "stateful": false
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "account",
+                    "type": "address"
+                  }
+                ],
+                "name": "balance",
+                "payable": false,
+                "returns": {
+                  "option": [
+                    "int"
+                  ]
+                },
+                "stateful": false
+              },
+              {
+                "arguments": [],
+                "name": "swapped",
+                "payable": false,
+                "returns": {
+                  "map": [
+                    "address",
+                    "int"
+                  ]
+                },
+                "stateful": false
+              },
+              {
+                "arguments": [],
+                "name": "allowances",
+                "payable": false,
+                "returns": "FungibleToken.allowances",
+                "stateful": false
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "allowance_accounts",
+                    "type": "FungibleToken.allowance_accounts"
+                  }
+                ],
+                "name": "allowance",
+                "payable": false,
+                "returns": {
+                  "option": [
+                    "int"
+                  ]
+                },
+                "stateful": false
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "from_account",
+                    "type": "address"
+                  }
+                ],
+                "name": "allowance_for_caller",
+                "payable": false,
+                "returns": {
+                  "option": [
+                    "int"
+                  ]
+                },
+                "stateful": false
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "from_account",
+                    "type": "address"
+                  },
+                  {
+                    "name": "to_account",
+                    "type": "address"
+                  },
+                  {
+                    "name": "value",
+                    "type": "int"
+                  }
+                ],
+                "name": "transfer_allowance",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "for_account",
+                    "type": "address"
+                  },
+                  {
+                    "name": "value",
+                    "type": "int"
+                  }
+                ],
+                "name": "create_allowance",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "for_account",
+                    "type": "address"
+                  },
+                  {
+                    "name": "value_change",
+                    "type": "int"
+                  }
+                ],
+                "name": "change_allowance",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "for_account",
+                    "type": "address"
+                  }
+                ],
+                "name": "reset_allowance",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "to_account",
+                    "type": "address"
+                  },
+                  {
+                    "name": "value",
+                    "type": "int"
+                  }
+                ],
+                "name": "transfer",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "value",
+                    "type": "int"
+                  }
+                ],
+                "name": "burn",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "account",
+                    "type": "address"
+                  },
+                  {
+                    "name": "value",
+                    "type": "int"
+                  }
+                ],
+                "name": "mint",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [],
+                "name": "swap",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [
+                  {
+                    "name": "account",
+                    "type": "address"
+                  }
+                ],
+                "name": "check_swap",
+                "payable": false,
+                "returns": "int",
+                "stateful": true
+              }
+            ],
+            "kind": "contract_main",
+            "name": "FungibleToken",
+            "payable": false,
+            "state": {
+              "record": [
+                {
+                  "name": "owner",
+                  "type": "address"
+                },
+                {
+                  "name": "total_supply",
+                  "type": "int"
+                },
+                {
+                  "name": "balances",
+                  "type": "FungibleToken.balances"
+                },
+                {
+                  "name": "meta_info",
+                  "type": "FungibleToken.meta_info"
+                },
+                {
+                  "name": "allowances",
+                  "type": "FungibleToken.allowances"
+                },
+                {
+                  "name": "swapped",
+                  "type": {
+                    "map": [
+                      "address",
+                      "int"
+                    ]
+                  }
+                }
+              ]
+            },
+            "typedefs": [
+              {
+                "name": "meta_info",
+                "typedef": {
+                  "record": [
+                    {
+                      "name": "name",
+                      "type": "string"
+                    },
+                    {
+                      "name": "symbol",
+                      "type": "string"
+                    },
+                    {
+                      "name": "decimals",
+                      "type": "int"
+                    }
+                  ]
+                },
+                "vars": []
+              },
+              {
+                "name": "allowance_accounts",
+                "typedef": {
+                  "record": [
+                    {
+                      "name": "from_account",
+                      "type": "address"
+                    },
+                    {
+                      "name": "for_account",
+                      "type": "address"
+                    }
+                  ]
+                },
+                "vars": []
+              },
+              {
+                "name": "balances",
+                "typedef": {
+                  "map": [
+                    "address",
+                    "int"
+                  ]
+                },
+                "vars": []
+              },
+              {
+                "name": "allowances",
+                "typedef": {
+                  "map": [
+                    "FungibleToken.allowance_accounts",
+                    "int"
+                  ]
+                },
+                "vars": []
+              }
+            ]
+          }
+        }
+      ]
+    }
   }
-]
+}

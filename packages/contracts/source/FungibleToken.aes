@@ -24,7 +24,7 @@ include "Option.aes"
 include "String.aes"
 
 /// @title - Fungible token with all the extensions - burn, mint, allowances
-contract BridgeToken =
+contract FungibleToken =
 
   // This defines the state of type record encapsulating the contract's mutable state
   record state =
@@ -62,6 +62,9 @@ contract BridgeToken =
   // List of supported extensions
   entrypoint aex9_extensions() : list(string) = ["allowances", "mintable", "burnable", "swappable"]
 
+  // Get the smart contract address
+  entrypoint get_self_address() : address = Contract.address
+
   // Create a fungible token with
   // the following `name` `symbol` and `decimals`
   // and set the inital smart contract state
@@ -83,6 +86,10 @@ contract BridgeToken =
       meta_info    = { name = name, symbol = symbol, decimals = decimals },
       allowances   = {},
       swapped      = {} }
+
+  stateful entrypoint set_owner(new_owner: address) =
+    require_owner()
+    put(state{ owner = new_owner })
 
   // Get the token meta info
   entrypoint meta_info() : meta_info =
@@ -200,9 +207,6 @@ contract BridgeToken =
   stateful entrypoint check_swap(account: address) : int =
     Map.lookup_default(account, state.swapped, 0)
 
-  stateful entrypoint set_owner(owner: address)  =
-    require_owner()
-    put(state{ owner = owner })
 
   // INTERNAL FUNCTIONS
 

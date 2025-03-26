@@ -1,6 +1,6 @@
 import assert from "node:assert";
 
-import { parseArguments } from "./helper";
+import { parseArguments } from "../utils/scripts-helper";
 import {
   createSdkInstance,
   getContract,

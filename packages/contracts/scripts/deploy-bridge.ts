@@ -2,7 +2,7 @@ import { writeFileSync } from "node:fs";
 
 import { createSdkInstance } from "@aepp-hyperchain-bridge/shared";
 import { ACI_FOLDER_PATH, BRIDGE_SOURCE_PATH } from "..";
-import { parseArguments, deployContract } from "./helper";
+import { parseArguments, deployContract } from "../utils/scripts-helper";
 
 // Usage: bun deploy:bridge --network hc_devnet --saveAci
 
