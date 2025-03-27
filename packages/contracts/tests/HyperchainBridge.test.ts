@@ -1,4 +1,4 @@
-import { afterAll, beforeEach, describe, expect, test } from "bun:test";
+import { describe, expect, test } from "bun:test";
 
 import {
   AE_TESTNET,
@@ -7,11 +7,12 @@ import {
 } from "@aepp-hyperchain-bridge/shared";
 import {
   Bridge,
-  Claim,
-  Deposit,
-  DepositTx,
+  ExitRequest,
+  BridgeEntry,
+  BridgeEntryTx,
   TokenType,
   tokenTypeToStr,
+  TokenLink,
 } from "../utils/types";
 import { getAccountAddress, setupContracts } from "../utils/setup-tests";
 import { createMessage, createSignature } from "../utils/create-signature";
@@ -28,13 +29,12 @@ import { sleep } from "bun";
 const { BRIDGE_A, BRIDGE_B } = await setupContracts(AE_TESTNET, AE_MAINNET);
 
 const [
-  [resolveDepositsA, depositsPromiseA],
-  [resolveDepositsB, depositsPromiseB],
-  [resolveClaimsB, claimsPromiseB],
-  [resolveClaimsA, claimsPromiseA],
-] = Array(4)
+  [resolveEntriesPromiseA, entriesPromiseA],
+  [resolveEntriesPromiseB, entriesPromiseB],
+  [resolveExitsPromiseB, exitsPromiseB],
+] = Array(3)
   .fill("")
-  .map((_, i) => {
+  .map(() => {
     let resolve: (value: boolean) => void = () => {};
     const promise: Promise<boolean> = new Promise((res) => {
       resolve = res;
@@ -42,216 +42,199 @@ const [
     return [resolve, promise];
   });
 
-const executedDeposits: DepositTx[][] = [[], []];
-const claimsToExecute: Claim[][] = [[], []];
+const executedEntries: { A: BridgeEntryTx[] } | { B: BridgeEntryTx[] } = {
+  A: [],
+  B: [],
+};
+const exitsToProcess: { A: ExitRequest[] } & { B: ExitRequest[] } = {
+  A: [],
+  B: [],
+};
 
 const ownerAddress = BRIDGE_A.sdk.addresses()[0] as `ak_${string}`;
 const userAddress = BRIDGE_B.sdk.addresses()[1] as `ak_${string}`;
-const depositAmount = 1e6;
+const depositAmount = 1e3;
 
-describe("HyperchainBridge A<>B", async () => {
-  describe("Deposits on BridgeA", async () => {
-    const { sdk, contract, token, tokenMeta } = BRIDGE_A;
+describe("HyperchainBridge", async () => {
+  let testsRan = 0;
+  describe("entries on Network A", async () => {
+    const { sdk, contract, token } = BRIDGE_A;
 
-    afterAll(() => {
-      resolveDepositsA(true);
-    });
-
-    test("user should be able to deposit Standard(AEX9) tokens", async () => {
-      const { decodedResult: bridgeBalanceBefore } = await token.balance(
-        getAccountAddress(contract)
+    test("Standard(AEX9) token entry", async () => {
+      const bridgeBalanceBefore = parseInt(
+        (await token.balance(getAccountAddress(contract))).decodedResult
       );
-
-      const { decodedResult: depositsBefore } = await contract.deposits();
-      const { decodedResult: depositIndex, hash } = await contract.deposit(
-        mapNetwork(BRIDGE_B.network),
+      const { decodedResult: entriesBefore } = await contract.bridge_entries();
+      const { decodedResult: newEntry, hash } = await contract.enter_bridge(
         depositAmount,
-        tokenMeta.id,
-        TokenType.Standard([])
+        TokenType.Standard([]),
+        mapNetwork(BRIDGE_B.network),
+        token.$options.address
       );
-      expect(depositIndex).toBe(BigInt(depositsBefore.length));
+      const bridgeBalance = parseInt(
+        (await token.balance(getAccountAddress(contract))).decodedResult
+      );
+      const newBridgeEntry = convertAllBigIntsToInts(newEntry) as BridgeEntry;
 
-      const { decodedResult: deposits } = await contract.deposits();
-      const { decodedResult: bridgeContractBalance } = await token.balance(
-        getAccountAddress(contract)
-      );
-
-      expect(bridgeContractBalance).toBe(
-        (bridgeBalanceBefore || BigInt(0)) + BigInt(depositAmount)
-      );
-      const idx = deposits.length - 1;
-      const deposit: Deposit = {
-        idx: idx,
+      expect(bridgeBalance).toBe((bridgeBalanceBefore || 0) + depositAmount);
+      expect(newBridgeEntry).toEqual({
+        idx: entriesBefore.length,
         from: userAddress,
         amount: depositAmount,
         token: token.$options.address,
-        for_network: mapNetwork(BRIDGE_B.network),
+        target_network: mapNetwork(BRIDGE_B.network),
         token_type: TokenType.Standard([]),
-        original_token: undefined,
-      };
-      expect(convertAllBigIntsToInts(deposits[idx])).toEqual(deposit);
-      await saveDeposit(deposit, hash, BRIDGE_A);
+        exit_link: undefined,
+      });
+
+      await saveEntry(newBridgeEntry, hash, BRIDGE_A);
+
+      testsRan++;
+      if (testsRan === 2) {
+        resolveEntriesPromiseA(true);
+      }
     });
 
-    test("user should be able to deposit NATIVE(AE) tokens", async () => {
-      const contractBalanceBefore = await sdk.getBalance(
-        getAccountAddress(contract) as `ak_${string}`
+    test("Native(AE) tokens entry", async () => {
+      const bridgeBalanceBefore = parseInt(
+        await sdk.getBalance(getAccountAddress(contract) as `ak_${string}`)
       );
-
-      const { decodedResult: depositsBefore } = await contract.deposits();
-      const { decodedResult: depositIndex, hash } = await contract.deposit(
-        mapNetwork(BRIDGE_B.network),
+      const { decodedResult: entriesBefore } = await contract.bridge_entries();
+      const { decodedResult: newEntry, hash } = await contract.enter_bridge(
         depositAmount,
-        undefined,
         TokenType.Native([]),
+        mapNetwork(BRIDGE_B.network),
+        undefined,
         {
           amount: depositAmount,
         }
       );
-      expect(depositIndex).toBe(BigInt(depositsBefore.length));
-
-      const { decodedResult: deposits } = await contract.deposits();
-      const contractBalance = await sdk.getBalance(
-        getAccountAddress(contract) as `ak_${string}`
+      const bridgeBalance = parseInt(
+        await sdk.getBalance(getAccountAddress(contract) as `ak_${string}`)
       );
-      expect(BigInt(contractBalance)).toBe(
-        BigInt(contractBalanceBefore) + BigInt(depositAmount)
-      );
+      const newBridgeEntry = convertAllBigIntsToInts(newEntry) as BridgeEntry;
 
-      const idx = deposits.length - 1;
-      const deposit: Deposit = {
-        idx: idx,
-        token: undefined,
+      expect(bridgeBalance).toBe((bridgeBalanceBefore || 0) + depositAmount);
+      expect(newBridgeEntry).toEqual({
+        idx: entriesBefore.length,
         from: userAddress,
         amount: depositAmount,
-        original_token: undefined,
+        token: undefined,
+        target_network: mapNetwork(BRIDGE_B.network),
         token_type: TokenType.Native([]),
-        for_network: mapNetwork(BRIDGE_B.network),
-      };
-      expect(convertAllBigIntsToInts(deposits[idx])).toEqual(deposit);
-      await saveDeposit(deposit, hash, BRIDGE_A);
-    });
-  });
+        exit_link: undefined,
+      });
 
-  describe("Claims on BridgeB", async () => {
-    beforeEach(async () => {
-      await depositsPromiseA;
-    });
+      await saveEntry(newBridgeEntry, hash, BRIDGE_A);
 
-    afterAll(() => {
-      resolveClaimsB(true);
-    });
-
-    test("verify claim arg message", async () => {
-      await testMessageEquality(BRIDGE_B, claimsToExecute[0][0]);
-    });
-
-    test(`user should be able to claim NetworkA deposits on NetworkB`, async () => {
-      await testClaims(BRIDGE_B, claimsToExecute[0]);
-    });
-  });
-
-  describe("Deposits on BridgeB", async () => {
-    const { sdk, contract, network } = BRIDGE_B;
-    beforeEach(async () => {
-      await claimsPromiseB;
-    });
-
-    afterAll(async () => {
-      resolveDepositsB(true);
-    });
-
-    test("user should be able to deposit Child(deployed by bridge) tokens", async () => {
-      const { decodedResult: child_tokens } = await contract.child_tokens();
-      for await (const child_token of child_tokens) {
-        const [userBalanceBefore, contractBalanceBefore] = await Promise.all(
-          [userAddress, getAccountAddress(contract)].map((account) =>
-            getOriginalTokenBalance(child_token, sdk, account)
-          )
-        );
-
-        const gasSpentAllowance = await setAllowanceIfNeeded(
-          child_token,
-          userAddress,
-          getAccountAddress(contract),
-          BRIDGE_B
-        );
-
-        const {
-          hash,
-          decodedResult: depositIndex,
-          result: { gasPrice, gasUsed },
-        } = await contract.deposit(
-          mapNetwork(BRIDGE_A.network),
-          depositAmount,
-          child_token.ct,
-          TokenType.Child([])
-        );
-
-        const [userBalance, contractBalance] = await Promise.all(
-          [userAddress, getAccountAddress(contract)].map((account) =>
-            getOriginalTokenBalance(child_token, sdk, account)
-          )
-        );
-
-        let totalFees = depositAmount;
-        if (child_token.is_native) {
-          const gasSpentDeposit = gasUsed * parseInt(gasPrice.toString());
-          const txFee = await getTxFee(network, hash);
-          totalFees = gasSpentDeposit + (gasSpentAllowance || 0) + txFee;
-        }
-
-        expect(contractBalance).toBe(0);
-        expect(userBalance).toBe(userBalanceBefore - totalFees);
-
-        const deposit: Deposit = {
-          idx: parseInt(depositIndex),
-          amount: depositAmount,
-          from: userAddress,
-          token: child_token.ct,
-          token_type: TokenType.Child([]),
-          original_token: child_token,
-          for_network: mapNetwork(BRIDGE_A.network),
-        };
-        await saveDeposit(deposit, hash, BRIDGE_B);
+      testsRan++;
+      if (testsRan === 2) {
+        resolveEntriesPromiseA(true);
       }
     });
   });
 
-  describe("Claims on BridgeA", async () => {
-    beforeEach(async () => {
-      await depositsPromiseB;
+  describe("exits on Network B", async () => {
+    test("verify exit request message", async () => {
+      await entriesPromiseA;
+      await testMessageEquality(BRIDGE_B, exitsToProcess.A[0]);
     });
 
-    afterAll(async () => {
-      resolveClaimsA(true);
+    test(`bridge exits of Native and Standard tokens`, async () => {
+      await entriesPromiseA;
+      await testBridgeExits(BRIDGE_B, exitsToProcess.A);
+      resolveExitsPromiseB(true);
+    });
+  });
+
+  describe("entries on Network B", async () => {
+    test("Link tokens entry", async () => {
+      await exitsPromiseB;
+      const { sdk, contract, network } = BRIDGE_B;
+
+      const { decodedResult: tokenLinks } = await contract.token_links();
+      for await (const _tokenLink of tokenLinks) {
+        const tokenLink = _tokenLink as TokenLink;
+        const userBalanceBefore = await getOriginalTokenBalance(
+          tokenLink,
+          sdk,
+          userAddress
+        );
+        const gasSpentOnAllowance = await setAllowanceIfNeeded(
+          tokenLink,
+          userAddress,
+          getAccountAddress(contract),
+          BRIDGE_B
+        );
+        const { decodedResult: entries } = await contract.bridge_entries();
+        const {
+          hash,
+          decodedResult: newEntry,
+          result: { gasPrice, gasUsed },
+        } = await contract.enter_bridge(
+          depositAmount,
+          TokenType.Link([]),
+          mapNetwork(BRIDGE_A.network),
+          tokenLink.local_token
+        );
+        const [userBalance, contractBalance] = await Promise.all(
+          [userAddress, getAccountAddress(contract)].map((account) =>
+            getOriginalTokenBalance(tokenLink, sdk, account)
+          )
+        );
+
+        let totalFees = depositAmount;
+        if (tokenLink.is_source_native) {
+          const gasSpentDeposit = gasUsed * parseInt(gasPrice.toString());
+          const txFee = await getTxFee(network, hash);
+          totalFees = gasSpentDeposit + (gasSpentOnAllowance || 0) + txFee;
+        }
+
+        expect(contractBalance).toBe(0);
+        expect(userBalance).toBe(userBalanceBefore - totalFees);
+        expect(convertAllBigIntsToInts(newEntry)).toEqual({
+          idx: entries.length,
+          amount: depositAmount,
+          from: userAddress,
+          token: tokenLink.local_token,
+          token_type: TokenType.Link([]),
+          exit_link: tokenLink,
+          target_network: mapNetwork(BRIDGE_A.network),
+        });
+
+        await saveEntry(newEntry, hash, BRIDGE_B);
+        resolveEntriesPromiseB(true);
+      }
+    });
+  });
+
+  describe("exits on Network A", async () => {
+    test("verify bridge exit request message", async () => {
+      await entriesPromiseB;
+      await testMessageEquality(BRIDGE_A, exitsToProcess.B[0]);
     });
 
-    test("verify claim arg message", async () => {
-      await testMessageEquality(BRIDGE_A, claimsToExecute[1][0]);
-    });
-
-    test(`user should be able to claim NetworkB deposits on NetworkA`, async () => {
-      await testClaims(BRIDGE_A, claimsToExecute[1]);
+    test(`bridge exits of Link tokens`, async () => {
+      await entriesPromiseB;
+      await testBridgeExits(BRIDGE_A, exitsToProcess.B);
     });
   });
 });
 
-const testClaims = async (bridge: Bridge, claimsToTest: Claim[]) => {
+const testBridgeExits = async (bridge: Bridge, exitRequests: ExitRequest[]) => {
   const { sdk, contract } = bridge;
-  for await (const claimArg of claimsToTest) {
+  for await (const request of exitRequests) {
     const timestamp = Date.now();
     const signature = await createSignature(
       sdk,
-      claimArg,
+      request,
       timestamp,
       ownerAddress
     );
-
-    let outTokenAddress = await getOutTokenAddress(bridge, claimArg);
+    let exitTokenAddress = await retrieveExitTokenAddress(bridge, request);
 
     const userBalanceBefore = await getTokenBalanceOfAccount(
-      outTokenAddress,
+      exitTokenAddress,
       sdk,
       userAddress
     );
@@ -259,99 +242,96 @@ const testClaims = async (bridge: Bridge, claimsToTest: Claim[]) => {
     const {
       hash,
       result: { gasPrice, gasUsed },
-      decodedResult: childToken,
-    } = await contract.claim(claimArg, timestamp, signature);
-    const { decodedResult: claims } = await contract.claims();
+      decodedResult: exitLink,
+    } = await contract.exit_bridge(request, timestamp, signature);
+    const { decodedResult } = await contract.processed_exits();
+    const processedExits = decodedResult.map(
+      convertAllBigIntsToInts
+    ) as ExitRequest[];
 
-    if (!outTokenAddress) {
-      outTokenAddress = childToken.ct;
+    if (!exitTokenAddress) {
+      exitTokenAddress = (exitLink as TokenLink).local_token;
     }
 
     const userBalance = await getTokenBalanceOfAccount(
-      outTokenAddress,
+      exitTokenAddress,
       sdk,
       userAddress
     );
 
     let totalFees = 0;
-    if (claimArg.deposit.original_token?.is_native) {
+    if (request.entry.exit_link?.is_source_native) {
       const gasSpentDeposit = gasUsed * parseInt(gasPrice.toString());
       const txFee = await getTxFee(bridge.network, hash);
       totalFees = gasSpentDeposit + txFee;
     }
 
-    expect(claims.length).toBeGreaterThan(0);
-    const lastClaim = convertAllBigIntsToInts(claims[claims.length - 1]);
-    expect(lastClaim).toEqual(claimArg);
+    expect(processedExits.length).toBeGreaterThan(0);
+    const lastExit = processedExits[processedExits.length - 1];
+    expect(lastExit).toEqual(request);
     expect(userBalance).toBe(
-      userBalanceBefore + claimArg.deposit.amount - totalFees
+      userBalanceBefore + request.entry.amount - totalFees
     );
 
-    await sleep(500);
+    await sleep(1000);
   }
 };
 
-const getOutTokenAddress = async (bridge: Bridge, claimArg: Claim) => {
-  if (tokenTypeToStr(claimArg.deposit.token_type) === "Child") {
-    if (claimArg.deposit.original_token?.is_native) {
+const retrieveExitTokenAddress = async (
+  bridge: Bridge,
+  request: ExitRequest
+) => {
+  if (tokenTypeToStr(request.entry.token_type) === "Link") {
+    if (request.entry.exit_link?.is_source_native) {
       return "native";
     }
-    return claimArg.deposit.original_token?.original_token;
+    return request.entry.exit_link?.source_token;
   } else {
-    const { decodedResult } = await bridge.contract.search_child_token(
-      claimArg
-    );
-    return decodedResult ? decodedResult.ct : null;
+    const { decodedResult } = await bridge.contract.find_token_link(request);
+    return decodedResult ? (decodedResult as TokenLink).local_token : null;
   }
 };
 
-const testMessageEquality = async (bridge: Bridge, claim: Claim) => {
+const testMessageEquality = async (bridge: Bridge, request: ExitRequest) => {
   const timestamp = Date.now();
-  const message = createMessage(claim, timestamp);
-  const { decodedResult: contractMessage } = await bridge.contract.claim_to_msg(
-    claim,
-    timestamp
-  );
+  const message = createMessage(request, timestamp);
+  const { decodedResult: contractMessage } =
+    await bridge.contract.stringify_exit_request(request, timestamp);
   expect(contractMessage).toBe(message);
 };
 
-const saveDeposit = async (
-  deposit: Deposit,
+const saveEntry = async (
+  entry: BridgeEntry,
   tx_hash: string,
   bridge: Bridge
 ) => {
-  const dataIndex = bridge === BRIDGE_A ? 0 : 1;
-  let deposit_token_meta = bridge.tokenMeta;
+  const dataIndex = bridge === BRIDGE_A ? "A" : "B";
+  let entry_token_meta = bridge.tokenMeta;
 
-  if (tokenTypeToStr(deposit.token_type) === "Native") {
-    deposit_token_meta = {
-      id: undefined,
+  if (tokenTypeToStr(entry.token_type) === "Native") {
+    entry_token_meta = {
       name: `${bridge.network.name} AE Token`,
       decimals: 18,
       symbol: "AE",
     };
   }
 
-  if (tokenTypeToStr(deposit.token_type) === "Child") {
-    const childTokenCt = await Contract.initialize({
+  if (tokenTypeToStr(entry.token_type) === "Link") {
+    const linkedToken = await Contract.initialize({
       ...bridge.sdk.getContext(),
-      address: deposit.token as `ct_${string}`,
+      address: entry.token as `ct_${string}`,
       aci: FungibleToken_aci,
     });
-    const { decodedResult: meta } = await childTokenCt.meta_info();
-    deposit_token_meta = {
-      id: deposit.token,
-      ...convertAllBigIntsToInts(meta),
-    };
+    entry_token_meta = (await linkedToken.meta_info()).decodedResult;
   }
 
-  executedDeposits[dataIndex].push({ deposit, tx_hash });
-
-  const newClaimArgs = {
-    deposit,
-    deposit_network: mapNetwork(bridge.network),
-    deposit_tx_hash: tx_hash,
-    deposit_token_meta,
+  const newExitRequest = {
+    entry,
+    entry_token_meta,
+    entry_tx_hash: tx_hash,
+    entry_network: mapNetwork(bridge.network),
   };
-  claimsToExecute[dataIndex].push(newClaimArgs);
+
+  executedEntries[dataIndex].push(convertAllBigIntsToInts({ entry, tx_hash }));
+  exitsToProcess[dataIndex].push(convertAllBigIntsToInts(newExitRequest));
 };

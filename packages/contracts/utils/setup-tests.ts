@@ -80,12 +80,9 @@ async function setupBridgeForNetwork(code: string, network: Network) {
     [`BRIDGE_${code}`]: {
       sdk,
       token,
-      tokenMeta: {
-        id: token.$options.address,
-        ...tokenMeta,
-      },
       network,
       contract,
+      tokenMeta,
     },
   };
 }
@@ -113,7 +110,6 @@ async function configureContractsForTesting(
 
   aeSdk.selectAccount(ownerAddress);
   await tokenContract.set_owner(getAccountAddress(bridgeContract));
-  aeSdk.selectAccount(userAddress);
 }
 
 async function getContractOptions(filePath: string) {

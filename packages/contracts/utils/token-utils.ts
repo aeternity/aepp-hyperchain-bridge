@@ -1,17 +1,17 @@
 import { AeSdk, Contract } from "@aeternity/aepp-sdk";
-import { Bridge, ChildToken } from "./types";
+import { Bridge, TokenLink } from "./types";
 import { FungibleToken_aci, Network } from "@aepp-hyperchain-bridge/shared";
 import { sleep } from "bun";
 
 export const setAllowanceIfNeeded = async (
-  child_token: ChildToken,
+  token_link: TokenLink,
   from_account: string,
   for_account: string,
   bridge: Bridge
 ) => {
   const contract = await Contract.initialize({
     ...bridge.sdk.getContext(),
-    address: child_token.ct as `ct_${string}`,
+    address: token_link.local_token as `ct_${string}`,
     aci: FungibleToken_aci,
   });
 
@@ -33,25 +33,25 @@ export const setAllowanceIfNeeded = async (
 };
 
 export const getOriginalTokenBalance = async (
-  childToken: ChildToken,
+  tokenLink: TokenLink,
   aeSdk: AeSdk,
   account: string
 ) => {
-  if (!childToken) return 0;
-  if (childToken.is_native) {
+  if (!tokenLink) return 0;
+  if (tokenLink.is_source_native) {
     return parseInt(await aeSdk.getBalance(account as `ak_${string}`));
   }
 
-  return getTokenBalanceOfAccount(childToken.ct, aeSdk, account);
+  return getTokenBalanceOfAccount(tokenLink.local_token, aeSdk, account);
 };
 
 export const getBridgedTokenBalance = (
-  childToken: ChildToken,
+  tokenLink: TokenLink,
   aeSdk: AeSdk,
   account: string
 ) => {
-  if (!childToken) return 0;
-  return getTokenBalanceOfAccount(childToken.ct, aeSdk, account);
+  if (!tokenLink) return 0;
+  return getTokenBalanceOfAccount(tokenLink.local_token, aeSdk, account);
 };
 
 export const getTokenBalanceOfAccount = async (

@@ -1,7 +1,7 @@
 {
   "ae_uat": {
     "bridge": {
-      "address": "ct_2HSPzVSSN9NWJV1mTRWEnC2HT5nmwkbyU9YDcZXfWsj1Bx4veR",
+      "address": "ct_2DVsdHUGzBzBdGDGTvP2H5dGZGGjCYhV2GQR71ERErjjwRhidx",
       "aci": [
         {
           "namespace": {
@@ -479,33 +479,33 @@
               },
               {
                 "arguments": [],
-                "name": "claims",
+                "name": "token_links",
                 "payable": false,
                 "returns": {
                   "list": [
-                    "HyperchainBridge.claim"
+                    "HyperchainBridge.token_link"
                   ]
                 },
                 "stateful": false
               },
               {
                 "arguments": [],
-                "name": "deposits",
+                "name": "bridge_entries",
                 "payable": false,
                 "returns": {
                   "list": [
-                    "HyperchainBridge.deposit"
+                    "HyperchainBridge.bridge_entry"
                   ]
                 },
                 "stateful": false
               },
               {
                 "arguments": [],
-                "name": "child_tokens",
+                "name": "processed_exits",
                 "payable": false,
                 "returns": {
                   "list": [
-                    "HyperchainBridge.child_token"
+                    "HyperchainBridge.exit_request"
                   ]
                 },
                 "stateful": false
@@ -513,12 +513,16 @@
               {
                 "arguments": [
                   {
-                    "name": "for_network",
-                    "type": "HyperchainBridge.network"
-                  },
-                  {
                     "name": "amount",
                     "type": "int"
+                  },
+                  {
+                    "name": "token_type",
+                    "type": "HyperchainBridge.token_type"
+                  },
+                  {
+                    "name": "target_network",
+                    "type": "HyperchainBridge.network"
                   },
                   {
                     "name": "token",
@@ -527,22 +531,18 @@
                         "FungibleToken"
                       ]
                     }
-                  },
-                  {
-                    "name": "token_type",
-                    "type": "HyperchainBridge.token_type"
                   }
                 ],
-                "name": "deposit",
+                "name": "enter_bridge",
                 "payable": true,
-                "returns": "int",
+                "returns": "HyperchainBridge.bridge_entry",
                 "stateful": true
               },
               {
                 "arguments": [
                   {
-                    "name": "arg",
-                    "type": "HyperchainBridge.claim"
+                    "name": "request",
+                    "type": "HyperchainBridge.exit_request"
                   },
                   {
                     "name": "timestamp",
@@ -553,23 +553,23 @@
                     "type": "signature"
                   }
                 ],
-                "name": "claim",
+                "name": "exit_bridge",
                 "payable": false,
-                "returns": "HyperchainBridge.child_token",
+                "returns": "HyperchainBridge.token_link",
                 "stateful": true
               },
               {
                 "arguments": [
                   {
-                    "name": "arg",
-                    "type": "HyperchainBridge.claim"
+                    "name": "request",
+                    "type": "HyperchainBridge.exit_request"
                   },
                   {
-                    "name": "t",
+                    "name": "timestamp",
                     "type": "int"
                   }
                 ],
-                "name": "claim_to_msg",
+                "name": "stringify_exit_request",
                 "payable": false,
                 "returns": "string",
                 "stateful": false
@@ -585,11 +585,11 @@
                     }
                   }
                 ],
-                "name": "get_child_token",
+                "name": "get_token_link",
                 "payable": false,
                 "returns": {
                   "option": [
-                    "HyperchainBridge.child_token"
+                    "HyperchainBridge.token_link"
                   ]
                 },
                 "stateful": false
@@ -597,15 +597,15 @@
               {
                 "arguments": [
                   {
-                    "name": "arg",
-                    "type": "HyperchainBridge.claim"
+                    "name": "request",
+                    "type": "HyperchainBridge.exit_request"
                   }
                 ],
-                "name": "search_child_token",
+                "name": "find_token_link",
                 "payable": false,
                 "returns": {
                   "option": [
-                    "HyperchainBridge.child_token"
+                    "HyperchainBridge.token_link"
                   ]
                 },
                 "stateful": false
@@ -617,36 +617,36 @@
             "state": {
               "record": [
                 {
-                  "name": "owner",
+                  "name": "operator",
                   "type": "address"
-                },
-                {
-                  "name": "deposits",
-                  "type": {
-                    "list": [
-                      "HyperchainBridge.deposit"
-                    ]
-                  }
-                },
-                {
-                  "name": "child_tokens",
-                  "type": {
-                    "list": [
-                      "HyperchainBridge.child_token"
-                    ]
-                  }
-                },
-                {
-                  "name": "claims",
-                  "type": {
-                    "list": [
-                      "HyperchainBridge.claim"
-                    ]
-                  }
                 },
                 {
                   "name": "token_ref",
                   "type": "FungibleToken"
+                },
+                {
+                  "name": "token_links",
+                  "type": {
+                    "list": [
+                      "HyperchainBridge.token_link"
+                    ]
+                  }
+                },
+                {
+                  "name": "bridge_entries",
+                  "type": {
+                    "list": [
+                      "HyperchainBridge.bridge_entry"
+                    ]
+                  }
+                },
+                {
+                  "name": "processed_exits",
+                  "type": {
+                    "list": [
+                      "HyperchainBridge.exit_request"
+                    ]
+                  }
                 }
               ]
             },
@@ -659,7 +659,7 @@
                       "Native": []
                     },
                     {
-                      "Child": []
+                      "Link": []
                     },
                     {
                       "Standard": []
@@ -669,15 +669,11 @@
                 "vars": []
               },
               {
-                "name": "deposit",
+                "name": "bridge_entry",
                 "typedef": {
                   "record": [
                     {
                       "name": "idx",
-                      "type": "int"
-                    },
-                    {
-                      "name": "amount",
                       "type": "int"
                     },
                     {
@@ -693,43 +689,47 @@
                       }
                     },
                     {
+                      "name": "amount",
+                      "type": "int"
+                    },
+                    {
+                      "name": "exit_link",
+                      "type": {
+                        "option": [
+                          "HyperchainBridge.token_link"
+                        ]
+                      }
+                    },
+                    {
                       "name": "token_type",
                       "type": "HyperchainBridge.token_type"
                     },
                     {
-                      "name": "for_network",
+                      "name": "target_network",
                       "type": "HyperchainBridge.network"
-                    },
-                    {
-                      "name": "original_token",
-                      "type": {
-                        "option": [
-                          "HyperchainBridge.child_token"
-                        ]
-                      }
                     }
                   ]
                 },
                 "vars": []
               },
               {
-                "name": "claim",
+                "name": "exit_request",
                 "typedef": {
                   "record": [
                     {
-                      "name": "deposit",
-                      "type": "HyperchainBridge.deposit"
+                      "name": "entry",
+                      "type": "HyperchainBridge.bridge_entry"
                     },
                     {
-                      "name": "deposit_tx_hash",
+                      "name": "entry_tx_hash",
                       "type": "string"
                     },
                     {
-                      "name": "deposit_network",
+                      "name": "entry_network",
                       "type": "HyperchainBridge.network"
                     },
                     {
-                      "name": "deposit_token_meta",
+                      "name": "entry_token_meta",
                       "type": "HyperchainBridge.token_meta"
                     }
                   ]
@@ -737,19 +737,15 @@
                 "vars": []
               },
               {
-                "name": "child_token",
+                "name": "token_link",
                 "typedef": {
                   "record": [
                     {
-                      "name": "ct",
+                      "name": "local_token",
                       "type": "FungibleToken"
                     },
                     {
-                      "name": "is_native",
-                      "type": "bool"
-                    },
-                    {
-                      "name": "original_token",
+                      "name": "source_token",
                       "type": {
                         "option": [
                           "FungibleToken"
@@ -757,8 +753,12 @@
                       }
                     },
                     {
-                      "name": "origin_network",
+                      "name": "source_network",
                       "type": "HyperchainBridge.network"
+                    },
+                    {
+                      "name": "is_source_native",
+                      "type": "bool"
                     }
                   ]
                 },
@@ -768,14 +768,6 @@
                 "name": "token_meta",
                 "typedef": {
                   "record": [
-                    {
-                      "name": "id",
-                      "type": {
-                        "option": [
-                          "FungibleToken"
-                        ]
-                      }
-                    },
                     {
                       "name": "name",
                       "type": "string"
@@ -818,7 +810,7 @@
       ]
     },
     "token": {
-      "address": "ct_E1rdaXF1BtrW7ruwapxWzz7WXLbGMsJpNtV6D6Hdq7trkr8sR",
+      "address": "ct_2qZQtcZ4yLhRREN7tsEsvfAULYqyYUKZ6X8gWEwQET36SyD6uk",
       "aci": [
         {
           "namespace": {
@@ -1283,7 +1275,7 @@
   },
   "ae_mainnet": {
     "bridge": {
-      "address": "ct_1BtpxG8t3v4WencidgnFfEMCXm2u8qLsRWndSVtV8Mjd6dAHU",
+      "address": "ct_29Ya77mpKnbtQh63mvESeE6L2upd6ZnxtBADJgPwejRAx9tC35",
       "aci": [
         {
           "namespace": {
@@ -1761,33 +1753,33 @@
               },
               {
                 "arguments": [],
-                "name": "claims",
+                "name": "token_links",
                 "payable": false,
                 "returns": {
                   "list": [
-                    "HyperchainBridge.claim"
+                    "HyperchainBridge.token_link"
                   ]
                 },
                 "stateful": false
               },
               {
                 "arguments": [],
-                "name": "deposits",
+                "name": "bridge_entries",
                 "payable": false,
                 "returns": {
                   "list": [
-                    "HyperchainBridge.deposit"
+                    "HyperchainBridge.bridge_entry"
                   ]
                 },
                 "stateful": false
               },
               {
                 "arguments": [],
-                "name": "child_tokens",
+                "name": "processed_exits",
                 "payable": false,
                 "returns": {
                   "list": [
-                    "HyperchainBridge.child_token"
+                    "HyperchainBridge.exit_request"
                   ]
                 },
                 "stateful": false
@@ -1795,12 +1787,16 @@
               {
                 "arguments": [
                   {
-                    "name": "for_network",
-                    "type": "HyperchainBridge.network"
-                  },
-                  {
                     "name": "amount",
                     "type": "int"
+                  },
+                  {
+                    "name": "token_type",
+                    "type": "HyperchainBridge.token_type"
+                  },
+                  {
+                    "name": "target_network",
+                    "type": "HyperchainBridge.network"
                   },
                   {
                     "name": "token",
@@ -1809,22 +1805,18 @@
                         "FungibleToken"
                       ]
                     }
-                  },
-                  {
-                    "name": "token_type",
-                    "type": "HyperchainBridge.token_type"
                   }
                 ],
-                "name": "deposit",
+                "name": "enter_bridge",
                 "payable": true,
-                "returns": "int",
+                "returns": "HyperchainBridge.bridge_entry",
                 "stateful": true
               },
               {
                 "arguments": [
                   {
-                    "name": "arg",
-                    "type": "HyperchainBridge.claim"
+                    "name": "request",
+                    "type": "HyperchainBridge.exit_request"
                   },
                   {
                     "name": "timestamp",
@@ -1835,23 +1827,23 @@
                     "type": "signature"
                   }
                 ],
-                "name": "claim",
+                "name": "exit_bridge",
                 "payable": false,
-                "returns": "HyperchainBridge.child_token",
+                "returns": "HyperchainBridge.token_link",
                 "stateful": true
               },
               {
                 "arguments": [
                   {
-                    "name": "arg",
-                    "type": "HyperchainBridge.claim"
+                    "name": "request",
+                    "type": "HyperchainBridge.exit_request"
                   },
                   {
-                    "name": "t",
+                    "name": "timestamp",
                     "type": "int"
                   }
                 ],
-                "name": "claim_to_msg",
+                "name": "stringify_exit_request",
                 "payable": false,
                 "returns": "string",
                 "stateful": false
@@ -1867,11 +1859,11 @@
                     }
                   }
                 ],
-                "name": "get_child_token",
+                "name": "get_token_link",
                 "payable": false,
                 "returns": {
                   "option": [
-                    "HyperchainBridge.child_token"
+                    "HyperchainBridge.token_link"
                   ]
                 },
                 "stateful": false
@@ -1879,15 +1871,15 @@
               {
                 "arguments": [
                   {
-                    "name": "arg",
-                    "type": "HyperchainBridge.claim"
+                    "name": "request",
+                    "type": "HyperchainBridge.exit_request"
                   }
                 ],
-                "name": "search_child_token",
+                "name": "find_token_link",
                 "payable": false,
                 "returns": {
                   "option": [
-                    "HyperchainBridge.child_token"
+                    "HyperchainBridge.token_link"
                   ]
                 },
                 "stateful": false
@@ -1899,36 +1891,36 @@
             "state": {
               "record": [
                 {
-                  "name": "owner",
+                  "name": "operator",
                   "type": "address"
-                },
-                {
-                  "name": "deposits",
-                  "type": {
-                    "list": [
-                      "HyperchainBridge.deposit"
-                    ]
-                  }
-                },
-                {
-                  "name": "child_tokens",
-                  "type": {
-                    "list": [
-                      "HyperchainBridge.child_token"
-                    ]
-                  }
-                },
-                {
-                  "name": "claims",
-                  "type": {
-                    "list": [
-                      "HyperchainBridge.claim"
-                    ]
-                  }
                 },
                 {
                   "name": "token_ref",
                   "type": "FungibleToken"
+                },
+                {
+                  "name": "token_links",
+                  "type": {
+                    "list": [
+                      "HyperchainBridge.token_link"
+                    ]
+                  }
+                },
+                {
+                  "name": "bridge_entries",
+                  "type": {
+                    "list": [
+                      "HyperchainBridge.bridge_entry"
+                    ]
+                  }
+                },
+                {
+                  "name": "processed_exits",
+                  "type": {
+                    "list": [
+                      "HyperchainBridge.exit_request"
+                    ]
+                  }
                 }
               ]
             },
@@ -1941,7 +1933,7 @@
                       "Native": []
                     },
                     {
-                      "Child": []
+                      "Link": []
                     },
                     {
                       "Standard": []
@@ -1951,15 +1943,11 @@
                 "vars": []
               },
               {
-                "name": "deposit",
+                "name": "bridge_entry",
                 "typedef": {
                   "record": [
                     {
                       "name": "idx",
-                      "type": "int"
-                    },
-                    {
-                      "name": "amount",
                       "type": "int"
                     },
                     {
@@ -1975,43 +1963,47 @@
                       }
                     },
                     {
+                      "name": "amount",
+                      "type": "int"
+                    },
+                    {
+                      "name": "exit_link",
+                      "type": {
+                        "option": [
+                          "HyperchainBridge.token_link"
+                        ]
+                      }
+                    },
+                    {
                       "name": "token_type",
                       "type": "HyperchainBridge.token_type"
                     },
                     {
-                      "name": "for_network",
+                      "name": "target_network",
                       "type": "HyperchainBridge.network"
-                    },
-                    {
-                      "name": "original_token",
-                      "type": {
-                        "option": [
-                          "HyperchainBridge.child_token"
-                        ]
-                      }
                     }
                   ]
                 },
                 "vars": []
               },
               {
-                "name": "claim",
+                "name": "exit_request",
                 "typedef": {
                   "record": [
                     {
-                      "name": "deposit",
-                      "type": "HyperchainBridge.deposit"
+                      "name": "entry",
+                      "type": "HyperchainBridge.bridge_entry"
                     },
                     {
-                      "name": "deposit_tx_hash",
+                      "name": "entry_tx_hash",
                       "type": "string"
                     },
                     {
-                      "name": "deposit_network",
+                      "name": "entry_network",
                       "type": "HyperchainBridge.network"
                     },
                     {
-                      "name": "deposit_token_meta",
+                      "name": "entry_token_meta",
                       "type": "HyperchainBridge.token_meta"
                     }
                   ]
@@ -2019,19 +2011,15 @@
                 "vars": []
               },
               {
-                "name": "child_token",
+                "name": "token_link",
                 "typedef": {
                   "record": [
                     {
-                      "name": "ct",
+                      "name": "local_token",
                       "type": "FungibleToken"
                     },
                     {
-                      "name": "is_native",
-                      "type": "bool"
-                    },
-                    {
-                      "name": "original_token",
+                      "name": "source_token",
                       "type": {
                         "option": [
                           "FungibleToken"
@@ -2039,8 +2027,12 @@
                       }
                     },
                     {
-                      "name": "origin_network",
+                      "name": "source_network",
                       "type": "HyperchainBridge.network"
+                    },
+                    {
+                      "name": "is_source_native",
+                      "type": "bool"
                     }
                   ]
                 },
@@ -2050,14 +2042,6 @@
                 "name": "token_meta",
                 "typedef": {
                   "record": [
-                    {
-                      "name": "id",
-                      "type": {
-                        "option": [
-                          "FungibleToken"
-                        ]
-                      }
-                    },
                     {
                       "name": "name",
                       "type": "string"
@@ -2100,7 +2084,7 @@
       ]
     },
     "token": {
-      "address": "ct_LcBBsxygsfkfTNygbZGJE8ziWw42tE1kRMQmdfw3c3Umc2SDW",
+      "address": "ct_2Kkm6JkLvpg3LGAnyQSoAnPofR2qp8mrUCZ2e8F1xEjVFFuCE5",
       "aci": [
         {
           "namespace": {

@@ -21,6 +21,7 @@
       "dependencies": {
         "@aepp-hyperchain-bridge/shared": "file:../shared",
         "@aeternity/aepp-sdk": "^14.0.0",
+        "tweetnacl": "^1.0.3",
       },
       "devDependencies": {
         "@types/bun": "latest",

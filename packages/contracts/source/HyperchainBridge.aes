@@ -5,43 +5,42 @@ include "List.aes"
 include "String.aes"
 include "./FungibleToken.aes"
 
-/// @title Bridge contract for Hyperchain
+/// @title Bridge contract for Hyperchains
 /// @notice This contract allows users to bridge tokens between Aeternity chains
-/// @author Yusuf Seyrek
-/// @dev This contract is a bridge contract created for Hyperchains. It allows users to deposit tokens from any Aeternity chain and claim them on another Aeternity chain.
+/// @author Yusuf Seyrek (seyrek91@gmail.com)
+/// @dev 
 payable main contract HyperchainBridge = 
   record state = {
-    owner         : address,
-    deposits      : list(deposit),
-    child_tokens  : list(child_token),
-    claims        : list(claim),
-    token_ref     : FungibleToken }
+    operator        : address,
+    token_ref       : FungibleToken, 
+    token_links     : list(token_link),
+    bridge_entries  : list(bridge_entry),
+    processed_exits : list(exit_request) }
 
-  datatype token_type = Native | Child | Standard
+  datatype token_type = Native | Link | Standard
 
-  record deposit = {
+  record bridge_entry = {
     idx             : int,
-    amount          : int,
     from            : address,
     token           : option(FungibleToken),
+    amount          : int,
+    exit_link       : option(token_link),
     token_type      : token_type,
-    for_network     : network,
-    original_token  : option(child_token) }
+    target_network  : network }
 
-  record claim = {
-    deposit           : deposit,
-    deposit_tx_hash   : string,
-    deposit_network   : network,
-    deposit_token_meta: token_meta }
+  record exit_request = {
+    entry           : bridge_entry,
+    entry_tx_hash   : string,
+    entry_network   : network,
+    entry_token_meta: token_meta }
 
-  record child_token = {
-    ct                : FungibleToken,
-    is_native         : bool,
-    original_token    : option(FungibleToken),
-    origin_network    : network }
+  record token_link = {
+    local_token       : FungibleToken,
+    source_token      : option(FungibleToken),
+    source_network    : network, 
+    is_source_native  : bool }
 
   record token_meta = {
-    id        : option(FungibleToken),
     name      : string,
     symbol    : string,
     decimals  : int }
@@ -52,29 +51,31 @@ payable main contract HyperchainBridge =
     name  : string }
 
   stateful entrypoint init(): state = { 
-    claims        = [],
-    deposits      = [],
-    child_tokens  = [],
-    owner         = Call.caller,
-    token_ref     = Chain.create(
+    operator        = Call.caller,
+    token_links     = [],
+    bridge_entries  = [],
+    processed_exits = [],
+    token_ref       = Chain.create(
       "HyperchainBridgeToken", 18, "HBT", None): FungibleToken }
 
-  entrypoint claims(): list(claim) = state.claims
-  entrypoint deposits(): list(deposit) = state.deposits
-  entrypoint child_tokens(): list(child_token) = state.child_tokens
+  entrypoint token_links(): list(token_link) = state.token_links
+  entrypoint bridge_entries(): list(bridge_entry) = state.bridge_entries
+  entrypoint processed_exits(): list(exit_request) = state.processed_exits
   
-  payable stateful entrypoint deposit(
-    for_network: network, 
-    amount: int, 
-    token: option(FungibleToken), 
-    token_type: token_type
-    ): int =      
+  payable stateful entrypoint enter_bridge(
+    amount: int,
+    token_type: token_type,
+    target_network: network, 
+    token: option(FungibleToken)
+    ): bridge_entry =
+    require_not_same_network(target_network)
+
     switch(token_type)
       Native => 
         require_valid_amount(amount)
         Chain.spend(Contract.address, amount)
-      Child => 
-        require_child_token(token)
+      Link => 
+        require_token_link(token)
         Option.force(token).transfer_allowance(
           Call.caller, Contract.address, amount)
         Option.force(token).burn(amount)
@@ -83,112 +84,117 @@ payable main contract HyperchainBridge =
         Option.force(token).transfer_allowance(
           Call.caller, Contract.address, amount)
 
-    let idx = List.length(state.deposits)
-    let new_deposit = { 
+    let idx = List.length(state.bridge_entries)
+    let new_bridge_entry = { 
       idx = idx, 
       token = token, 
       amount = amount, 
       from = Call.caller, 
       token_type = token_type,
-      for_network = for_network,
-      original_token = get_child_token(token) }
+      target_network = target_network,
+      exit_link = get_token_link(token) }
 
-    put(state{deposits = state.deposits ++ [new_deposit]})
-    idx
+    put(state{bridge_entries = state.bridge_entries ++ [new_bridge_entry]})
+    new_bridge_entry
 
-  stateful entrypoint claim(arg: claim, timestamp: int, sig: signature): child_token =
-    require_valid_claim(arg, timestamp, sig)
-      
-    let out_token = 
-      if (arg.deposit.token_type == Child)
-        let child_token_out = Option.force(arg.deposit.original_token)
+  stateful entrypoint exit_bridge(request: exit_request, timestamp: int, sig: signature): token_link =
+    verify_exit_request(request, timestamp, sig)
 
-        if (child_token_out.is_native) 
-          Chain.spend(arg.deposit.from, arg.deposit.amount)
+    let exit_link = 
+      if (request.entry.token_type == Link)
+        let _exit_link = Option.force(request.entry.exit_link)
+
+        if (_exit_link.is_source_native) 
+          Chain.spend(request.entry.from, request.entry.amount)
         else 
-            Option.force(child_token_out.original_token) // check this line
-              .mint(arg.deposit.from, arg.deposit.amount)
+            Option.force(_exit_link.source_token) // check this line
+              .mint(request.entry.from, request.entry.amount)
 
-        child_token_out
+        _exit_link
       else
-        switch(search_child_token(arg))
-          None => create_child_token_and_mint(arg)
+        switch(find_token_link(request))
+          None => create_token_link_and_mint(request)
           Some(found) =>
-            found.ct.mint(arg.deposit.from, arg.deposit.amount)
+            found.local_token.mint(request.entry.from, request.entry.amount)
             found
       
-    put(state{claims = state.claims ++ [arg]})
-    out_token
+    put(state{processed_exits = state.processed_exits ++ [request]})
+    exit_link
 
 
-  stateful function create_child_token_and_mint(arg: claim) =
-    let deployed_token = Chain.clone(
+  stateful function create_token_link_and_mint(request: exit_request) =
+    let new_token = Chain.clone(
       ref=state.token_ref,
-      String.concat("Bridged ", arg.deposit_token_meta.name), 
-      arg.deposit_token_meta.decimals,
-      String.concat("b", arg.deposit_token_meta.symbol),
-      String.to_int(Int.to_str(arg.deposit.amount))): FungibleToken
+      String.concat("Bridged ", request.entry_token_meta.name), 
+      request.entry_token_meta.decimals,
+      String.concat("b", request.entry_token_meta.symbol),
+      String.to_int(Int.to_str(request.entry.amount))): FungibleToken
 
-    deployed_token.transfer(arg.deposit.from, arg.deposit.amount)
+    new_token.transfer(request.entry.from, request.entry.amount)
 
-    let is_native = arg.deposit.token_type == Native
-    let child_token = { 
-      ct = deployed_token, 
-      original_token = if (!is_native) arg.deposit_token_meta.id else None,
-      is_native = is_native,
-      origin_network = arg.deposit_network }
+    let native_source = request.entry.token_type == Native
+    let new_link = {
+      local_token      = new_token, 
+      source_token     = if (!native_source) request.entry.token else None,
+      is_source_native = native_source,
+      source_network   = request.entry_network }
 
-    put(state{child_tokens = state.child_tokens ++ [child_token]})
-    child_token
-
-
-  entrypoint claim_to_msg(arg: claim, t: int): string =
-    let token_type_str = switch(arg.deposit.token_type)
-        Native => "native"
-        Child => "child"
-        Standard => "standard"
-
-    let token_id = 
-      switch(arg.deposit_token_meta.id)
-        None => ""
-        Some(ct) => get_contract_address_string(ct)
-          
-    let original_token = 
-      switch(arg.deposit.original_token)
-        None => ""
-        Some(t) => String.concats([
-          get_contract_address_string(t.ct),
-          if (t.is_native) "true" else "false",
-          if (Option.is_some(t.original_token)) 
-            get_contract_address_string(Option.force(t.original_token))
-          else "",
-          t.origin_network.id,
-          t.origin_network.url
-          ])
-
-    let msg = String.concats([
-      Int.to_str(arg.deposit.idx), 
-      arg.deposit_tx_hash,
-      token_type_str,
-      Int.to_str(arg.deposit.amount),
-      token_id,
-      Int.to_str(arg.deposit_token_meta.decimals),
-      arg.deposit.for_network.id,
-      arg.deposit.for_network.url,
-      arg.deposit_network.id,
-      arg.deposit_network.url,
-      Address.to_str(arg.deposit.from),
-      original_token,
-      Int.to_str(t)])
-
-    String.to_lower(msg)
+    put(state{token_links = state.token_links ++ [new_link]})
+    new_link
 
 
-  function require_child_token(token: option(FungibleToken)) =
-    require(is_child_token(token), "NOT_CHILD_TOKEN")
+  function stringify_network_keys(network: network): string =
+    String.concat(network.id, network.url)
 
-  function require_owner() =
-    require(Call.caller == state.owner, "ONLY_OWNER_CALL_ALLOWED")
+  function stringify_token_meta(meta: token_meta): string =
+    String.concats([
+      meta.name,
+      meta.symbol,
+      Int.to_str(meta.decimals)])
+
+  function stringify_token_link(_link: option(token_link)): string =
+    if (Option.is_none(_link)) ""
+    else
+      let link = Option.force(_link)
+      String.concats([
+        get_token_contract_address_str(Some(link.local_token)),
+        get_token_contract_address_str(link.source_token),
+        stringify_network_keys(link.source_network),
+        if (link.is_source_native) "true" else "false" ])
+
+  function stringify_token_type(token_type: token_type): string =
+    switch(token_type)
+      Native => "native"
+      Link => "link"
+      Standard => "standard"
+
+  function stringify_bridge_entry(entry: bridge_entry): string =
+    String.concats([
+      Int.to_str(entry.idx), 
+      Address.to_str(entry.from),
+      get_token_contract_address_str(entry.token),
+      Int.to_str(entry.amount),
+      stringify_token_link(entry.exit_link),
+      stringify_token_type(entry.token_type),
+      stringify_network_keys(entry.target_network)])
+
+  entrypoint stringify_exit_request(request: exit_request, timestamp: int): string =
+    let timed_exit_request_str = 
+      String.concats([
+        stringify_bridge_entry(request.entry),
+        request.entry_tx_hash,
+        stringify_network_keys(request.entry_network),
+        stringify_token_meta(request.entry_token_meta),
+        Int.to_str(timestamp) ])
+      
+    String.to_lower(timed_exit_request_str)
+
+
+  function require_token_link(token: option(FungibleToken)) =
+    require(has_token_linked(token), "NOT_LINKED_TOKEN")
+
+  function require_operator() =
+    require(Call.caller == state.operator, "ONLY_operator_CALL_ALLOWED")
 
   function require_standard_aex9(token: option(FungibleToken)) =
     require(List.contains(
@@ -199,48 +205,49 @@ payable main contract HyperchainBridge =
     require(amount > 0, "INVALID_AMOUNT")
     require(Call.value == amount, "CALL_VALUE_AND_AMOUNT_NOT_EQUAL")
 
-  function require_valid_claim(arg: claim, timestamp: int, sig: signature) =
-    //check new fields
-    require(!check_claim_exists(arg), "CLAIM_ALREADY_PROCESSED")
-    require(timestamp > 0, "INVALID_TIMESTAMP")
-    require(arg.deposit.idx >= 0, "INVALID_DEPOSIT_INDEX")
-    require(arg.deposit.amount > 0, "INVALID_AMOUNT")
-    require(Chain.network_id == arg.deposit.for_network.id, "INVALID_NETWORK_ID")
-    require(Chain.timestamp - timestamp < 600000, "TIMESTAMP_EXPIRED")
-    require(arg.deposit.from == Call.caller, "INVALID_DEPOSITOR")
-    if (arg.deposit.token_type == Child)
-      require(Option.is_some(arg.deposit.original_token), 
-        "ORIGINAL_TOKEN_NOT_PROVIDED")
+  function require_not_same_network(target_network: network) =
+    require(Chain.network_id != target_network.id, "SAME_NETWORK")
 
+  function verify_exit_request(request: exit_request, timestamp: int, sig: signature) =
+    require(Call.caller == request.entry.from, "WRONG_CALLER")
+    require(request.entry.amount > 0, "AMOUNT_CANNOT_BE_ZERO")
+    require(!check_request_processed(request), "ALREADY_PROCESSED")
+    require(Chain.timestamp - timestamp < 60000, "TIMESTAMP_EXPIRED")
+    require(Chain.network_id == request.entry.target_network.id, "BAD_TARGET_NETWORK")
+    if (request.entry.token_type == Link)
+      require(Option.is_some(request.entry.exit_link), 
+        "EXIT_LINK_REQUIRED_FOR_LINKED_TOKEN")
     require(
       Crypto.verify_sig(
-        String.to_bytes(claim_to_msg(arg, timestamp)), state.owner, sig), 
+        String.to_bytes(stringify_exit_request(request, timestamp)), state.operator, sig), 
         "INVALID_SIGNATURE")
 
-  function check_claim_exists(arg: claim) =
+  function check_request_processed(request: exit_request) =
     List.find(
-      (c) => c.deposit.idx == arg.deposit.idx &&
-        c.deposit_tx_hash == arg.deposit_tx_hash &&
-        c.deposit.for_network.id == arg.deposit.for_network.id &&
-        c.deposit.for_network.url == arg.deposit.for_network.url
-      ,state.claims) != None
+      (c) => c.entry.idx == request.entry.idx &&
+        c.entry_tx_hash == request.entry_tx_hash &&
+        c.entry.target_network.id == request.entry.target_network.id &&
+        c.entry.target_network.url == request.entry.target_network.url
+      ,state.processed_exits) != None
 
-  entrypoint get_child_token(token: option(FungibleToken)) =
+  entrypoint get_token_link(token: option(FungibleToken)) =
     if (Option.is_none(token)) None
-    else List.find((p) => p.ct == Option.force(token), state.child_tokens)
+    else List.find((p) => p.local_token == Option.force(token), state.token_links)
 
-  entrypoint search_child_token(arg: claim) =
-    let is_native = arg.deposit.token_type == Native
+  entrypoint find_token_link(request: exit_request) =
+    let is_source_native = request.entry.token_type == Native
     List.find(
-      (t) => t.original_token == arg.deposit_token_meta.id && 
-        t.origin_network.id == arg.deposit_network.id && 
-        t.origin_network.url == arg.deposit_network.url &&
-        t.is_native == is_native
-      ,state.child_tokens)
+      (t) => t.source_token == request.entry.token && 
+        t.source_network.id == request.entry_network.id && 
+        t.source_network.url == request.entry_network.url &&
+        t.is_source_native == is_source_native
+      ,state.token_links)
   
-  function is_child_token(token: option(FungibleToken)) =
-    get_child_token(token) != None
+  function has_token_linked(token: option(FungibleToken)) =
+    get_token_link(token) != None
 
-  function get_contract_address_string(ct: FungibleToken): string = 
-    let _id = Pair.snd(String.split(2, Address.to_str(ct.address)))
-    String.concat("ct", _id)
+  function get_token_contract_address_str(token: option(FungibleToken)): string = 
+    if (Option.is_none(token)) ""
+    else
+      let _id = Pair.snd(String.split(2, Address.to_str(Option.force(token).address)))
+      String.concat("ct", _id)
