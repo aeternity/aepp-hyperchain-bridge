@@ -1,21 +1,34 @@
 {
-  "name": "aepp-hyperchain-bridge",
+  "name": "bun-react-template",
+  "version": "0.1.0",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
+  "type": "module",
+  "main": "src/index.tsx",
+  "module": "src/index.tsx",
   "scripts": {
-    "deploy:token": "bun run packages/contracts/scripts/deploy-token.ts",
-    "deploy:bridge": "bun run packages/contracts/scripts/deploy-bridge.ts",
-    "setup:bridge": "bun run packages/contracts/scripts/setup-bridge.ts",
-    "test:contracts": "cd packages/contracts && bun run test",
-    "dev:frontend": "cd packages/frontend && bun run dev",
-    "start:frontend": "cd packages/frontend && bun run start",
-    "dev:backend": "cd packages/backend && bun run dev",
-    "start:backend": "cd packages/backend && bun run start",
-    "dev": "concurrently \"bun dev:frontend\" \"bun dev:backend\""
+    "dev": "bun --hot src/web/index.ts",
+    "start": "NODE_ENV=production bun src/index.tsx",
+    "build": "bun run build.ts",
+    "tests": "bun test --timeout 30000",
+    "deploy-bridge": "bun run ./src/scripts/deploy-bridge.ts"
   },
   "dependencies": {
-    "concurrently": "^9.1.2"
+    "@aeternity/aepp-sdk": "^14.0.0",
+    "@heroicons/react": "^2.2.0",
+    "@tanstack/react-query": "^5.69.3",
+    "bignumber.js": "^9.1.2",
+    "bun-plugin-tailwind": "^0.0.14",
+    "daisyui": "^5.0.9",
+    "moment": "^2.30.1",
+    "notistack": "^3.0.2",
+    "react": "^19",
+    "react-dom": "^19",
+    "react-intersection-observer": "^9.16.0",
+    "tailwindcss": "^4.0.6"
+  },
+  "devDependencies": {
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/bun": "latest"
   }
 }
