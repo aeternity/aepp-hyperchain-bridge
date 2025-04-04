@@ -1,7 +1,7 @@
 {
   "ae_uat": {
     "bridge": {
-      "address": "ct_rywVDtNCDyY6pfhEVw5D5rLJoQ2NBh1VmeHmXKX93xZMSwepk",
+      "address": "ct_FGrTH9Np5KNUC6sukGUNQ8EkvwE7xT9xrgV99xCzbxuhUvHrf",
       "aci": [
         {
           "namespace": {
@@ -513,6 +513,22 @@
               {
                 "arguments": [
                   {
+                    "name": "tx_hash",
+                    "type": "string"
+                  },
+                  {
+                    "name": "network_id",
+                    "type": "string"
+                  }
+                ],
+                "name": "is_entry_transaction_processed",
+                "payable": false,
+                "returns": "bool",
+                "stateful": false
+              },
+              {
+                "arguments": [
+                  {
                     "name": "amount",
                     "type": "int"
                   },
@@ -810,7 +826,7 @@
       ]
     },
     "token": {
-      "address": "ct_iRBPkT9nGwKKyazKw2LRZohQ9WZM91X3AaeY7PGghQxyf8Hut",
+      "address": "ct_2aCugAWto9gDiz5Lv2AYS53WggDfv8EfsjzdRL6mmT9XTekeps",
       "aci": [
         {
           "namespace": {
@@ -1275,7 +1291,7 @@
   },
   "ae_mainnet": {
     "bridge": {
-      "address": "ct_T43VVTebfkbwXt7a6FaeitEEwHUUdS3YrhEMfUw7QXUG7PXgc",
+      "address": "ct_9DqhbfVUR6fvLtzGYHqBNFSoxgow8Pupx6NsJu85R3QGKDHtq",
       "aci": [
         {
           "namespace": {
@@ -1787,6 +1803,22 @@
               {
                 "arguments": [
                   {
+                    "name": "tx_hash",
+                    "type": "string"
+                  },
+                  {
+                    "name": "network_id",
+                    "type": "string"
+                  }
+                ],
+                "name": "is_entry_transaction_processed",
+                "payable": false,
+                "returns": "bool",
+                "stateful": false
+              },
+              {
+                "arguments": [
+                  {
                     "name": "amount",
                     "type": "int"
                   },
@@ -2084,7 +2116,7 @@
       ]
     },
     "token": {
-      "address": "ct_UMiywSWLMaYxnKebPy6EVzCMwFBvkTBQevHfSqqnJTRsEyFtM",
+      "address": "ct_xavbhgP82qGJjoSyxndA57RBeMBZ859Gki425eZ4Uf4P6mTSV",
       "aci": [
         {
           "namespace": {
