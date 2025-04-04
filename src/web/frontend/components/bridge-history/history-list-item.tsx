@@ -1,11 +1,10 @@
+import moment from "moment";
 import { BridgeEntryTx } from "@/types/bridge";
 import { getNetworkById } from "@/utils/data/filters";
 import { formatBalance, shorten } from "@/utils/data/formatters";
-
 import { ArrowDownCircleIcon, LinkIcon } from "@heroicons/react/24/outline";
-
-import moment from "moment";
-import { useTokenBalances } from "../../hooks/useTokenBalances";
+import { useTokenBalances } from "@/frontend/hooks/useTokenBalances";
+import Claim from "./claim";
 
 interface Props {
   tx: BridgeEntryTx;
@@ -54,9 +53,7 @@ export default function TransactionListItem({ tx }: Props) {
             <span className="text-lg">{token?.symbol}</span>
           </div>
           <div>
-            <button className="btn btn-outline h-6 text-aepink hover:bg-aepink hover:border-white hover:text-white font-semibold tracking-wider">
-              Claim
-            </button>
+            <Claim transaction={tx} />
           </div>
         </div>
       </div>

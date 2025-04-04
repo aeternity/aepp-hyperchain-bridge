@@ -1,5 +1,3 @@
-import { BridgeEntryTx } from "@/types/bridge";
-import { Transaction } from "@/types/transaction";
 import { Network, NetworkBase } from "@/types/network";
 
 export const mapBigIntsToNumbers = <T>(obj: any): T => {

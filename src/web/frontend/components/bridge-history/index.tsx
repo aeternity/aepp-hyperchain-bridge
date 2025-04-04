@@ -26,6 +26,8 @@ export default function BridgeHistory({ isContractBusy }: Props) {
     }
   }, [isContractBusy, refetch]);
 
+  const uncompletedEntries = entries.filter((e) => !e.is_action_completed);
+
   return (
     <div className="drawer drawer-end">
       <input
@@ -38,10 +40,15 @@ export default function BridgeHistory({ isContractBusy }: Props) {
           htmlFor="transaction-history-drawer"
           className="drawer-button btn btn-link text-aepink"
         >
-          View History{" "}
-          <div className="badge badge-sm badge-neutral bg-aepink border-white pt-0.5">
-            1
-          </div>
+          View History
+          {!isFetching && uncompletedEntries.length > 0 && (
+            <div className="badge badge-sm badge-neutral bg-aepink border-white pt-0.5">
+              {uncompletedEntries.length}
+            </div>
+          )}
+          {isFetching && (
+            <span className="loading-xs loading loading-spinner text-neutral"></span>
+          )}
         </label>
       </div>
       <div className="drawer-side">
@@ -60,7 +67,7 @@ export default function BridgeHistory({ isContractBusy }: Props) {
             {isFetched && <BridgeHistoryList transactions={entries} />}
             <div ref={ref}></div>
             {isFetching && (
-              <div className="flex justify-center">
+              <div className="flex justify-center mt-3">
                 <span className="loading loading-spinner text-neutral"></span>
               </div>
             )}

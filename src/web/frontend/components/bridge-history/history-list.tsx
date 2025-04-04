@@ -8,7 +8,7 @@ interface Props {
 export default function BridgeHistoryList({ transactions }: Props) {
   if (transactions.length === 0) {
     return (
-      <div className="text-center text-2xl text-neutral">
+      <div className="text-center text-2xl text-neutral mt-3">
         No transactions yet
       </div>
     );

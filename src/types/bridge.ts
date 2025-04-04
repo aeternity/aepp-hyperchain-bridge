@@ -9,6 +9,10 @@ export interface HyperchainBridge extends ContractMethodsBase {
   token_links: () => Promise<TokenLink[]>;
   bridge_entries: () => Promise<BridgeEntry[]>;
   processed_exits: () => Promise<ExitRequest[]>;
+  is_entry_transaction_processed: (
+    tx_hash: string,
+    network_id: string
+  ) => Promise<boolean>;
 
   enter_bridge: (
     amount: number | bigint,
@@ -46,6 +50,7 @@ export interface BridgeEntry {
 export interface BridgeEntryTx extends BridgeEntry {
   tx_hash: string;
   timestamp: number;
+  is_action_completed?: boolean;
 }
 
 export interface ExitRequest {

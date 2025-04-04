@@ -1,5 +1,3 @@
-import BigNumber from "bignumber.js";
-
 export interface NetworkBase {
   id: string;
   url: string;
@@ -10,4 +8,5 @@ export interface Network extends NetworkBase {
   mdwUrl: string;
   compilerUrl: string;
   explorerUrl: string;
+  bridgeContractAddress: string;
 }

@@ -1,7 +1,7 @@
 import { resolve } from "path";
 import { writeFileSync } from "fs";
 
-import { createSdkInstance } from "@/utils/aeternity/create-sdk-instance";
+import { createSdkInstance } from "@/utils/aeternity/create-sdk-node";
 import {
   parseArguments,
   deployContract,

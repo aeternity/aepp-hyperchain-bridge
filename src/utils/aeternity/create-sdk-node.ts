@@ -29,7 +29,7 @@ export async function createSdkInstance(
 
   return new AeSdk({
     onCompiler: new CompilerHttp(network.compilerUrl),
-    nodes: [{ name: "test", instance: new Node(network.url) }],
+    nodes: [{ name: "remote", instance: new Node(network.url) }],
     accounts,
   });
 }

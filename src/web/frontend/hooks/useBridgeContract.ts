@@ -5,10 +5,7 @@ import { WalletContext } from "../context/wallet-provider";
 import HyperchainBridge_aci from "@/aci/HyperchainBridge.json";
 import { BridgeContractStatus } from "@/types/wallet";
 import { HyperchainBridge, HyperchainBridgeContract } from "@/types/bridge";
-import {
-  getBridgeContractAddress,
-  getNetworkBaseById,
-} from "@/utils/data/filters";
+import { getNetworkBaseById, getNetworkById } from "@/utils/data/filters";
 import { getContract } from "@/utils/contract/helper";
 import { AppContext } from "../context/app-provider";
 import { Token } from "@/types/token";
@@ -27,7 +24,8 @@ const useBridgeContract = () => {
   useEffect(() => {
     if (!networkId) return;
 
-    const contractAddress = getBridgeContractAddress(networkId);
+    const network = getNetworkById(networkId);
+    const contractAddress = network?.bridgeContractAddress as `ct_${string}`;
     if (!contractAddress) {
       setBridgeContract(null);
       setContractState(BridgeContractStatus.NOT_AVAILABLE);

@@ -8,7 +8,7 @@ import {
   HyperchainBridgeContract,
 } from "@/types/bridge";
 
-import { createSdkInstance } from "@/utils/aeternity/create-sdk-instance";
+import { createSdkInstance } from "@/utils/aeternity/create-sdk-node";
 import {
   BRIDGE_SOURCE_PATH,
   DEPLOYMENTS_CACHE_PATH,

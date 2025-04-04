@@ -348,6 +348,10 @@ const saveEntry = async (
     entry_network: mapNetworkToBase(bridge.network),
   };
 
-  executedEntries[dataIndex].push({ ...entry, tx_hash, timestamp: Date.now() });
+  executedEntries[dataIndex].push({
+    ...entry,
+    tx_hash,
+    timestamp: Date.now(),
+  });
   exitsToProcess[dataIndex].push(newExitRequest);
 };

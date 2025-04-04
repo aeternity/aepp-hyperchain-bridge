@@ -1,6 +1,6 @@
 import { writeFileSync } from "node:fs";
 
-import { createSdkInstance } from "@/utils/aeternity/create-sdk-instance";
+import { createSdkInstance } from "@/utils/aeternity/create-sdk-node";
 import {
   ACI_FOLDER_PATH,
   BRIDGE_SOURCE_PATH,
