@@ -7,18 +7,15 @@ import {
 
 import { ConnectionStatus, DetectionStatus, Wallet } from "@/types/wallet";
 import { getConnector, getWallet, walletSdk } from "../utils/wallet-sdk";
-import { useQuery } from "@tanstack/react-query";
+import { getNetworkById } from "@/utils/data/filters";
 
 export const WalletContext = createContext({
-  balance: "",
   address: "",
   networkId: "",
   detectionStatus: DetectionStatus.IDLE,
   connectionStatus: ConnectionStatus.IDLE,
-  currency: { symbol: "", decimals: 0, networkName: "" },
   connect: () => {},
   disconnect: () => {},
-  reloadBalance: () => {},
   requestNetworkChange: (networkId: string) => {},
 });
 
@@ -27,14 +24,9 @@ export default function WalletProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [balance, setBalance] = useState("");
   const [networkId, setNetworkId] = useState("");
   const [address, setAddress] = useState<`ak_${string}` | "">("");
-  const [currency, setCurrency] = useState({
-    symbol: "",
-    decimals: 0,
-    networkName: "",
-  });
+
   const [detectionStatus, setDetectionStatus] = useState(DetectionStatus.IDLE);
   const [connectionStatus, setConnectionStatus] = useState(
     ConnectionStatus.IDLE
@@ -61,30 +53,6 @@ export default function WalletProvider({
       setConnector(connector);
     });
   }, [wallet]);
-
-  const reloadBalance = () => {
-    walletSdk.getBalance(address as `ak_${string}`).then(setBalance);
-  };
-
-  useEffect(() => {
-    walletSdk.getNodeInfo().then((info) => {
-      fetch(`${info.url}/v3/currency`)
-        .then((res) => res.json())
-        .then((data) =>
-          setCurrency({
-            symbol: data.symbol,
-            decimals: Math.log10(data.subunits_per_unit),
-            networkName: data.network_name,
-          })
-        );
-    });
-  }, [networkId]);
-
-  useEffect(() => {
-    if (!networkId || !address) return;
-
-    reloadBalance();
-  }, [networkId, address]);
 
   const tryConnect = useCallback(async () => {
     try {
@@ -113,9 +81,14 @@ export default function WalletProvider({
       setNetworkId(connector.networkId);
     });
 
-    connector.addListener("networkIdChange", async (networkId: string) => {
-      walletSdk.selectNode(networkId);
-      setNetworkId(networkId);
+    connector.addListener("networkIdChange", async (_networkId: string) => {
+      const network = getNetworkById(_networkId);
+      if (!network) {
+        alert("Network not found");
+        return;
+      }
+      walletSdk.selectNode(_networkId);
+      setNetworkId(_networkId);
     });
 
     connector.addListener("disconnect", () => {
@@ -153,15 +126,12 @@ export default function WalletProvider({
   return (
     <WalletContext.Provider
       value={{
-        balance,
         address,
-        currency,
         networkId,
         detectionStatus,
         connectionStatus,
         connect,
         disconnect,
-        reloadBalance,
         requestNetworkChange,
       }}
     >

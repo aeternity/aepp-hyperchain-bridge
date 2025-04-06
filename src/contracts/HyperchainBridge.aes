@@ -64,12 +64,26 @@ payable main contract HyperchainBridge =
   entrypoint bridge_entries(): list(bridge_entry) = state.bridge_entries
   entrypoint processed_exits(): list(exit_request) = state.processed_exits
   
-  entrypoint is_entry_transaction_processed(tx_hash: string, network_id: string): bool =
-    List.find(
-      (e) => e.entry_tx_hash == tx_hash &&
-        e.entry_network.id == network_id
-      ,state.processed_exits) != None
+
+  /// @notice Checks the processed exits for given IDs and source network ID.
+  /// @param ids The list of IDs to check.
+  /// @param source_network_id The source network ID to check against.
+  /// @return A list of tuples containing the ID and its process status (true if processed, false otherwise).
+  /// @dev This function filters the processed exits based on the source network ID and checks if the given IDs are present in the processed exits.
+  /// It returns a list of tuples where each tuple contains the ID and a boolean indicating whether it has been processed.
+  /// This is useful for checking the status of multiple IDs in a single call.
+  entrypoint check_ids_processed(ids: list(int), source_network_id: string): list(int * bool) =
+    let exits = List.filter(
+      (e) => e.entry.source_network_id == source_network_id
+        && List.contains(e.entry.idx, ids)
+      ,state.processed_exits)
+
+    let exits_ids = List.map((e) => e.entry.idx, exits)
+    List.map(
+      (id) => (id, List.contains(id, exits_ids))
+      ,ids)
   
+
   /// @notice Allows the user to enter the bridge with a specified amount and token type.
   /// @param amount The amount of tokens to bridge.
   /// @param target_network The target network for the bridge.

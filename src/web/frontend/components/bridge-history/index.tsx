@@ -3,7 +3,7 @@ import { useInView } from "react-intersection-observer";
 
 import Title from "../base/title";
 import BridgeHistoryList from "./history-list";
-import useBridgeEntries from "../../hooks/useBridgeEntries";
+import useBridgeTransactions from "../../hooks/useBridgeTransactions";
 
 interface Props {
   isContractBusy: boolean;
@@ -12,7 +12,7 @@ interface Props {
 export default function BridgeHistory({ isContractBusy }: Props) {
   const { ref, inView } = useInView();
   const { entries, isFetched, isFetching, fetchNextPage, refetch } =
-    useBridgeEntries();
+    useBridgeTransactions();
 
   useEffect(() => {
     if (inView) {

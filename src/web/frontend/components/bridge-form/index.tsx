@@ -1,5 +1,5 @@
 import BigNumber from "bignumber.js";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 
 import { validateForm } from "./validation";
 import TokenSelect from "./token-select";
@@ -12,17 +12,24 @@ import { useTokenBalances } from "@/frontend/hooks/useTokenBalances";
 import useNetworks from "@/frontend/hooks/useNetworks";
 import { WalletContext } from "@/frontend/context/wallet-provider";
 import useBridgeContract from "@/frontend/hooks/useBridgeContract";
+import BridgeEntrySuccessModal, {
+  BridgeEntrySuccessModalProps,
+} from "./bridge-entry-success-modal";
+import { BridgeEntryTx } from "@/types/bridge";
+import { NetworkContext } from "../../context/network-provider";
 
 export default function BridgeForm() {
-  const networks = useNetworks();
+  const { otherNetworks } = useNetworks();
   const { tokens, refetch } = useTokenBalances();
-  const { reloadBalance } = useContext(WalletContext);
+  const { reloadBalance } = useContext(NetworkContext);
   const { enterBridge, isBusy } = useBridgeContract();
 
   const [amount, setAmount] = useState("");
   const [selectedNetworkId, setSelectedNetworkId] = useState("");
   const [selectedTokenAddress, setSelectedTokenAddress] = useState("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [bridgeEntrySuccessModalProps, setBridgeEntrySuccessModalProps] =
+    useState<BridgeEntrySuccessModalProps | undefined>();
 
   const selectedToken = tokens.find(byAddress(selectedTokenAddress))!;
 
@@ -48,15 +55,22 @@ export default function BridgeForm() {
         .shiftedBy(Number(selectedToken.decimals))
         .toString();
 
-      const isSucceeded = await enterBridge(
+      const [isSucceeded, txResult] = await enterBridge(
         selectedNetworkId,
         selectedToken,
         amountWithDecimals
       );
+
       if (isSucceeded) {
         refetch();
         reloadBalance();
         setAmount("");
+        setBridgeEntrySuccessModalProps({
+          txResult,
+          token: tokens.find(byAddress(selectedTokenAddress || "native"))!,
+          onClose: () => setBridgeEntrySuccessModalProps(undefined),
+        });
+        console.log("Transaction result:", txResult);
       }
     } else {
       setErrors(_errors);
@@ -69,7 +83,7 @@ export default function BridgeForm() {
         <NetworkSelect
           className="w-1/2 px-4 max-[400px]:w-full"
           error={errors.network}
-          networks={networks}
+          networks={otherNetworks}
           onSelect={setSelectedNetworkId}
         />
         <TokenSelect
@@ -97,7 +111,9 @@ export default function BridgeForm() {
         >
           Confirm Transaction
         </button>
-
+        {bridgeEntrySuccessModalProps && (
+          <BridgeEntrySuccessModal {...bridgeEntrySuccessModalProps} />
+        )}
         <BridgeHistory isContractBusy={isBusy} />
       </div>
     </fieldset>

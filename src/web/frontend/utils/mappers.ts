@@ -16,7 +16,7 @@ export const fromTransactionToBridgeEntryTx = (data: any): BridgeEntryTx => {
     returnValue[2].value.length > 1 ? returnValue[2].value[1].value : undefined;
 
   return {
-    tx_hash: data.hash,
+    hash: data.hash,
     timestamp: data.micro_time,
     idx: BigInt(returnValue[0].value),
     from: returnValue[1].value,

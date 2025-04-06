@@ -4,9 +4,11 @@ import PowerIcon from "@heroicons/react/24/outline/PowerIcon";
 import { shorten, formatBalance } from "@/utils/data/formatters";
 import { WalletContext } from "@/frontend/context/wallet-provider";
 import NetworkDisplay from "./network-display";
+import { NetworkContext } from "@/web/frontend/context/network-provider";
 
 export default function ConnectedView() {
-  const { address, balance, disconnect, currency } = useContext(WalletContext);
+  const { address, disconnect } = useContext(WalletContext);
+  const { balance, currency } = useContext(NetworkContext);
   const [justCopied, setJustCopied] = useState(false);
 
   const handleAddressClick = () => {
@@ -20,12 +22,13 @@ export default function ConnectedView() {
       <NetworkDisplay />
       <div className="border-aepink ml-2 flex flex-row items-center overflow-hidden rounded-xl border text-sm font-medium text-white">
         <div className="px-2 font-semibold text-gray-900">
-          {formatBalance({
-            balance,
-            decimals: currency.decimals,
-            formatDecimals: 2,
-          })}{" "}
-          {currency.symbol}
+          {currency &&
+            formatBalance({
+              balance,
+              decimals: currency.decimals,
+              formatDecimals: 2,
+            })}{" "}
+          {currency?.symbol}
         </div>
         <div
           onClick={handleAddressClick}

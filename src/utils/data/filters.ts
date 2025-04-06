@@ -1,8 +1,9 @@
-import { ALL_NETWORKS } from "@/constants/networks";
+import { NETWORKS } from "@/constants/networks";
 import { mapNetworkToBase } from "./mappers";
 
-export const getNetworkById = (id: string) =>
-  ALL_NETWORKS.find((network) => network.id === id);
+export const byId = (id: string) => (o: any) => o.id === id;
+
+export const getNetworkById = (id: string) => NETWORKS.find(byId(id));
 
 export const getNetworkBaseById = (id: string) =>
   mapNetworkToBase(getNetworkById(id)!);

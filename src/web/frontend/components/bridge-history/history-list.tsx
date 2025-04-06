@@ -15,6 +15,6 @@ export default function BridgeHistoryList({ transactions }: Props) {
   }
 
   return transactions.map((tx) => (
-    <TransactionListItem key={tx.tx_hash} tx={tx} />
+    <TransactionListItem key={tx.hash} tx={tx} />
   ));
 }

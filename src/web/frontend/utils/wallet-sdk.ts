@@ -7,13 +7,13 @@ import {
   BrowserWindowMessageConnection,
 } from "@aeternity/aepp-sdk";
 
-import { ALL_NETWORKS, networkDefaults } from "@/constants/networks";
+import { NETWORKS, networkDefaults } from "@/constants/networks";
 import { Wallet } from "@/types/wallet";
 import { Network } from "@/types/network";
 
 export const walletSdk = new AeSdk({
   onCompiler: new CompilerHttp(networkDefaults.compilerUrl),
-  nodes: ALL_NETWORKS.map((network: Network) => ({
+  nodes: NETWORKS.map((network: Network) => ({
     name: network.id,
     instance: new Node(network.url),
   })),

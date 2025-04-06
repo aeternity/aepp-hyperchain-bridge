@@ -1,7 +1,7 @@
 import { AeSdk, type ContractMethodsBase, Contract } from "@aeternity/aepp-sdk";
 
 import { Network, NetworkBase } from "./network";
-import { FungibleTokenContract, TokenAmount, TokenMeta } from "./token";
+import { FungibleTokenContract, TokenMeta } from "./token";
 
 export type HyperchainBridgeContract = Contract<HyperchainBridge>;
 
@@ -9,10 +9,10 @@ export interface HyperchainBridge extends ContractMethodsBase {
   token_links: () => Promise<TokenLink[]>;
   bridge_entries: () => Promise<BridgeEntry[]>;
   processed_exits: () => Promise<ExitRequest[]>;
-  is_entry_transaction_processed: (
-    tx_hash: string,
-    network_id: string
-  ) => Promise<boolean>;
+  check_ids_processed: (
+    ids: Array<number | bigint>,
+    source_network_id: string
+  ) => Promise<Array<[number, boolean]>>;
 
   enter_bridge: (
     amount: number | bigint,
@@ -48,7 +48,7 @@ export interface BridgeEntry {
 }
 
 export interface BridgeEntryTx extends BridgeEntry {
-  tx_hash: string;
+  hash: string;
   timestamp: number;
   is_action_completed?: boolean;
 }

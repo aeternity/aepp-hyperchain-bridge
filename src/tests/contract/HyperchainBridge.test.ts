@@ -350,7 +350,7 @@ const saveEntry = async (
 
   executedEntries[dataIndex].push({
     ...entry,
-    tx_hash,
+    hash: tx_hash,
     timestamp: Date.now(),
   });
   exitsToProcess[dataIndex].push(newExitRequest);

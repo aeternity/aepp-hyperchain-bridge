@@ -5,34 +5,43 @@ import { getNetworkById } from "@/utils/data/filters";
 import { fromAccountsBalancesToTokenAmount } from "../utils/mappers";
 import { TokenAmount } from "@/types/token";
 import BigNumber from "bignumber.js";
+import { NetworkContext } from "../context/network-provider";
+import useNetworks from "./useNetworks";
 
 export const useTokenBalances = () => {
-  const { networkId, address, balance, currency } = useContext(WalletContext);
-  const network = getNetworkById(networkId);
+  const { address } = useContext(WalletContext);
+  const { balance, currency } = useContext(NetworkContext);
+  const { currentNetwork } = useNetworks();
 
   const fetchAccountTokenBalances = async () => {
     const response = await fetch(
-      `${network?.mdwUrl}/v3/accounts/${address}/aex9/balances?limit=100`
+      `${currentNetwork?.mdwUrl}/v3/accounts/${address}/aex9/balances?limit=100`
     );
     return await response.json();
   };
 
   const { isPending, data, isFetching, refetch, isFetched } = useQuery({
-    queryKey: ["token-balances", networkId, address],
+    queryKey: ["token-balances", currentNetwork?.id, address],
     queryFn: fetchAccountTokenBalances,
+    enabled: !!address && !!currentNetwork,
   });
 
-  const nativeToken: TokenAmount = {
-    address: "native",
-    amount: new BigNumber(balance),
-    name: `${currency.networkName} Native ${currency.symbol}`,
-    decimals: BigInt(currency.decimals),
-    symbol: currency.symbol,
-  };
-  const tokens: TokenAmount[] =
-    isFetched && data
-      ? [nativeToken].concat(data.data.map(fromAccountsBalancesToTokenAmount))
-      : [];
+  const nativeToken =
+    currency &&
+    ({
+      address: "native",
+      amount: new BigNumber(balance),
+      name: `${currency.name} Native ${currency.symbol}`,
+      decimals: currency.decimals,
+      symbol: currency.symbol,
+    } as TokenAmount);
+
+  const tokens: TokenAmount[] = [];
+  if (nativeToken) tokens.push(nativeToken);
+
+  if (isFetched && data) {
+    tokens.push(...data.data.map(fromAccountsBalancesToTokenAmount));
+  }
 
   return {
     tokens,

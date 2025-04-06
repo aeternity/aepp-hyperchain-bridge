@@ -4,7 +4,11 @@ import { walletSdk } from "../utils/wallet-sdk";
 import { WalletContext } from "../context/wallet-provider";
 import HyperchainBridge_aci from "@/aci/HyperchainBridge.json";
 import { BridgeContractStatus } from "@/types/wallet";
-import { HyperchainBridge, HyperchainBridgeContract } from "@/types/bridge";
+import {
+  BridgeEntryTx,
+  HyperchainBridge,
+  HyperchainBridgeContract,
+} from "@/types/bridge";
 import { getNetworkBaseById, getNetworkById } from "@/utils/data/filters";
 import { getContract } from "@/utils/contract/helper";
 import { AppContext } from "../context/app-provider";
@@ -73,11 +77,11 @@ const useBridgeContract = () => {
           `Deposit ID:${result?.decodedResult} is successful with tx hash: ${result?.hash}`
         );
         setBusy(false);
-        return true;
+        return [true, result];
       } catch (error: any) {
         setBusy(false);
         showError(error.message);
-        return false;
+        return [false, error];
       }
     },
     [bridgeContract, showError, showInfo, showSuccess]

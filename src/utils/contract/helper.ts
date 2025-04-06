@@ -19,6 +19,8 @@ export async function getContract<T extends ContractMethodsBase>(
   });
 }
 
+const contractInstanceMap = new Map<string, HyperchainBridgeContract>();
+
 export async function getBridgeContractForNetwork(
   id: string
 ): Promise<HyperchainBridgeContract> {
@@ -28,9 +30,17 @@ export async function getBridgeContractForNetwork(
   }
 
   const sdk = await createSdkBrowser(network);
-  return await getContract<HyperchainBridge>(
-    sdk,
-    network.bridgeContractAddress as `ct_${string}`,
-    HyperchainBridge_aci
-  );
+
+  if (!contractInstanceMap.has(network.id)) {
+    contractInstanceMap.set(
+      network.id,
+      await getContract<HyperchainBridge>(
+        sdk,
+        network.bridgeContractAddress as `ct_${string}`,
+        HyperchainBridge_aci
+      )
+    );
+  }
+
+  return contractInstanceMap.get(network.id)!;
 }

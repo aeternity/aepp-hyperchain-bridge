@@ -1,6 +1,6 @@
 import moment from "moment";
 import { BridgeEntryTx } from "@/types/bridge";
-import { getNetworkById } from "@/utils/data/filters";
+import { byAddress, getNetworkById } from "@/utils/data/filters";
 import { formatBalance, shorten } from "@/utils/data/formatters";
 import { ArrowDownCircleIcon, LinkIcon } from "@heroicons/react/24/outline";
 import { useTokenBalances } from "@/frontend/hooks/useTokenBalances";
@@ -14,7 +14,7 @@ export default function TransactionListItem({ tx }: Props) {
   const { tokens } = useTokenBalances();
   const targetNetwork = getNetworkById(tx.target_network.id)!;
   const sourceNetwork = getNetworkById(tx.source_network_id)!;
-  const token = tokens.find((t) => t.address === (tx.token || "native"));
+  const token = tokens.find(byAddress(tx.token || "native"));
 
   return (
     <div className="flex-col text-sm mx-2 p-3 border-b border-gray-300 odd:bg-aepink-50">
@@ -24,9 +24,9 @@ export default function TransactionListItem({ tx }: Props) {
           <a
             target="_blank"
             className="link text-xs flex-row flex items-center"
-            href={`${sourceNetwork.explorerUrl}/transactions/${tx.tx_hash}`}
+            href={`${sourceNetwork.explorerUrl}/transactions/${tx.hash}`}
           >
-            {shorten(tx.tx_hash)}
+            {shorten(tx.hash)}
             <LinkIcon className="ml-0.5" width={12} height={12} />
           </a>
         </div>
