@@ -53,7 +53,7 @@ export default function TransactionListItem({ tx }: Props) {
             <span className="text-lg">{token?.symbol}</span>
           </div>
           <div>
-            <Claim transaction={tx} />
+            {tx.is_action_completed ? "Completed!" : <Claim transaction={tx} />}
           </div>
         </div>
       </div>

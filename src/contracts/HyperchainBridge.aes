@@ -60,9 +60,13 @@ payable main contract HyperchainBridge =
     token_ref       = Chain.create(
       "HyperchainBridgeToken", 18, "HBT", None): FungibleToken }
 
+  entrypoint operator(): address = state.operator
   entrypoint token_links(): list(token_link) = state.token_links
   entrypoint bridge_entries(): list(bridge_entry) = state.bridge_entries
   entrypoint processed_exits(): list(exit_request) = state.processed_exits
+
+  entrypoint bridge_entry(idx: int): option(bridge_entry) =
+    List.find((e) => e.idx == idx, state.bridge_entries)
   
 
   /// @notice Checks the processed exits for given IDs and source network ID.

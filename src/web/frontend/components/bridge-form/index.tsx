@@ -12,11 +12,12 @@ import { useTokenBalances } from "@/frontend/hooks/useTokenBalances";
 import useNetworks from "@/frontend/hooks/useNetworks";
 import { WalletContext } from "@/frontend/context/wallet-provider";
 import useBridgeContract from "@/frontend/hooks/useBridgeContract";
-import BridgeEntrySuccessModal, {
-  BridgeEntrySuccessModalProps,
-} from "./bridge-entry-success-modal";
+import BridgeActionDetailsModal, {
+  BridgeActionDetailsModalProps,
+} from "./bridge-action-details";
 import { BridgeEntryTx } from "@/types/bridge";
 import { NetworkContext } from "../../context/network-provider";
+import { fromTransactionToBridgeEntryTx } from "../../utils/mappers";
 
 export default function BridgeForm() {
   const { otherNetworks } = useNetworks();
@@ -29,7 +30,7 @@ export default function BridgeForm() {
   const [selectedTokenAddress, setSelectedTokenAddress] = useState("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [bridgeEntrySuccessModalProps, setBridgeEntrySuccessModalProps] =
-    useState<BridgeEntrySuccessModalProps | undefined>();
+    useState<BridgeActionDetailsModalProps | undefined>();
 
   const selectedToken = tokens.find(byAddress(selectedTokenAddress))!;
 
@@ -50,31 +51,37 @@ export default function BridgeForm() {
 
   const handleBridgeClick = useCallback(async () => {
     const _errors = validate();
-    if (Object.keys(_errors).length === 0) {
-      const amountWithDecimals = new BigNumber(amount)
-        .shiftedBy(Number(selectedToken.decimals))
-        .toString();
-
-      const [isSucceeded, txResult] = await enterBridge(
-        selectedNetworkId,
-        selectedToken,
-        amountWithDecimals
-      );
-
-      if (isSucceeded) {
-        refetch();
-        reloadBalance();
-        setAmount("");
-        setBridgeEntrySuccessModalProps({
-          txResult,
-          token: tokens.find(byAddress(selectedTokenAddress || "native"))!,
-          onClose: () => setBridgeEntrySuccessModalProps(undefined),
-        });
-        console.log("Transaction result:", txResult);
-      }
-    } else {
+    if (Object.keys(_errors).length !== 0) {
       setErrors(_errors);
+      return;
     }
+
+    const amountWithDecimals = new BigNumber(amount)
+      .shiftedBy(Number(selectedToken.decimals))
+      .toString();
+
+    const [isSucceeded, txResult] = await enterBridge(
+      selectedNetworkId,
+      selectedToken,
+      amountWithDecimals
+    );
+
+    if (!isSucceeded) return;
+
+    const entryTx = {
+      ...txResult.decodedResult,
+      hash: txResult.hash,
+      timestamp: Date.now(),
+    };
+
+    refetch();
+    reloadBalance();
+    setAmount("");
+    setBridgeEntrySuccessModalProps({
+      entryTx: entryTx,
+      token: tokens.find(byAddress(selectedTokenAddress || "native"))!,
+      onClose: () => setBridgeEntrySuccessModalProps(undefined),
+    });
   }, [amount, selectedNetworkId, selectedTokenAddress]);
 
   return (
@@ -112,7 +119,7 @@ export default function BridgeForm() {
           Confirm Transaction
         </button>
         {bridgeEntrySuccessModalProps && (
-          <BridgeEntrySuccessModal {...bridgeEntrySuccessModalProps} />
+          <BridgeActionDetailsModal {...bridgeEntrySuccessModalProps} />
         )}
         <BridgeHistory isContractBusy={isBusy} />
       </div>

@@ -67,7 +67,7 @@ export default function BridgeHistory({ isContractBusy }: Props) {
             {isFetched && <BridgeHistoryList transactions={entries} />}
             <div ref={ref}></div>
             {isFetching && (
-              <div className="flex justify-center mt-3">
+              <div className="flex justify-center m-3">
                 <span className="loading loading-spinner text-neutral"></span>
               </div>
             )}

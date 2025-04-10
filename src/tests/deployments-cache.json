@@ -38,36 +38,19 @@
             "event": {
               "variant": [
                 {
-                  "Transfer": [
-                    "address",
-                    "address",
-                    "int"
-                  ]
+                  "Transfer": ["address", "address", "int"]
                 },
                 {
-                  "Allowance": [
-                    "address",
-                    "address",
-                    "int"
-                  ]
+                  "Allowance": ["address", "address", "int"]
                 },
                 {
-                  "Burn": [
-                    "address",
-                    "int"
-                  ]
+                  "Burn": ["address", "int"]
                 },
                 {
-                  "Mint": [
-                    "address",
-                    "int"
-                  ]
+                  "Mint": ["address", "int"]
                 },
                 {
-                  "Swap": [
-                    "address",
-                    "int"
-                  ]
+                  "Swap": ["address", "int"]
                 }
               ]
             },
@@ -77,9 +60,7 @@
                 "name": "aex9_extensions",
                 "payable": false,
                 "returns": {
-                  "list": [
-                    "string"
-                  ]
+                  "list": ["string"]
                 },
                 "stateful": false
               },
@@ -107,9 +88,7 @@
                   {
                     "name": "initial_owner_balance",
                     "type": {
-                      "option": [
-                        "int"
-                      ]
+                      "option": ["int"]
                     }
                   }
                 ],
@@ -170,9 +149,7 @@
                 "name": "balance",
                 "payable": false,
                 "returns": {
-                  "option": [
-                    "int"
-                  ]
+                  "option": ["int"]
                 },
                 "stateful": false
               },
@@ -181,10 +158,7 @@
                 "name": "swapped",
                 "payable": false,
                 "returns": {
-                  "map": [
-                    "address",
-                    "int"
-                  ]
+                  "map": ["address", "int"]
                 },
                 "stateful": false
               },
@@ -205,9 +179,7 @@
                 "name": "allowance",
                 "payable": false,
                 "returns": {
-                  "option": [
-                    "int"
-                  ]
+                  "option": ["int"]
                 },
                 "stateful": false
               },
@@ -221,9 +193,7 @@
                 "name": "allowance_for_caller",
                 "payable": false,
                 "returns": {
-                  "option": [
-                    "int"
-                  ]
+                  "option": ["int"]
                 },
                 "stateful": false
               },
@@ -399,10 +369,7 @@
                 {
                   "name": "swapped",
                   "type": {
-                    "map": [
-                      "address",
-                      "int"
-                    ]
+                    "map": ["address", "int"]
                   }
                 }
               ]
@@ -447,20 +414,14 @@
               {
                 "name": "balances",
                 "typedef": {
-                  "map": [
-                    "address",
-                    "int"
-                  ]
+                  "map": ["address", "int"]
                 },
                 "vars": []
               },
               {
                 "name": "allowances",
                 "typedef": {
-                  "map": [
-                    "FungibleToken.allowance_accounts",
-                    "int"
-                  ]
+                  "map": ["FungibleToken.allowance_accounts", "int"]
                 },
                 "vars": []
               }
@@ -482,9 +443,7 @@
                 "name": "token_links",
                 "payable": false,
                 "returns": {
-                  "list": [
-                    "HyperchainBridge.token_link"
-                  ]
+                  "list": ["HyperchainBridge.token_link"]
                 },
                 "stateful": false
               },
@@ -493,9 +452,7 @@
                 "name": "bridge_entries",
                 "payable": false,
                 "returns": {
-                  "list": [
-                    "HyperchainBridge.bridge_entry"
-                  ]
+                  "list": ["HyperchainBridge.bridge_entry"]
                 },
                 "stateful": false
               },
@@ -504,9 +461,7 @@
                 "name": "processed_exits",
                 "payable": false,
                 "returns": {
-                  "list": [
-                    "HyperchainBridge.exit_request"
-                  ]
+                  "list": ["HyperchainBridge.exit_request"]
                 },
                 "stateful": false
               },
@@ -539,9 +494,7 @@
                   {
                     "name": "token",
                     "type": {
-                      "option": [
-                        "FungibleToken"
-                      ]
+                      "option": ["FungibleToken"]
                     }
                   }
                 ],
@@ -591,18 +544,14 @@
                   {
                     "name": "token",
                     "type": {
-                      "option": [
-                        "FungibleToken"
-                      ]
+                      "option": ["FungibleToken"]
                     }
                   }
                 ],
                 "name": "get_token_link",
                 "payable": false,
                 "returns": {
-                  "option": [
-                    "HyperchainBridge.token_link"
-                  ]
+                  "option": ["HyperchainBridge.token_link"]
                 },
                 "stateful": false
               },
@@ -616,9 +565,7 @@
                 "name": "find_token_link",
                 "payable": false,
                 "returns": {
-                  "option": [
-                    "HyperchainBridge.token_link"
-                  ]
+                  "option": ["HyperchainBridge.token_link"]
                 },
                 "stateful": false
               }
@@ -639,25 +586,19 @@
                 {
                   "name": "token_links",
                   "type": {
-                    "list": [
-                      "HyperchainBridge.token_link"
-                    ]
+                    "list": ["HyperchainBridge.token_link"]
                   }
                 },
                 {
                   "name": "bridge_entries",
                   "type": {
-                    "list": [
-                      "HyperchainBridge.bridge_entry"
-                    ]
+                    "list": ["HyperchainBridge.bridge_entry"]
                   }
                 },
                 {
                   "name": "processed_exits",
                   "type": {
-                    "list": [
-                      "HyperchainBridge.exit_request"
-                    ]
+                    "list": ["HyperchainBridge.exit_request"]
                   }
                 }
               ]
@@ -695,9 +636,7 @@
                     {
                       "name": "token",
                       "type": {
-                        "option": [
-                          "FungibleToken"
-                        ]
+                        "option": ["FungibleToken"]
                       }
                     },
                     {
@@ -707,9 +646,7 @@
                     {
                       "name": "exit_link",
                       "type": {
-                        "option": [
-                          "HyperchainBridge.token_link"
-                        ]
+                        "option": ["HyperchainBridge.token_link"]
                       }
                     },
                     {
@@ -763,9 +700,7 @@
                     {
                       "name": "source_token",
                       "type": {
-                        "option": [
-                          "FungibleToken"
-                        ]
+                        "option": ["FungibleToken"]
                       }
                     },
                     {
@@ -857,36 +792,19 @@
             "event": {
               "variant": [
                 {
-                  "Transfer": [
-                    "address",
-                    "address",
-                    "int"
-                  ]
+                  "Transfer": ["address", "address", "int"]
                 },
                 {
-                  "Allowance": [
-                    "address",
-                    "address",
-                    "int"
-                  ]
+                  "Allowance": ["address", "address", "int"]
                 },
                 {
-                  "Burn": [
-                    "address",
-                    "int"
-                  ]
+                  "Burn": ["address", "int"]
                 },
                 {
-                  "Mint": [
-                    "address",
-                    "int"
-                  ]
+                  "Mint": ["address", "int"]
                 },
                 {
-                  "Swap": [
-                    "address",
-                    "int"
-                  ]
+                  "Swap": ["address", "int"]
                 }
               ]
             },
@@ -896,9 +814,7 @@
                 "name": "aex9_extensions",
                 "payable": false,
                 "returns": {
-                  "list": [
-                    "string"
-                  ]
+                  "list": ["string"]
                 },
                 "stateful": false
               },
@@ -926,9 +842,7 @@
                   {
                     "name": "initial_owner_balance",
                     "type": {
-                      "option": [
-                        "int"
-                      ]
+                      "option": ["int"]
                     }
                   }
                 ],
@@ -989,9 +903,7 @@
                 "name": "balance",
                 "payable": false,
                 "returns": {
-                  "option": [
-                    "int"
-                  ]
+                  "option": ["int"]
                 },
                 "stateful": false
               },
@@ -1000,10 +912,7 @@
                 "name": "swapped",
                 "payable": false,
                 "returns": {
-                  "map": [
-                    "address",
-                    "int"
-                  ]
+                  "map": ["address", "int"]
                 },
                 "stateful": false
               },
@@ -1024,9 +933,7 @@
                 "name": "allowance",
                 "payable": false,
                 "returns": {
-                  "option": [
-                    "int"
-                  ]
+                  "option": ["int"]
                 },
                 "stateful": false
               },
@@ -1040,9 +947,7 @@
                 "name": "allowance_for_caller",
                 "payable": false,
                 "returns": {
-                  "option": [
-                    "int"
-                  ]
+                  "option": ["int"]
                 },
                 "stateful": false
               },
@@ -1218,10 +1123,7 @@
                 {
                   "name": "swapped",
                   "type": {
-                    "map": [
-                      "address",
-                      "int"
-                    ]
+                    "map": ["address", "int"]
                   }
                 }
               ]
@@ -1266,20 +1168,14 @@
               {
                 "name": "balances",
                 "typedef": {
-                  "map": [
-                    "address",
-                    "int"
-                  ]
+                  "map": ["address", "int"]
                 },
                 "vars": []
               },
               {
                 "name": "allowances",
                 "typedef": {
-                  "map": [
-                    "FungibleToken.allowance_accounts",
-                    "int"
-                  ]
+                  "map": ["FungibleToken.allowance_accounts", "int"]
                 },
                 "vars": []
               }
@@ -1328,36 +1224,19 @@
             "event": {
               "variant": [
                 {
-                  "Transfer": [
-                    "address",
-                    "address",
-                    "int"
-                  ]
+                  "Transfer": ["address", "address", "int"]
                 },
                 {
-                  "Allowance": [
-                    "address",
-                    "address",
-                    "int"
-                  ]
+                  "Allowance": ["address", "address", "int"]
                 },
                 {
-                  "Burn": [
-                    "address",
-                    "int"
-                  ]
+                  "Burn": ["address", "int"]
                 },
                 {
-                  "Mint": [
-                    "address",
-                    "int"
-                  ]
+                  "Mint": ["address", "int"]
                 },
                 {
-                  "Swap": [
-                    "address",
-                    "int"
-                  ]
+                  "Swap": ["address", "int"]
                 }
               ]
             },
@@ -1367,9 +1246,7 @@
                 "name": "aex9_extensions",
                 "payable": false,
                 "returns": {
-                  "list": [
-                    "string"
-                  ]
+                  "list": ["string"]
                 },
                 "stateful": false
               },
@@ -1397,9 +1274,7 @@
                   {
                     "name": "initial_owner_balance",
                     "type": {
-                      "option": [
-                        "int"
-                      ]
+                      "option": ["int"]
                     }
                   }
                 ],
@@ -1460,9 +1335,7 @@
                 "name": "balance",
                 "payable": false,
                 "returns": {
-                  "option": [
-                    "int"
-                  ]
+                  "option": ["int"]
                 },
                 "stateful": false
               },
@@ -1471,10 +1344,7 @@
                 "name": "swapped",
                 "payable": false,
                 "returns": {
-                  "map": [
-                    "address",
-                    "int"
-                  ]
+                  "map": ["address", "int"]
                 },
                 "stateful": false
               },
@@ -1495,9 +1365,7 @@
                 "name": "allowance",
                 "payable": false,
                 "returns": {
-                  "option": [
-                    "int"
-                  ]
+                  "option": ["int"]
                 },
                 "stateful": false
               },
@@ -1511,9 +1379,7 @@
                 "name": "allowance_for_caller",
                 "payable": false,
                 "returns": {
-                  "option": [
-                    "int"
-                  ]
+                  "option": ["int"]
                 },
                 "stateful": false
               },
@@ -1689,10 +1555,7 @@
                 {
                   "name": "swapped",
                   "type": {
-                    "map": [
-                      "address",
-                      "int"
-                    ]
+                    "map": ["address", "int"]
                   }
                 }
               ]
@@ -1737,20 +1600,14 @@
               {
                 "name": "balances",
                 "typedef": {
-                  "map": [
-                    "address",
-                    "int"
-                  ]
+                  "map": ["address", "int"]
                 },
                 "vars": []
               },
               {
                 "name": "allowances",
                 "typedef": {
-                  "map": [
-                    "FungibleToken.allowance_accounts",
-                    "int"
-                  ]
+                  "map": ["FungibleToken.allowance_accounts", "int"]
                 },
                 "vars": []
               }
@@ -1772,9 +1629,7 @@
                 "name": "token_links",
                 "payable": false,
                 "returns": {
-                  "list": [
-                    "HyperchainBridge.token_link"
-                  ]
+                  "list": ["HyperchainBridge.token_link"]
                 },
                 "stateful": false
               },
@@ -1783,9 +1638,7 @@
                 "name": "bridge_entries",
                 "payable": false,
                 "returns": {
-                  "list": [
-                    "HyperchainBridge.bridge_entry"
-                  ]
+                  "list": ["HyperchainBridge.bridge_entry"]
                 },
                 "stateful": false
               },
@@ -1794,9 +1647,7 @@
                 "name": "processed_exits",
                 "payable": false,
                 "returns": {
-                  "list": [
-                    "HyperchainBridge.exit_request"
-                  ]
+                  "list": ["HyperchainBridge.exit_request"]
                 },
                 "stateful": false
               },
@@ -1829,9 +1680,7 @@
                   {
                     "name": "token",
                     "type": {
-                      "option": [
-                        "FungibleToken"
-                      ]
+                      "option": ["FungibleToken"]
                     }
                   }
                 ],
@@ -1881,18 +1730,14 @@
                   {
                     "name": "token",
                     "type": {
-                      "option": [
-                        "FungibleToken"
-                      ]
+                      "option": ["FungibleToken"]
                     }
                   }
                 ],
                 "name": "get_token_link",
                 "payable": false,
                 "returns": {
-                  "option": [
-                    "HyperchainBridge.token_link"
-                  ]
+                  "option": ["HyperchainBridge.token_link"]
                 },
                 "stateful": false
               },
@@ -1906,9 +1751,7 @@
                 "name": "find_token_link",
                 "payable": false,
                 "returns": {
-                  "option": [
-                    "HyperchainBridge.token_link"
-                  ]
+                  "option": ["HyperchainBridge.token_link"]
                 },
                 "stateful": false
               }
@@ -1929,25 +1772,19 @@
                 {
                   "name": "token_links",
                   "type": {
-                    "list": [
-                      "HyperchainBridge.token_link"
-                    ]
+                    "list": ["HyperchainBridge.token_link"]
                   }
                 },
                 {
                   "name": "bridge_entries",
                   "type": {
-                    "list": [
-                      "HyperchainBridge.bridge_entry"
-                    ]
+                    "list": ["HyperchainBridge.bridge_entry"]
                   }
                 },
                 {
                   "name": "processed_exits",
                   "type": {
-                    "list": [
-                      "HyperchainBridge.exit_request"
-                    ]
+                    "list": ["HyperchainBridge.exit_request"]
                   }
                 }
               ]
@@ -1985,9 +1822,7 @@
                     {
                       "name": "token",
                       "type": {
-                        "option": [
-                          "FungibleToken"
-                        ]
+                        "option": ["FungibleToken"]
                       }
                     },
                     {
@@ -1997,9 +1832,7 @@
                     {
                       "name": "exit_link",
                       "type": {
-                        "option": [
-                          "HyperchainBridge.token_link"
-                        ]
+                        "option": ["HyperchainBridge.token_link"]
                       }
                     },
                     {
@@ -2053,9 +1886,7 @@
                     {
                       "name": "source_token",
                       "type": {
-                        "option": [
-                          "FungibleToken"
-                        ]
+                        "option": ["FungibleToken"]
                       }
                     },
                     {
@@ -2147,36 +1978,19 @@
             "event": {
               "variant": [
                 {
-                  "Transfer": [
-                    "address",
-                    "address",
-                    "int"
-                  ]
+                  "Transfer": ["address", "address", "int"]
                 },
                 {
-                  "Allowance": [
-                    "address",
-                    "address",
-                    "int"
-                  ]
+                  "Allowance": ["address", "address", "int"]
                 },
                 {
-                  "Burn": [
-                    "address",
-                    "int"
-                  ]
+                  "Burn": ["address", "int"]
                 },
                 {
-                  "Mint": [
-                    "address",
-                    "int"
-                  ]
+                  "Mint": ["address", "int"]
                 },
                 {
-                  "Swap": [
-                    "address",
-                    "int"
-                  ]
+                  "Swap": ["address", "int"]
                 }
               ]
             },
@@ -2186,9 +2000,7 @@
                 "name": "aex9_extensions",
                 "payable": false,
                 "returns": {
-                  "list": [
-                    "string"
-                  ]
+                  "list": ["string"]
                 },
                 "stateful": false
               },
@@ -2216,9 +2028,7 @@
                   {
                     "name": "initial_owner_balance",
                     "type": {
-                      "option": [
-                        "int"
-                      ]
+                      "option": ["int"]
                     }
                   }
                 ],
@@ -2279,9 +2089,7 @@
                 "name": "balance",
                 "payable": false,
                 "returns": {
-                  "option": [
-                    "int"
-                  ]
+                  "option": ["int"]
                 },
                 "stateful": false
               },
@@ -2290,10 +2098,7 @@
                 "name": "swapped",
                 "payable": false,
                 "returns": {
-                  "map": [
-                    "address",
-                    "int"
-                  ]
+                  "map": ["address", "int"]
                 },
                 "stateful": false
               },
@@ -2314,9 +2119,7 @@
                 "name": "allowance",
                 "payable": false,
                 "returns": {
-                  "option": [
-                    "int"
-                  ]
+                  "option": ["int"]
                 },
                 "stateful": false
               },
@@ -2330,9 +2133,7 @@
                 "name": "allowance_for_caller",
                 "payable": false,
                 "returns": {
-                  "option": [
-                    "int"
-                  ]
+                  "option": ["int"]
                 },
                 "stateful": false
               },
@@ -2508,10 +2309,7 @@
                 {
                   "name": "swapped",
                   "type": {
-                    "map": [
-                      "address",
-                      "int"
-                    ]
+                    "map": ["address", "int"]
                   }
                 }
               ]
@@ -2556,20 +2354,14 @@
               {
                 "name": "balances",
                 "typedef": {
-                  "map": [
-                    "address",
-                    "int"
-                  ]
+                  "map": ["address", "int"]
                 },
                 "vars": []
               },
               {
                 "name": "allowances",
                 "typedef": {
-                  "map": [
-                    "FungibleToken.allowance_accounts",
-                    "int"
-                  ]
+                  "map": ["FungibleToken.allowance_accounts", "int"]
                 },
                 "vars": []
               }

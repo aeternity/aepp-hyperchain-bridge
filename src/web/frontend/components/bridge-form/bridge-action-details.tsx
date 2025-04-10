@@ -1,37 +1,41 @@
-import { BridgeEntry } from "@/types/bridge";
-import { byAddress, getNetworkById } from "@/utils/data/filters";
+import moment from "moment";
+import { BridgeEntry, BridgeEntryTx } from "@/types/bridge";
 import { formatBalance, shorten } from "@/utils/data/formatters";
 import {
   ArrowRightEndOnRectangleIcon,
   ArrowRightStartOnRectangleIcon,
   BanknotesIcon,
-  CheckCircleIcon,
   CircleStackIcon,
   ClockIcon,
   DocumentTextIcon,
   ExclamationCircleIcon,
-  LightBulbIcon,
   LinkIcon,
-  ShieldExclamationIcon,
 } from "@heroicons/react/24/outline";
-import moment from "moment";
-import { useTokenBalances } from "../../hooks/useTokenBalances";
 import { TokenAmount } from "@/types/token";
+import useNetworks from "../../hooks/useNetworks";
+import useBridgeContract from "../../hooks/useBridgeContract";
 
-export interface BridgeEntrySuccessModalProps {
-  txResult: any;
+export interface BridgeActionDetailsModalProps {
+  entryTx: BridgeEntryTx;
   token: TokenAmount;
   onClose: () => void;
 }
 
-export default function BridgeEntrySuccessModal({
+export default function BridgeActionDetailsModal({
   token,
-  txResult,
+  entryTx,
   onClose,
-}: BridgeEntrySuccessModalProps) {
-  const { hash, decodedResult } = txResult;
-  const entry = decodedResult as BridgeEntry;
-  const sourceNetwork = getNetworkById(entry.source_network_id)!;
+}: BridgeActionDetailsModalProps) {
+  const { exitBridge } = useBridgeContract();
+  const { getNetworkById, currentNetwork } = useNetworks();
+  const sourceNetwork = getNetworkById(entryTx.source_network_id)!;
+
+  const connectedToTargetNetwork =
+    currentNetwork?.id === entryTx.target_network.id;
+
+  const handleBridgeComplete = async () => {
+    await exitBridge(entryTx);
+  };
 
   return (
     <dialog
@@ -45,11 +49,7 @@ export default function BridgeEntrySuccessModal({
             ✕
           </button>
         </form>
-        <h3 className="font-semibold text-lg">Transaction Details</h3>
-        <p className="mt-2 font-medium flex  text-sm">
-          <CheckCircleIcon className="w-5 h-5 mr-0.5 text-green-500" />
-          Completed the first step of the bridge process.
-        </p>
+        <h3 className="font-semibold text-2xl">Transaction Details</h3>
         <div className="divider" />
         <table className="table table-zebra">
           <tbody className="[&>tr>th]:font-semibold [&>tr>td]:font-medium [&>tr>td]:pr-0 [&>tr>th]:pl-0">
@@ -64,14 +64,14 @@ export default function BridgeEntrySuccessModal({
               <td>
                 <DocumentTextIcon className="w-5 h-5" />
               </td>
-              <th>Transaction hash:</th>
+              <th>Entry Transaction:</th>
               <td className="flex-row flex items-center">
                 <a
                   className="link "
-                  href={`${sourceNetwork.explorerUrl}/transactions/${hash}`}
+                  href={`${sourceNetwork.explorerUrl}/transactions/${entryTx.hash}`}
                   target="_blank"
                 >
-                  {shorten(hash, 16, 4)}
+                  {shorten(entryTx.hash, 16, 4)}
                 </a>
                 <LinkIcon className="ml-0.5" width={12} height={12} />
               </td>
@@ -90,7 +90,7 @@ export default function BridgeEntrySuccessModal({
               <th>Amount</th>
               <td>
                 {formatBalance({
-                  balance: entry.amount,
+                  balance: entryTx.amount,
                   decimals: token?.decimals,
                   formatDecimals: 2,
                 })}{" "}
@@ -109,15 +109,31 @@ export default function BridgeEntrySuccessModal({
                 <ArrowRightEndOnRectangleIcon className="w-5 h-5" />
               </td>
               <th>Target Network</th>
-              <td>{`${entry.target_network.name} (${entry.target_network.id})`}</td>
+              <td>{`${entryTx.target_network.name} (${entryTx.target_network.id})`}</td>
             </tr>
           </tbody>
         </table>
         <div className="divider" />
-        <div className="alert alert-warning">
-          <ExclamationCircleIcon className="w-6 h-6 mr-0.5" />
-          Connect to the target network to continue the bridging process.
-        </div>
+        {!connectedToTargetNetwork ? (
+          <div className="alert alert-warning">
+            <ExclamationCircleIcon className="w-6 h-6 mr-0.5" />
+            <p>
+              Switch to{" "}
+              <span className="font-medium">
+                {entryTx.target_network.name} Network
+              </span>{" "}
+              on your wallet to continue the bridging process.
+            </p>
+          </div>
+        ) : (
+          <button
+            className="btn bg-aepink text-white font-medium w-[200px] mb-2 mt-2 flex justify-self-center"
+            color="primary"
+            onClick={handleBridgeComplete}
+          >
+            Complete Bridge
+          </button>
+        )}
       </div>
     </dialog>
   );

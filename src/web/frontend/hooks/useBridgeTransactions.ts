@@ -70,6 +70,10 @@ const fetchBridgeTransactions = async (
     await Promise.all(
       entriesByNetwork.map(async ([networkId, entries]) => {
         const contract = await getBridgeContractForNetwork(networkId);
+        console.log(
+          `processed_exits of ${networkId}`,
+          (await contract.processed_exits()).decodedResult
+        );
         return (
           await contract.check_ids_processed(
             entries.map((e) => e.idx),
@@ -79,7 +83,7 @@ const fetchBridgeTransactions = async (
       })
     )
   ).flat();
-
+  console.log(bridgeActionCompletionChecks);
   const data = bridgeEntries.map((entry) => {
     const is_action_completed = bridgeActionCompletionChecks.find(
       ([idx]) => entry.idx === idx

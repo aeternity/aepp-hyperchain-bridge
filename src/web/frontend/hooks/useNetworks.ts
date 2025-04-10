@@ -1,4 +1,4 @@
-import { NETWORKS } from "@/constants/networks";
+import { DEFAULT_NETWORKS } from "@/constants/networks";
 import { useContext } from "react";
 import { WalletContext } from "../context/wallet-provider";
 import { useQuery } from "@tanstack/react-query";
@@ -10,13 +10,18 @@ const useNetworks = () => {
   const { data: remoteNetworks } = useQuery({
     queryKey: ["networks"],
     queryFn: async () => {
-      const resp = await fetch(`/api/networks`);
-      return await resp.json();
+      try {
+        const resp = await fetch(`/api/networks`);
+        return await resp.json();
+      } catch (e) {
+        console.error("Error fetching networks", e);
+        return [];
+      }
     },
     initialData: [],
   });
 
-  const allNetworks = [...NETWORKS, ...remoteNetworks] as Network[];
+  const allNetworks = [...DEFAULT_NETWORKS, ...remoteNetworks] as Network[];
 
   const otherNetworks = allNetworks.filter(
     (network) => network.id !== networkId
@@ -25,7 +30,7 @@ const useNetworks = () => {
     (network) => network.id === networkId
   );
   const getNetworkById = (id: string) =>
-    NETWORKS.find((network) => network.id === id);
+    DEFAULT_NETWORKS.find((network) => network.id === id);
 
   return {
     allNetworks,

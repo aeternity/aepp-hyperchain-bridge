@@ -6,8 +6,10 @@ import { FungibleTokenContract, TokenMeta } from "./token";
 export type HyperchainBridgeContract = Contract<HyperchainBridge>;
 
 export interface HyperchainBridge extends ContractMethodsBase {
+  operator: () => Promise<string>;
   token_links: () => Promise<TokenLink[]>;
   bridge_entries: () => Promise<BridgeEntry[]>;
+  bridge_entry: (idx: number | bigint) => Promise<BridgeEntry | null>;
   processed_exits: () => Promise<ExitRequest[]>;
   check_ids_processed: (
     ids: Array<number | bigint>,
@@ -27,7 +29,10 @@ export interface HyperchainBridge extends ContractMethodsBase {
   exit_bridge: (
     request: ExitRequest,
     timestamp: number,
-    signature: string
+    signature: string,
+    options?: {
+      ttl?: number;
+    }
   ) => Promise<TokenLink>;
 
   stringify_exit_request: (

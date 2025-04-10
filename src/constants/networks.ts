@@ -10,7 +10,7 @@ export const AE_TESTNET: Network = {
   url: "https://testnet.aeternity.io",
   mdwUrl: "https://testnet.aeternity.io/mdw",
   explorerUrl: "https://testnet.aescan.io",
-  bridgeContractAddress: "ct_CQxcMLXXKg1Nsju7CmGfb5LsA24qrX7CMR69pKocBS9xCfGco",
+  bridgeContractAddress: "ct_Sez5oVtCgNrgyMRsEfARajfNFsxtXoNoR1Nd7YzRwDCx5xxYs",
   ...networkDefaults,
 };
 
@@ -20,7 +20,7 @@ export const AE_MAINNET: Network = {
   url: "https://mainnet.aeternity.io",
   mdwUrl: "https://mainnet.aeternity.io/mdw",
   explorerUrl: "https://aescan.io",
-  bridgeContractAddress: "ct_9W134XDN1B8kAbRqQhvN3i2NJrei7toyM5MqeUEnMwuXwTkpM",
+  bridgeContractAddress: "ct_HF6vxGCvfUir1CpkcNMZmoFGiwDC5uvAfN9tKsrDDrLdswe3P",
   ...networkDefaults,
 };
 
@@ -30,9 +30,8 @@ export const HC_DEV: Network = {
   url: "http://localhost:23013",
   mdwUrl: "http://localhost:24000",
   explorerUrl: "http://localhost:28020",
-  bridgeContractAddress:
-    "ct_2fi1rcyFZdbkXsqFBxD2CS8NBDDaLWUzMyhZruYn9RKm2pRPaV",
+  bridgeContractAddress: "ct_iPPPd7TiEpY1FhvWVfMK2zC5cWRVuddj9mdWQMG3USsd4p7Ws",
   ...networkDefaults,
 };
 
-export const NETWORKS = [AE_MAINNET, AE_TESTNET, HC_DEV];
+export const DEFAULT_NETWORKS = [AE_MAINNET, AE_TESTNET, HC_DEV];

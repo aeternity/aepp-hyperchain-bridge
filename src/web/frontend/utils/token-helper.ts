@@ -30,11 +30,3 @@ export async function setTokenAllowance(
     return true;
   }
 }
-
-export async function getTokenContract(tokenAddress: string) {
-  return getContract(
-    walletSdk,
-    tokenAddress as `ct_${string}`,
-    FungibleToken_aci
-  );
-}

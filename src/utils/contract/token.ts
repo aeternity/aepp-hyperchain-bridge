@@ -88,14 +88,15 @@ export const getTxFee = async (network: Network, hash: string) => {
   }
 };
 
-export const getTokenMeta = async (address: string): Promise<TokenMeta> => {
+export const getTokenMeta = async (
+  sdk: AeSdk,
+  address: string
+): Promise<TokenMeta> => {
   const contract = await Contract.initialize({
-    ...walletSdk.getContext(),
+    ...sdk.getContext(),
     address: address as `ct_${string}`,
     aci: FungibleToken_aci,
   });
 
-  const { decodedResult: tokenMeta } = await contract.meta_info();
-
-  return tokenMeta;
+  return (await contract.meta_info()).decodedResult as TokenMeta;
 };

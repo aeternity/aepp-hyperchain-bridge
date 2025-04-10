@@ -14,9 +14,11 @@ import { getContract } from "@/utils/contract/helper";
 import { AppContext } from "../context/app-provider";
 import { Token } from "@/types/token";
 import { setTokenAllowance } from "../utils/token-helper";
+import useNetworks from "./useNetworks";
 
 const useBridgeContract = () => {
-  const { address, networkId } = useContext(WalletContext);
+  const { address } = useContext(WalletContext);
+  const { getNetworkById, currentNetwork } = useNetworks();
   const { showError, showInfo, showSuccess } = useContext(AppContext);
   const [bridgeContract, setBridgeContract] =
     useState<HyperchainBridgeContract | null>(null);
@@ -26,10 +28,10 @@ const useBridgeContract = () => {
   const [isBusy, setBusy] = useState(false);
 
   useEffect(() => {
-    if (!networkId) return;
+    if (!currentNetwork?.id) return;
 
-    const network = getNetworkById(networkId);
-    const contractAddress = network?.bridgeContractAddress as `ct_${string}`;
+    const contractAddress =
+      currentNetwork?.bridgeContractAddress as `ct_${string}`;
     if (!contractAddress) {
       setBridgeContract(null);
       setContractState(BridgeContractStatus.NOT_AVAILABLE);
@@ -44,7 +46,7 @@ const useBridgeContract = () => {
       setBridgeContract(contract);
       setContractState(BridgeContractStatus.AVAILABLE);
     });
-  }, [address, networkId]);
+  }, [address, currentNetwork?.id]);
 
   const enterBridge = useCallback(
     async (destinationNetworkId: string, token: Token, amount: string) => {
@@ -73,9 +75,7 @@ const useBridgeContract = () => {
           }
         );
 
-        showSuccess(
-          `Deposit ID:${result?.decodedResult} is successful with tx hash: ${result?.hash}`
-        );
+        showSuccess(`Bridge entry is successful with tx hash: ${result?.hash}`);
         setBusy(false);
         return [true, result];
       } catch (error: any) {
@@ -87,7 +87,44 @@ const useBridgeContract = () => {
     [bridgeContract, showError, showInfo, showSuccess]
   );
 
-  return { bridgeContract, contractState, enterBridge, isBusy };
+  const exitBridge = useCallback(
+    async (entryTx: BridgeEntryTx) => {
+      setBusy(true);
+      try {
+        const sourceNetwork = getNetworkById(entryTx.source_network_id)!;
+        const _resp = await fetch(
+          `/api/exit-params/${encodeURIComponent(sourceNetwork.url)}/${
+            sourceNetwork.bridgeContractAddress
+          }/${entryTx.idx}/${entryTx.hash}`
+        );
+        const { ok, error, signature, exitRequest, timestamp } =
+          await _resp.json();
+
+        if (!ok) throw new Error(error);
+
+        const exitTx = await bridgeContract?.exit_bridge(
+          exitRequest,
+          timestamp,
+          signature,
+          {
+            ttl: 30,
+          }
+        );
+        console.log("exitTx", exitTx);
+        showSuccess(
+          `Exit bridge transaction is successful with tx hash: ${exitTx?.hash}`
+        );
+      } catch (error: any) {
+        setBusy(false);
+        showError(error.message);
+      }
+
+      setBusy(false);
+    },
+    [bridgeContract]
+  );
+
+  return { isBusy, bridgeContract, contractState, enterBridge, exitBridge };
 };
 
 export default useBridgeContract;
