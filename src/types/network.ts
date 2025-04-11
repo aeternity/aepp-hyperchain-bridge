@@ -1,3 +1,5 @@
+import { TokenMeta } from "./token";
+
 export interface NetworkBase {
   id: string;
   url: string;
@@ -6,7 +8,12 @@ export interface NetworkBase {
 
 export interface Network extends NetworkBase {
   mdwUrl: string;
-  compilerUrl: string;
+  mdwWebSocketUrl: string;
   explorerUrl: string;
   bridgeContractAddress: string;
+}
+
+export interface NetworkWithCurrency extends Network {
+  currency: TokenMeta;
+  statusSucceeded: boolean;
 }

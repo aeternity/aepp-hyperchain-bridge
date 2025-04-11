@@ -8,7 +8,7 @@ import { mapBigIntsToNumbers } from "@/utils/data/mappers";
 
 export default {
   async GET(
-    req: Bun.BunRequest<"/api/exit-params/:networkURL/:bridgeAddress/:entryIdx/:entryTxHash">
+    req: Bun.BunRequest<"/api/signature/:networkURL/:bridgeAddress/:entryIdx/:entryTxHash">
   ): Promise<Response> {
     try {
       const { entryIdx, bridgeAddress, networkURL, entryTxHash } = req.params;

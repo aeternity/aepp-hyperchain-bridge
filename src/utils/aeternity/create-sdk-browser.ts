@@ -1,3 +1,4 @@
+import { networkDefaults } from "@/constants/networks";
 import type { Network } from "@/types/network";
 import { AeSdk, CompilerHttp, Node } from "@aeternity/aepp-sdk";
 
@@ -8,7 +9,7 @@ export async function createSdkBrowser(network: Network): Promise<AeSdk> {
     sdkInstanceMap.set(
       network.id,
       new AeSdk({
-        onCompiler: new CompilerHttp(network.compilerUrl),
+        onCompiler: new CompilerHttp(networkDefaults.compilerUrl),
         nodes: [{ name: "remote", instance: new Node(network.url) }],
       })
     );

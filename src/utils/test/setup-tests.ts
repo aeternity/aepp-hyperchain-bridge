@@ -54,6 +54,11 @@ async function setupBridgeForNetwork(
     decimals: BigInt(18),
     symbol: `HBT-${code}`,
   };
+  const nativeTokenMeta = {
+    name: `Aeternity(${code}) Native Token`,
+    decimals: BigInt(18),
+    symbol: `AE-${code}`,
+  };
   const token = cachedDeployment
     ? await Contract.initialize<FungibleToken>({
         ...sdk.getContext(),
@@ -90,6 +95,7 @@ async function setupBridgeForNetwork(
       network,
       contract,
       tokenMeta,
+      nativeTokenMeta,
     },
   };
 }

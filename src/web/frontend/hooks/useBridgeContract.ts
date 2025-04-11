@@ -110,7 +110,7 @@ const useBridgeContract = () => {
             ttl: 30,
           }
         );
-        console.log("exitTx", exitTx);
+
         showSuccess(
           `Exit bridge transaction is successful with tx hash: ${exitTx?.hash}`
         );

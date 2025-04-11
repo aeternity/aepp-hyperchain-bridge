@@ -1,5 +1,5 @@
 import BigNumber from "bignumber.js";
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 
 import { validateForm } from "./validation";
 import TokenSelect from "./token-select";
@@ -10,14 +10,11 @@ import BridgeHistory from "../bridge-history";
 
 import { useTokenBalances } from "@/frontend/hooks/useTokenBalances";
 import useNetworks from "@/frontend/hooks/useNetworks";
-import { WalletContext } from "@/frontend/context/wallet-provider";
 import useBridgeContract from "@/frontend/hooks/useBridgeContract";
 import BridgeActionDetailsModal, {
   BridgeActionDetailsModalProps,
 } from "./bridge-action-details";
-import { BridgeEntryTx } from "@/types/bridge";
 import { NetworkContext } from "../../context/network-provider";
-import { fromTransactionToBridgeEntryTx } from "../../utils/mappers";
 
 export default function BridgeForm() {
   const { otherNetworks } = useNetworks();

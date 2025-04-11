@@ -8,8 +8,8 @@
       "type": "bun",
       "internalConsoleOptions": "neverOpen",
       "request": "launch",
-      "name": "Debug Tests",
-      "program": "test:contracts",
+      "name": "Debug Dev",
+      "program": "dev",
       "cwd": "${workspaceFolder}",
       "stopOnEntry": false,
       "watchMode": false

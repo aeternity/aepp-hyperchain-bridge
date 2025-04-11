@@ -8,6 +8,9 @@ import { HyperchainBridge, HyperchainBridgeContract } from "@/types/bridge";
 import HyperchainBridge_aci from "@/aci/HyperchainBridge.json";
 import FungibleToken_aci from "@/aci/FungibleToken.json";
 import { FungibleToken, FungibleTokenContract } from "@/types/token";
+import { AciContractCallEncoder } from "@aeternity/aepp-calldata";
+
+const BridgeCallData = new AciContractCallEncoder(HyperchainBridge_aci);
 
 export async function getContract<T extends ContractMethodsBase>(
   aeSdk: AeSdk,

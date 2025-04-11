@@ -280,7 +280,17 @@ const testBridgeExits = async (
     }
 
     expect(processedExits.length).toBeGreaterThan(0);
-    const lastExit = processedExits[processedExits.length - 1];
+    const lastExit = processedExits[processedExits.length - 1] as ExitRequest;
+
+    const idxProcessResults = (
+      await contract.check_ids_processed(
+        [lastExit.entry.idx],
+        lastExit.entry.source_network_id
+      )
+    ).decodedResult;
+
+    expect(idxProcessResults[0][1]).toBe(true);
+
     expect(lastExit).toEqual(request);
     expect(userBalance).toBe(
       userBalanceBefore + request.entry.amount - totalFees

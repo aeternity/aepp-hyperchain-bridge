@@ -1,33 +1,21 @@
-import React, { useEffect } from "react";
-import { useInView } from "react-intersection-observer";
+import { useEffect } from "react";
 
 import Title from "../base/title";
 import BridgeHistoryList from "./history-list";
-import useBridgeTransactions from "../../hooks/useBridgeTransactions";
+import useBridgeActionsHistory from "../../hooks/useBridgeActionsHistory";
 
 interface Props {
   isContractBusy: boolean;
 }
 
 export default function BridgeHistory({ isContractBusy }: Props) {
-  const { ref, inView } = useInView();
-  const { entries, isFetched, isFetching, fetchNextPage, refetch } =
-    useBridgeTransactions();
-
-  useEffect(() => {
-    if (inView) {
-      fetchNextPage();
-    }
-  }, [fetchNextPage, inView]);
-
+  const { actions, isFetched, isFetching, refetch } = useBridgeActionsHistory();
   useEffect(() => {
     if (!isContractBusy) {
       refetch();
     }
   }, [isContractBusy, refetch]);
-
-  const uncompletedEntries = entries.filter((e) => !e.is_action_completed);
-
+  const nonCompletedActions = actions.filter((a) => !a.isCompleted);
   return (
     <div className="drawer drawer-end">
       <input
@@ -41,9 +29,9 @@ export default function BridgeHistory({ isContractBusy }: Props) {
           className="drawer-button btn btn-link text-aepink"
         >
           View History
-          {!isFetching && uncompletedEntries.length > 0 && (
+          {!isFetching && nonCompletedActions.length > 0 && (
             <div className="badge badge-sm badge-neutral bg-aepink border-white pt-0.5">
-              {uncompletedEntries.length}
+              {nonCompletedActions.length}
             </div>
           )}
           {isFetching && (
@@ -64,8 +52,7 @@ export default function BridgeHistory({ isContractBusy }: Props) {
             subtitle="History of your bridge transactions"
           />
           <div className="flex flex-1 flex-col overflow-scroll h-[calc(100%-7rem)]">
-            {isFetched && <BridgeHistoryList transactions={entries} />}
-            <div ref={ref}></div>
+            {isFetched && <BridgeHistoryList actions={actions} />}
             {isFetching && (
               <div className="flex justify-center m-3">
                 <span className="loading loading-spinner text-neutral"></span>

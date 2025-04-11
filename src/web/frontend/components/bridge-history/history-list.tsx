@@ -1,12 +1,12 @@
-import { BridgeEntryTx } from "@/types/bridge";
+import { BridgeAction } from "@/types/bridge";
 import TransactionListItem from "./history-list-item";
 
 interface Props {
-  transactions: BridgeEntryTx[];
+  actions: BridgeAction[];
 }
 
-export default function BridgeHistoryList({ transactions }: Props) {
-  if (transactions.length === 0) {
+export default function BridgeHistoryList({ actions }: Props) {
+  if (actions.length === 0) {
     return (
       <div className="text-center text-2xl text-neutral mt-3">
         No transactions yet
@@ -14,7 +14,7 @@ export default function BridgeHistoryList({ transactions }: Props) {
     );
   }
 
-  return transactions.map((tx) => (
-    <TransactionListItem key={tx.hash} tx={tx} />
+  return actions.map((action) => (
+    <TransactionListItem key={action.entryTxHash} action={action} />
   ));
 }

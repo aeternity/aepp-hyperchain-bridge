@@ -2,6 +2,7 @@ import { AeSdk, type ContractMethodsBase, Contract } from "@aeternity/aepp-sdk";
 
 import { Network, NetworkBase } from "./network";
 import { FungibleTokenContract, TokenMeta } from "./token";
+import { Tables } from "@/web/backend/lib/database.types";
 
 export type HyperchainBridgeContract = Contract<HyperchainBridge>;
 
@@ -57,6 +58,15 @@ export interface BridgeEntryTx extends BridgeEntry {
   timestamp: number;
   is_action_completed?: boolean;
 }
+
+export interface BridgeExitTx {
+  hash: string;
+  timestamp: number;
+  exitRequest: ExitRequest;
+  ok: boolean;
+}
+
+export type BridgeAction = Tables<"actions">;
 
 export interface ExitRequest {
   entry: BridgeEntry;
