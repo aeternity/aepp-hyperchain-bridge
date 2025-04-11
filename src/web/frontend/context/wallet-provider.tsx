@@ -7,7 +7,7 @@ import {
 
 import { ConnectionStatus, DetectionStatus, Wallet } from "@/types/wallet";
 import { getConnector, getWallet, walletSdk } from "../utils/wallet-sdk";
-import { getNetworkById } from "@/utils/data/filters";
+import useNetworks from "../hooks/useNetworks";
 
 export const WalletContext = createContext({
   address: "",
@@ -24,6 +24,8 @@ export default function WalletProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const { getNetworkById } = useNetworks();
+
   const [networkId, setNetworkId] = useState("");
   const [address, setAddress] = useState<`ak_${string}` | "">("");
 
@@ -71,24 +73,27 @@ export default function WalletProvider({
     }
   }, [connector, setConnectionStatus]);
 
+  const handleNetworkChange = (_networkId: string) => {
+    if (getNetworkById(_networkId)) {
+      walletSdk.selectNode(_networkId);
+      setNetworkId(_networkId);
+    } else {
+      setNetworkId("");
+    }
+  };
+
   useEffect(() => {
     if (!connector) return;
 
     connector.addListener("accountsChange", async (accounts: AccountBase[]) => {
       walletSdk.addAccount(accounts[0], { select: true });
-      walletSdk.selectNode(connector.networkId);
       setAddress(walletSdk.address);
-      setNetworkId(connector.networkId);
+
+      handleNetworkChange(connector.networkId);
     });
 
     connector.addListener("networkIdChange", async (_networkId: string) => {
-      const network = getNetworkById(_networkId);
-      if (!network) {
-        alert("Network not found");
-        return;
-      }
-      walletSdk.selectNode(_networkId);
-      setNetworkId(_networkId);
+      handleNetworkChange(_networkId);
     });
 
     connector.addListener("disconnect", () => {

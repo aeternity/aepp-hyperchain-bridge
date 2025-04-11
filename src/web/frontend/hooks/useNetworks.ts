@@ -3,9 +3,10 @@ import { useContext } from "react";
 import { WalletContext } from "../context/wallet-provider";
 import { useQuery } from "@tanstack/react-query";
 import { Network } from "@/types/network";
+import { ConnectionStatus } from "@/types/wallet";
 
 const useNetworks = () => {
-  const { networkId } = useContext(WalletContext);
+  const { networkId, connectionStatus } = useContext(WalletContext);
 
   const { data: remoteNetworks } = useQuery({
     queryKey: ["networks"],
@@ -32,10 +33,14 @@ const useNetworks = () => {
   const getNetworkById = (id: string) =>
     DEFAULT_NETWORKS.find((network) => network.id === id);
 
+  const isUnsupportedNetwork =
+    !currentNetwork && connectionStatus === ConnectionStatus.CONNECTED;
+
   return {
     allNetworks,
     currentNetwork,
     otherNetworks,
+    isUnsupportedNetwork,
     getNetworkById,
   };
 };

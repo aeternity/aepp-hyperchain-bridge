@@ -15,6 +15,7 @@ import BridgeActionDetailsModal, {
   BridgeActionDetailsModalProps,
 } from "./bridge-action-details";
 import { NetworkContext } from "../../context/network-provider";
+import Title from "../base/title";
 
 export default function BridgeForm() {
   const { otherNetworks } = useNetworks();
@@ -82,44 +83,51 @@ export default function BridgeForm() {
   }, [amount, selectedNetworkId, selectedTokenAddress]);
 
   return (
-    <fieldset className="fieldset rounded-sm bg-gray-50 shadow-sm pt-3">
-      <div className="flex flex-1 flex-row flex-wrap justify-center">
-        <NetworkSelect
-          className="w-1/2 px-4 max-[400px]:w-full"
-          error={errors.network}
-          networks={otherNetworks}
-          onSelect={setSelectedNetworkId}
-        />
-        <TokenSelect
-          className="w-1/2 px-4 max-[400px]:w-full"
-          error={errors.token}
-          tokens={tokens}
-          onSelect={setSelectedTokenAddress}
-        />
+    <>
+      <Title
+        title="Bridge"
+        subtitle="Bridge your assets between Aeternity mainnet and Hyperchains"
+      />
 
-        <AmountInput
-          className="w-full px-4"
-          error={errors.amount}
-          onChange={setAmount}
-          amount={amount}
-          max={selectedToken?.amount
-            .shiftedBy(-Number(selectedToken.decimals))
-            ?.toNumber()}
-        />
+      <fieldset className="fieldset rounded-sm bg-gray-50 shadow-sm pt-3">
+        <div className="flex flex-1 flex-row flex-wrap justify-center">
+          <NetworkSelect
+            className="w-1/2 px-4 max-[400px]:w-full"
+            error={errors.network}
+            networks={otherNetworks}
+            onSelect={setSelectedNetworkId}
+          />
+          <TokenSelect
+            className="w-1/2 px-4 max-[400px]:w-full"
+            error={errors.token}
+            tokens={tokens}
+            onSelect={setSelectedTokenAddress}
+          />
 
-        <button
-          disabled={isBusy}
-          className="btn bg-aepink text-white font-medium w-[200px] mb-2 mt-2"
-          color="primary"
-          onClick={handleBridgeClick}
-        >
-          Confirm Transaction
-        </button>
-        {bridgeEntrySuccessModalProps && (
-          <BridgeActionDetailsModal {...bridgeEntrySuccessModalProps} />
-        )}
-        <BridgeHistory isContractBusy={isBusy} />
-      </div>
-    </fieldset>
+          <AmountInput
+            className="w-full px-4"
+            error={errors.amount}
+            onChange={setAmount}
+            amount={amount}
+            max={selectedToken?.amount
+              .shiftedBy(-Number(selectedToken.decimals))
+              ?.toNumber()}
+          />
+
+          <button
+            disabled={isBusy}
+            className="btn bg-aepink text-white font-medium w-[200px] mb-2 mt-2"
+            color="primary"
+            onClick={handleBridgeClick}
+          >
+            Confirm Transaction
+          </button>
+          {bridgeEntrySuccessModalProps && (
+            <BridgeActionDetailsModal {...bridgeEntrySuccessModalProps} />
+          )}
+          <BridgeHistory isContractBusy={isBusy} />
+        </div>
+      </fieldset>
+    </>
   );
 }

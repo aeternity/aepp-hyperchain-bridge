@@ -1,57 +1,29 @@
-import { useState, useEffect, useContext, useCallback } from "react";
+import { useState, useContext, useCallback } from "react";
 
 import { walletSdk } from "../utils/wallet-sdk";
-import { WalletContext } from "../context/wallet-provider";
-import HyperchainBridge_aci from "@/aci/HyperchainBridge.json";
-import { BridgeContractStatus } from "@/types/wallet";
-import {
-  BridgeEntryTx,
-  HyperchainBridge,
-  HyperchainBridgeContract,
-} from "@/types/bridge";
-import { getNetworkBaseById, getNetworkById } from "@/utils/data/filters";
-import { getContract } from "@/utils/contract/helper";
+import { BridgeEntryTx } from "@/types/bridge";
+import { getNetworkBaseById } from "@/utils/data/filters";
+import { getBridgeContract } from "@/utils/contract/helper";
 import { AppContext } from "../context/app-provider";
 import { Token } from "@/types/token";
 import { setTokenAllowance } from "../utils/token-helper";
 import useNetworks from "./useNetworks";
 
 const useBridgeContract = () => {
-  const { address } = useContext(WalletContext);
   const { getNetworkById, currentNetwork } = useNetworks();
   const { showError, showInfo, showSuccess } = useContext(AppContext);
-  const [bridgeContract, setBridgeContract] =
-    useState<HyperchainBridgeContract | null>(null);
-  const [contractState, setContractState] = useState(
-    BridgeContractStatus.LOADING
-  );
   const [isBusy, setBusy] = useState(false);
-
-  useEffect(() => {
-    if (!currentNetwork?.id) return;
-
-    const contractAddress =
-      currentNetwork?.bridgeContractAddress as `ct_${string}`;
-    if (!contractAddress) {
-      setBridgeContract(null);
-      setContractState(BridgeContractStatus.NOT_AVAILABLE);
-      return;
-    }
-
-    getContract<HyperchainBridge>(
-      walletSdk,
-      contractAddress,
-      HyperchainBridge_aci
-    ).then((contract) => {
-      setBridgeContract(contract);
-      setContractState(BridgeContractStatus.AVAILABLE);
-    });
-  }, [address, currentNetwork?.id]);
 
   const enterBridge = useCallback(
     async (destinationNetworkId: string, token: Token, amount: string) => {
       setBusy(true);
       try {
+        if (!currentNetwork) throw new Error("Network not found");
+
+        const bridgeContract = await getBridgeContract(
+          walletSdk,
+          currentNetwork.bridgeContractAddress as `ct_${string}`
+        );
         const isNative = token.address === "native";
 
         if (!isNative) {
@@ -84,13 +56,19 @@ const useBridgeContract = () => {
         return [false, error];
       }
     },
-    [bridgeContract, showError, showInfo, showSuccess]
+    [currentNetwork?.id, showError, showInfo, showSuccess]
   );
 
   const exitBridge = useCallback(
     async (entryTx: BridgeEntryTx) => {
       setBusy(true);
       try {
+        if (!currentNetwork) throw new Error("Network not found");
+
+        const bridgeContract = await getBridgeContract(
+          walletSdk,
+          currentNetwork.bridgeContractAddress as `ct_${string}`
+        );
         const sourceNetwork = getNetworkById(entryTx.source_network_id)!;
         const _resp = await fetch(
           `/api/exit-params/${encodeURIComponent(sourceNetwork.url)}/${
@@ -114,17 +92,16 @@ const useBridgeContract = () => {
         showSuccess(
           `Exit bridge transaction is successful with tx hash: ${exitTx?.hash}`
         );
+        setBusy(false);
       } catch (error: any) {
         setBusy(false);
         showError(error.message);
       }
-
-      setBusy(false);
     },
-    [bridgeContract]
+    [currentNetwork?.id]
   );
 
-  return { isBusy, bridgeContract, contractState, enterBridge, exitBridge };
+  return { isBusy, enterBridge, exitBridge };
 };
 
 export default useBridgeContract;

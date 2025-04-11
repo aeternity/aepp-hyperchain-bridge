@@ -1,5 +1,5 @@
 import moment from "moment";
-import { BridgeEntry, BridgeEntryTx } from "@/types/bridge";
+import { BridgeEntryTx } from "@/types/bridge";
 import { formatBalance, shorten } from "@/utils/data/formatters";
 import {
   ArrowRightEndOnRectangleIcon,

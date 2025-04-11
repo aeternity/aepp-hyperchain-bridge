@@ -1,18 +1,13 @@
 import { useContext } from "react";
 
 import BridgeForm from "@/frontend/components/bridge-form";
-import Title from "@/frontend/components/base/title";
-import {
-  BridgeContractStatus,
-  ConnectionStatus,
-  DetectionStatus,
-} from "@/types/wallet";
+import { ConnectionStatus, DetectionStatus } from "@/types/wallet";
 import { WalletContext } from "@/frontend/context/wallet-provider";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
-import useBridgeContract from "@/frontend/hooks/useBridgeContract";
+import useNetworks from "../hooks/useNetworks";
 
 export default function Bridge() {
-  const { bridgeContract, contractState } = useBridgeContract();
+  const { currentNetwork } = useNetworks();
   const { connectionStatus, detectionStatus } = useContext(WalletContext);
 
   const walletNotConnected =
@@ -40,14 +35,15 @@ export default function Bridge() {
       return displayMessage("Please connect your wallet to use the bridge");
     }
 
-    if (contractState === BridgeContractStatus.NOT_AVAILABLE) {
-      return displayMessage(
-        "Bridge contract is not available for this network :("
-      );
-    }
-
-    if (contractState === BridgeContractStatus.AVAILABLE && bridgeContract) {
-      return <BridgeForm />;
+    if (connectionStatus === ConnectionStatus.CONNECTED) {
+      if (currentNetwork) {
+        return <BridgeForm />;
+      } else {
+        return displayMessage(
+          "Unsupported network. Please switch to Aeternity mainnet or Hyperchain",
+          false
+        );
+      }
     }
   };
 
@@ -55,10 +51,6 @@ export default function Bridge() {
     <main className="relative flex flex-1 flex-row overflow-hidden">
       <div className="absolute w-[200%] h-[200%] top-[-50%] left-[-50%] bg-[url(../assets/hc-logo.svg)] bg-[auto_50px] z-[0] opacity-5 rotate-[30deg] bg-repeat-space"></div>
       <div className=" mt-12 mb-9 flex-col max-sm:my-5 md:my-20 md:w-[600px] max-w-screen-2xl xl:px-0 px-4 m-auto z-10">
-        <Title
-          title="Bridge"
-          subtitle="Bridge your assets between Aeternity mainnet and Hyperchains"
-        />
         {content()}
       </div>
     </main>
