@@ -9,13 +9,12 @@ import { normalizeUrls } from "../../utils/formatters";
 
 export default function NetworkForm() {
   const { showError } = useContext(AppContext);
+
+  const [mdw, setMdw] = useState("");
+  const [node, setNode] = useState("");
+  const [mdwWS, setMdwWS] = useState("");
+  const [explorer, setExplorer] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
-  const [node, setNode] = useState("https://testnet.aeternity.io/");
-  const [mdw, setMdw] = useState("https://testnet.aeternity.io/mdw");
-  const [mdwWS, setMdwWS] = useState(
-    "wss://testnet.aeternity.io/mdw/websocket"
-  );
-  const [explorer, setExplorer] = useState("https://testnet.aescan.io/");
   const [network, setNetwork] = useState<NetworkWithCurrency>();
 
   const isButtonEnabled =
