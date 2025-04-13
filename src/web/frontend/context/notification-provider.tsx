@@ -1,7 +1,7 @@
 import { OptionsObject, useSnackbar } from "notistack";
 import { createContext } from "react";
 
-export const AppContext = createContext({
+export const NotificationContext = createContext({
   showInfo: (message: string) => {},
   showError: (message: string) => {},
   showSuccess: (message: string) => {},
@@ -13,7 +13,7 @@ const defaultSettings: OptionsObject = {
   anchorOrigin: { vertical: "bottom", horizontal: "center" },
 };
 
-export default function AppProvider({
+export default function NotificationProvider({
   children,
 }: {
   children: React.ReactNode;
@@ -35,8 +35,8 @@ export default function AppProvider({
   const showSuccess = (message: string) => showSnack(message, "success");
 
   return (
-    <AppContext.Provider value={{ showError, showSuccess, showInfo }}>
+    <NotificationContext.Provider value={{ showError, showSuccess, showInfo }}>
       {children}
-    </AppContext.Provider>
+    </NotificationContext.Provider>
   );
 }

@@ -1,11 +1,11 @@
 import { serve } from "bun";
 
 import index from "./frontend/index.html";
-import historyAPI from "./backend/api/history";
-import networksAPI from "./backend/api/networks";
-import signatureAPI from "./backend/api/signature";
+import networks from "./backend/api/networks";
+import signature from "./backend/api/signature";
 import syncActions from "./backend/job/sync-actions";
-import verifyNetworkAPI from "./backend/api/verify-network";
+import verifyNetwork from "./backend/api/verify-network";
+import * as actions from "./backend/api/actions";
 
 await syncActions();
 
@@ -13,11 +13,12 @@ const server = serve({
   port: 3000,
   routes: {
     "/*": index,
-    "/api/networks": networksAPI,
-    "/api/networks/verify": verifyNetworkAPI,
-    "/api/history/:userAddress": historyAPI,
+    "/api/networks": networks,
+    "/api/networks/verify": verifyNetwork,
+    "/api/actions/:userAddress": actions.byUserAddress,
+    "/api/action/:sourceNetworkId/:entryIdx": actions.byNetworkIdAndEntryIdx,
     "/api/signature/:networkURL/:bridgeAddress/:entryIdx/:entryTxHash":
-      signatureAPI,
+      signature,
   },
 
   development: process.env.NODE_ENV !== "production",

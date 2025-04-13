@@ -1,21 +1,42 @@
-import { useState, useContext, useCallback } from "react";
-
+import { createContext, useCallback, useContext, useState } from "react";
+import useNetworks from "../hooks/useNetworks";
+import { NotificationContext } from "./notification-provider";
 import { walletSdk } from "../utils/wallet-sdk";
-import { BridgeEntryTx } from "@/types/bridge";
-import { getNetworkBaseById } from "@/utils/data/filters";
 import { getBridgeContract } from "@/utils/contract/helper";
-import { AppContext } from "../context/app-provider";
+import { BridgeAction } from "@/types/bridge";
 import { Token } from "@/types/token";
 import { setTokenAllowance } from "../utils/token-helper";
-import useNetworks from "./useNetworks";
 
-const useBridgeContract = () => {
-  const { getNetworkById, currentNetwork } = useNetworks();
-  const { showError, showInfo, showSuccess } = useContext(AppContext);
+type Props = {
+  children: React.ReactNode;
+};
+
+export const BridgeActionContext = createContext({
+  isBusy: false,
+  modalAction: undefined as BridgeAction | undefined,
+  exitBridge: async (action: BridgeAction): Promise<[boolean, any]> =>
+    new Promise((resolve) => resolve([false, null])),
+  enterBridge: async (
+    destinationNetworkId: string,
+    token: Token,
+    amount: string
+  ): Promise<[boolean, any]> =>
+    new Promise((resolve) => resolve([false, null])),
+  setModalAction: (action: BridgeAction | undefined) => {},
+});
+
+export default function BridgeActionProvider({ children }: Props) {
+  const { getNetworkById, getNetworkBaseById, currentNetwork } = useNetworks();
+  const { showError, showInfo, showSuccess } = useContext(NotificationContext);
   const [isBusy, setBusy] = useState(false);
+  const [modalAction, setModalAction] = useState<BridgeAction>();
 
   const enterBridge = useCallback(
-    async (destinationNetworkId: string, token: Token, amount: string) => {
+    async (
+      destinationNetworkId: string,
+      token: Token,
+      amount: string
+    ): Promise<[boolean, any]> => {
       setBusy(true);
       try {
         if (!currentNetwork) throw new Error("Network not found");
@@ -53,14 +74,14 @@ const useBridgeContract = () => {
       } catch (error: any) {
         setBusy(false);
         showError(error.message);
-        return [false, error];
+        return [false, error as any];
       }
     },
     [currentNetwork?.id, showError, showInfo, showSuccess]
   );
 
   const exitBridge = useCallback(
-    async (entryTx: BridgeEntryTx) => {
+    async (action: BridgeAction): Promise<[boolean, any]> => {
       setBusy(true);
       try {
         if (!currentNetwork) throw new Error("Network not found");
@@ -69,11 +90,11 @@ const useBridgeContract = () => {
           walletSdk,
           currentNetwork.bridgeContractAddress as `ct_${string}`
         );
-        const sourceNetwork = getNetworkById(entryTx.source_network_id)!;
+        const sourceNetwork = getNetworkById(action.sourceNetworkId)!;
         const _resp = await fetch(
-          `/api/exit-params/${encodeURIComponent(sourceNetwork.url)}/${
+          `/api/signature/${encodeURIComponent(sourceNetwork.url)}/${
             sourceNetwork.bridgeContractAddress
-          }/${entryTx.idx}/${entryTx.hash}`
+          }/${action.entryIdx}/${action.entryTxHash}`
         );
         const { ok, error, signature, exitRequest, timestamp } =
           await _resp.json();
@@ -92,16 +113,37 @@ const useBridgeContract = () => {
         showSuccess(
           `Exit bridge transaction is successful with tx hash: ${exitTx?.hash}`
         );
+
+        showInfo(`Fetching exit transaction details. Please wait...`);
+
+        const remoteActionData: BridgeAction = await fetch(
+          `/api/action/${action.sourceNetworkId}/${action.entryIdx}`
+        ).then((res) => res.json());
+
+        if (remoteActionData.isCompleted) {
+          setModalAction(remoteActionData);
+        } else {
+          showError(
+            "Cannot fetch exit transaction details, please check the history later."
+          );
+        }
+
         setBusy(false);
+        return [true, exitTx];
       } catch (error: any) {
         setBusy(false);
         showError(error.message);
+        return [false, null];
       }
     },
     [currentNetwork?.id]
   );
 
-  return { isBusy, enterBridge, exitBridge };
-};
-
-export default useBridgeContract;
+  return (
+    <BridgeActionContext.Provider
+      value={{ isBusy, modalAction, exitBridge, enterBridge, setModalAction }}
+    >
+      {children}
+    </BridgeActionContext.Provider>
+  );
+}

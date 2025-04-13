@@ -2,7 +2,7 @@ import { supabase } from "../lib/supabase";
 
 export default {
   async GET(
-    req: Bun.BunRequest<"/api/history/:userAddress">
+    req: Bun.BunRequest<"/api/actions/:userAddress">
   ): Promise<Response> {
     const { userAddress } = req.params;
 

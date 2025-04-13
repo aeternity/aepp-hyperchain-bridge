@@ -1,14 +1,14 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import Title from "../base/title";
 import UrlInput from "./url-input";
 import { isValidURL } from "../../utils/validators";
-import { AppContext } from "../../context/app-provider";
+import { NotificationContext } from "../../context/notification-provider";
 import DeployContractModal from "./deploy-contract-modal";
-import { Network, NetworkWithCurrency } from "@/types/network";
+import { NetworkWithCurrency } from "@/types/network";
 import { normalizeUrls } from "../../utils/formatters";
 
 export default function NetworkForm() {
-  const { showError } = useContext(AppContext);
+  const { showError } = useContext(NotificationContext);
 
   const [mdw, setMdw] = useState("");
   const [node, setNode] = useState("");

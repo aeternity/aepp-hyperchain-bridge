@@ -1,7 +1,6 @@
 import { useContext } from "react";
 import { WalletContext } from "../context/wallet-provider";
 import { useQuery } from "@tanstack/react-query";
-import { getNetworkById } from "@/utils/data/filters";
 import { fromAccountsBalancesToTokenAmount } from "../utils/mappers";
 import { TokenAmount } from "@/types/token";
 import BigNumber from "bignumber.js";

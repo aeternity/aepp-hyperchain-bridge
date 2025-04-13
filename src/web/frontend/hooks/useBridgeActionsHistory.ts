@@ -8,7 +8,7 @@ export default function useBridgeActionsHistory() {
 
   const { data, isFetching, isFetched, refetch } = useQuery({
     queryKey: ["actions-history", address],
-    queryFn: () => fetch(`/api/history/${address}`).then((r) => r.json()),
+    queryFn: () => fetch(`/api/actions/${address}`).then((r) => r.json()),
     enabled: !!address,
     initialData: { data: [] },
   });

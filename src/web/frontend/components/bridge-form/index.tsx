@@ -10,25 +10,22 @@ import BridgeHistory from "../bridge-history";
 
 import { useTokenBalances } from "@/frontend/hooks/useTokenBalances";
 import useNetworks from "@/frontend/hooks/useNetworks";
-import useBridgeContract from "@/frontend/hooks/useBridgeContract";
-import BridgeActionDetailsModal, {
-  BridgeActionDetailsModalProps,
-} from "./bridge-action-details";
+
+import BridgeActionDetailsModal from "./bridge-action-details";
 import { NetworkContext } from "../../context/network-provider";
 import Title from "../base/title";
+import { BridgeActionContext } from "../../context/bridge-action-provider";
 
 export default function BridgeForm() {
   const { otherNetworks } = useNetworks();
-  const { tokens, refetch } = useTokenBalances();
   const { reloadBalance } = useContext(NetworkContext);
-  const { enterBridge, isBusy } = useBridgeContract();
+  const { enterBridge, isBusy } = useContext(BridgeActionContext);
+  const { tokens, refetch: refetchTokenBalances } = useTokenBalances();
 
   const [amount, setAmount] = useState("");
   const [selectedNetworkId, setSelectedNetworkId] = useState("");
   const [selectedTokenAddress, setSelectedTokenAddress] = useState("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [bridgeEntrySuccessModalProps, setBridgeEntrySuccessModalProps] =
-    useState<BridgeActionDetailsModalProps | undefined>();
 
   const selectedToken = tokens.find(byAddress(selectedTokenAddress))!;
 
@@ -72,14 +69,9 @@ export default function BridgeForm() {
       timestamp: Date.now(),
     };
 
-    refetch();
+    refetchTokenBalances();
     reloadBalance();
     setAmount("");
-    setBridgeEntrySuccessModalProps({
-      entryTx: entryTx,
-      token: tokens.find(byAddress(selectedTokenAddress || "native"))!,
-      onClose: () => setBridgeEntrySuccessModalProps(undefined),
-    });
   }, [amount, selectedNetworkId, selectedTokenAddress]);
 
   return (
@@ -122,9 +114,8 @@ export default function BridgeForm() {
           >
             Confirm Transaction
           </button>
-          {bridgeEntrySuccessModalProps && (
-            <BridgeActionDetailsModal {...bridgeEntrySuccessModalProps} />
-          )}
+
+          <BridgeActionDetailsModal />
           <BridgeHistory isContractBusy={isBusy} />
         </div>
       </fieldset>

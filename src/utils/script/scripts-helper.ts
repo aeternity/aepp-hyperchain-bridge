@@ -2,7 +2,7 @@ import fs from "fs";
 import { parseArgs } from "util";
 import { AeSdk, Contract, getFileSystem } from "@aeternity/aepp-sdk";
 
-import { getNetworkById } from "@/utils/data/filters";
+import { getDefaultNetworkById } from "@/utils/data/filters";
 import { BRIDGE_SOURCE_PATH } from "@/constants/artifact-paths";
 
 export function parseArguments() {
@@ -67,7 +67,7 @@ const paseNetworks = (networks: string[] | undefined) => {
 };
 
 const parseNetwork = (networkId: string | undefined) => {
-  const network = getNetworkById(networkId!);
+  const network = getDefaultNetworkById(networkId!);
   if (!network) {
     console.log(`Network not found`);
     process.exit(1);

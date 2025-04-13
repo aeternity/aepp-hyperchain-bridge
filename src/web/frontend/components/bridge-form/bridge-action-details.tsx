@@ -1,47 +1,44 @@
 import moment from "moment";
-import { BridgeEntryTx } from "@/types/bridge";
+
 import { formatBalance, shorten } from "@/utils/data/formatters";
 import {
   ArrowRightEndOnRectangleIcon,
   ArrowRightStartOnRectangleIcon,
   BanknotesIcon,
+  CheckCircleIcon,
   CircleStackIcon,
   ClockIcon,
   DocumentTextIcon,
   ExclamationCircleIcon,
+  ExclamationTriangleIcon,
   LinkIcon,
 } from "@heroicons/react/24/outline";
-import { TokenAmount } from "@/types/token";
+
 import useNetworks from "../../hooks/useNetworks";
-import useBridgeContract from "../../hooks/useBridgeContract";
 
-export interface BridgeActionDetailsModalProps {
-  entryTx: BridgeEntryTx;
-  token: TokenAmount;
-  onClose: () => void;
-}
+import { useContext } from "react";
+import { BridgeActionContext } from "../../context/bridge-action-provider";
 
-export default function BridgeActionDetailsModal({
-  token,
-  entryTx,
-  onClose,
-}: BridgeActionDetailsModalProps) {
-  const { exitBridge } = useBridgeContract();
+export default function BridgeActionDetailsModal() {
   const { getNetworkById, currentNetwork } = useNetworks();
-  const sourceNetwork = getNetworkById(entryTx.source_network_id)!;
+  const { exitBridge, modalAction, setModalAction, isBusy } =
+    useContext(BridgeActionContext);
 
-  const connectedToTargetNetwork =
-    currentNetwork?.id === entryTx.target_network.id;
+  if (!modalAction) return null;
+
+  const sourceNetwork = getNetworkById(modalAction.sourceNetworkId)!;
+  const targetNetwork = getNetworkById(modalAction.targetNetworkId)!;
+  const connectedToTargetNetwork = currentNetwork?.id === targetNetwork.id;
 
   const handleBridgeComplete = async () => {
-    await exitBridge(entryTx);
+    const [isSucceeded, complete] = await exitBridge(modalAction);
   };
 
   return (
     <dialog
       open
       className="modal modal-bottom sm:modal-middle"
-      onClose={onClose}
+      onClose={() => setModalAction(undefined)}
     >
       <div className="modal-box sm:inline-table">
         <form method="dialog">
@@ -49,16 +46,33 @@ export default function BridgeActionDetailsModal({
             ✕
           </button>
         </form>
-        <h3 className="font-semibold text-2xl">Transaction Details</h3>
-        <div className="divider" />
+        <h3 className="font-semibold text-2xl">
+          Action Details{" "}
+          {!modalAction.isCompleted ? (
+            <div className="badge badge-warning ml-1">
+              <ExclamationTriangleIcon className="w-4 h-4" />
+              Not complete
+            </div>
+          ) : (
+            <div className="badge badge-success ml-1">
+              <CheckCircleIcon className="w-4 h-4" />
+              Completed
+            </div>
+          )}
+        </h3>
+        <div className="divider my-2" />
         <table className="table table-zebra">
           <tbody className="[&>tr>th]:font-semibold [&>tr>td]:font-medium [&>tr>td]:pr-0 [&>tr>th]:pl-0">
             <tr>
               <td>
                 <ClockIcon className="w-5 h-5" />
               </td>
-              <th>Date & Time:</th>
-              <td>{moment().format("HH:mm | DD.MM.YYYY")}</td>
+              <th>Entry Date & Time:</th>
+              <td>
+                {moment(modalAction.entryTimestamp).format(
+                  "HH:mm | DD.MM.YYYY"
+                )}
+              </td>
             </tr>
             <tr>
               <td>
@@ -68,10 +82,10 @@ export default function BridgeActionDetailsModal({
               <td className="flex-row flex items-center">
                 <a
                   className="link "
-                  href={`${sourceNetwork.explorerUrl}/transactions/${entryTx.hash}`}
+                  href={`${sourceNetwork.explorerUrl}/transactions/${modalAction.entryTxHash}`}
                   target="_blank"
                 >
-                  {shorten(entryTx.hash, 16, 4)}
+                  {shorten(modalAction.entryTxHash!, 16, 4)}
                 </a>
                 <LinkIcon className="ml-0.5" width={12} height={12} />
               </td>
@@ -81,7 +95,7 @@ export default function BridgeActionDetailsModal({
                 <BanknotesIcon className="w-5 h-5" />
               </td>
               <th>Token</th>
-              <td>{token?.name}</td>
+              <td>{modalAction.tokenName}</td>
             </tr>
             <tr>
               <td>
@@ -90,11 +104,11 @@ export default function BridgeActionDetailsModal({
               <th>Amount</th>
               <td>
                 {formatBalance({
-                  balance: entryTx.amount,
-                  decimals: token?.decimals,
+                  balance: modalAction.amount,
+                  decimals: modalAction.tokenDecimals,
                   formatDecimals: 2,
                 })}{" "}
-                {token?.symbol}
+                {modalAction.tokenSymbol}
               </td>
             </tr>
             <tr>
@@ -109,24 +123,55 @@ export default function BridgeActionDetailsModal({
                 <ArrowRightEndOnRectangleIcon className="w-5 h-5" />
               </td>
               <th>Target Network</th>
-              <td>{`${entryTx.target_network.name} (${entryTx.target_network.id})`}</td>
+              <td>{`${targetNetwork.name} (${targetNetwork.id})`}</td>
             </tr>
+            {modalAction.isCompleted && (
+              <>
+                <tr>
+                  <td>
+                    <ClockIcon className="w-5 h-5" />
+                  </td>
+                  <th>Entry Date & Time:</th>
+                  <td>
+                    {moment(modalAction.exitTimestamp).format(
+                      "HH:mm | DD.MM.YYYY"
+                    )}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <DocumentTextIcon className="w-5 h-5" />
+                  </td>
+                  <th>Exit Transaction:</th>
+                  <td className="flex-row flex items-center">
+                    <a
+                      className="link "
+                      href={`${targetNetwork.explorerUrl}/transactions/${modalAction.exitTxHash}`}
+                      target="_blank"
+                    >
+                      {shorten(modalAction.exitTxHash!, 16, 4)}
+                    </a>
+                    <LinkIcon className="ml-0.5" width={12} height={12} />
+                  </td>
+                </tr>
+              </>
+            )}
           </tbody>
         </table>
         <div className="divider" />
-        {!connectedToTargetNetwork ? (
-          <div className="alert alert-warning">
+        {!connectedToTargetNetwork && !modalAction.isCompleted && (
+          <div className="alert alert-warning mb-5">
             <ExclamationCircleIcon className="w-6 h-6 mr-0.5" />
             <p>
               Switch to{" "}
-              <span className="font-medium">
-                {entryTx.target_network.name} Network
-              </span>{" "}
+              <span className="font-medium">{targetNetwork.name} Network</span>{" "}
               on your wallet to continue the bridging process.
             </p>
           </div>
-        ) : (
+        )}
+        {!modalAction.isCompleted && (
           <button
+            disabled={!connectedToTargetNetwork || isBusy}
             className="btn bg-aepink text-white font-medium w-[200px] mb-2 mt-2 flex justify-self-center"
             color="primary"
             onClick={handleBridgeComplete}

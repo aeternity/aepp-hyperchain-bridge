@@ -2,9 +2,7 @@ import { NetworkWithCurrency } from "@/types/network";
 import { createSdkBrowser } from "@/utils/aeternity/create-sdk-browser";
 import BigNumber from "bignumber.js";
 import { useContext, useEffect, useMemo, useState } from "react";
-import { AppContext } from "../../context/app-provider";
-import { walletSdk } from "../../utils/wallet-sdk";
-import { Node } from "@aeternity/aepp-sdk";
+import { NotificationContext } from "../../context/notification-provider";
 import { WalletContext } from "../../context/wallet-provider";
 
 interface Props {
@@ -16,7 +14,7 @@ const OPERATOR_ACCOUNT_ADDRESS =
 const MINIMUM_BALANCE = 0.01;
 
 export default function DeployContractModal({ onClose, network }: Props) {
-  const { showError, showSuccess } = useContext(AppContext);
+  const { showError, showSuccess } = useContext(NotificationContext);
   const { addNewNode } = useContext(WalletContext);
 
   const [balance, setBalance] = useState("");

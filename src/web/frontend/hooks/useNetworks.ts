@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Network } from "@/types/network";
 import { ConnectionStatus } from "@/types/wallet";
 import { byId, notById } from "@/utils/data/filters";
+import { mapNetworkToBase } from "@/utils/data/mappers";
 
 const useNetworks = () => {
   const { networkId, connectionStatus } = useContext(WalletContext);
@@ -28,6 +29,8 @@ const useNetworks = () => {
   const currentNetwork = allNetworks.find(byId(networkId));
 
   const getNetworkById = (id: string) => allNetworks.find(byId(id));
+  const getNetworkBaseById = (id: string) =>
+    mapNetworkToBase(getNetworkById(id)!);
 
   const isUnsupportedNetwork =
     !currentNetwork && connectionStatus === ConnectionStatus.CONNECTED;
@@ -39,6 +42,7 @@ const useNetworks = () => {
     isUnsupportedNetwork,
     getNetworkById,
     refetchNetworks,
+    getNetworkBaseById,
   };
 };
 

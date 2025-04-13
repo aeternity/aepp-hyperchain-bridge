@@ -5,7 +5,6 @@ import { Network, NetworkWithCurrency } from "@/types/network";
 
 import { BridgeEntryTx, BridgeExitTx } from "@/types/bridge";
 import { TablesInsert } from "../lib/database.types";
-import { TokenMeta } from "@/types/token";
 import { fetchBridgeTransactions, getCurrency } from "@/utils/aeternity/node";
 import {
   bridgeEntryTxToAction,

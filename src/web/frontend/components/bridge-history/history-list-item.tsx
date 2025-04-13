@@ -8,6 +8,8 @@ import {
 } from "@heroicons/react/24/outline";
 
 import useNetworks from "../../hooks/useNetworks";
+import { useContext } from "react";
+import { BridgeActionContext } from "../../context/bridge-action-provider";
 
 interface Props {
   action: BridgeAction;
@@ -15,11 +17,16 @@ interface Props {
 
 export default function TransactionListItem({ action }: Props) {
   const { getNetworkById } = useNetworks();
+  const { setModalAction } = useContext(BridgeActionContext);
+
   const targetNetwork = getNetworkById(action.targetNetworkId)!;
   const sourceNetwork = getNetworkById(action.sourceNetworkId)!;
 
   return (
-    <div className="flex-col text-sm mx-2 p-3 border-b border-gray-300 odd:bg-aepink-50 relative ">
+    <div
+      className="flex-col text-sm mx-2 p-3 border-b border-gray-300 odd:bg-aepink-50 relative cursor-pointer hover:bg-aepink-100"
+      onClick={() => setModalAction(action)}
+    >
       {action.isCompleted && (
         <CheckBadgeIcon className="stroke-green-500 w-20 h-20 absolute -z-10 left-3/7 top-1/7 opacity-10" />
       )}
@@ -70,7 +77,10 @@ export default function TransactionListItem({ action }: Props) {
                 </a>
               </div>
             ) : (
-              <button className="btn btn-outline h-6 text-aepink hover:bg-aepink hover:border-white hover:text-white font-semibold tracking-wider">
+              <button
+                onClick={() => setModalAction(action)}
+                className="btn btn-outline h-6 text-aepink hover:bg-aepink hover:border-white hover:text-white font-semibold tracking-wider"
+              >
                 Complete Bridge
               </button>
             )}

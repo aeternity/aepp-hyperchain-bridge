@@ -80,6 +80,7 @@ export default function WalletProvider({
     (_networkId: string) => {
       const network = getNetworkById(_networkId);
       if (network) {
+        walletSdk.selectNode(_networkId);
         setNetworkId(_networkId);
       } else {
         setNetworkId("");
