@@ -21,7 +21,8 @@ export const AE_MAINNET: Network = {
   mdwUrl: "https://mainnet.aeternity.io/mdw",
   mdwWebSocketUrl: "wss://mainnet.aeternity.io/mdw/v3/websocket",
   explorerUrl: "https://aescan.io",
-  bridgeContractAddress: "ct_qnUU9vpJfHaeEUiWgWCPuTD9TTN52tjrXiU4Hk8zsZfJ8Jgtc",
+  bridgeContractAddress:
+    "ct_2WuwEimsN5nYDUDPcdZKXyAy1U7rsgEhxtzioDQUsdCVrdffqJ",
 };
 
 export const HC_DEV: Network = {
