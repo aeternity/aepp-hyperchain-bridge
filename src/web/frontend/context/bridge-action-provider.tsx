@@ -69,6 +69,22 @@ export default function BridgeActionProvider({ children }: Props) {
         );
 
         showSuccess(`Bridge entry is successful with tx hash: ${result?.hash}`);
+        showInfo(`Fetching entry transaction details. Please wait...`);
+
+        const newEntryAction = await fetchBridgeAction(
+          currentNetwork.id,
+          Number(result.decodedResult.idx),
+          1000
+        );
+
+        if (newEntryAction) {
+          setModalAction(newEntryAction);
+        } else {
+          showError(
+            "Cannot fetch entry action details, please check the history later."
+          );
+        }
+
         setBusy(false);
         return [true, result];
       } catch (error: any) {
@@ -116,11 +132,13 @@ export default function BridgeActionProvider({ children }: Props) {
 
         showInfo(`Fetching exit transaction details. Please wait...`);
 
-        const remoteActionData: BridgeAction = await fetch(
-          `/api/action/${action.sourceNetworkId}/${action.entryIdx}`
-        ).then((res) => res.json());
+        const remoteActionData = await fetchBridgeAction(
+          sourceNetwork.id,
+          action.entryIdx,
+          1000
+        );
 
-        if (remoteActionData.isCompleted) {
+        if (remoteActionData?.isCompleted) {
           setModalAction(remoteActionData);
         } else {
           showError(
@@ -147,3 +165,21 @@ export default function BridgeActionProvider({ children }: Props) {
     </BridgeActionContext.Provider>
   );
 }
+
+const fetchBridgeAction = async (
+  sourceNetworkId: string,
+  entryIdx: number,
+  timeout = 0
+): Promise<BridgeAction | null> => {
+  return new Promise(async (resolve, reject) => {
+    setTimeout(async () => {
+      const { ok, data, error } = await fetch(
+        `/api/action/${sourceNetworkId}/${entryIdx}`
+      ).then((res) => res.json());
+
+      if (!ok) reject(error);
+
+      resolve(data);
+    }, timeout);
+  });
+};

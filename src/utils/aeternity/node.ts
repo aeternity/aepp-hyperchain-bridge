@@ -1,5 +1,7 @@
 import { Network } from "@/types/network";
 import { TokenMeta } from "@/types/token";
+import { createSdkInstance } from "./create-sdk-node";
+import { getTokenMeta as _getTokenMeta } from "@/utils/contract/token";
 
 export const getCurrency = async (
   network: Network
@@ -26,6 +28,11 @@ export const getTokenMeta = async (
   const response = await fetch(url)
     .then((res) => res.json())
     .catch((e) => console.error(e.message));
+
+  if (response.error) {
+    const sdk = createSdkInstance(network);
+    return await _getTokenMeta(sdk, address);
+  }
 
   return {
     decimals: BigInt(response.decimals),
