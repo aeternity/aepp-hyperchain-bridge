@@ -1,6 +1,6 @@
+import WebSocket from "ws";
 import { DEFAULT_NETWORKS } from "@/constants/networks";
 import { supabase } from "../lib/supabase";
-import WebSocket from "ws";
 import { Network, NetworkWithCurrency } from "@/types/network";
 
 import { BridgeEntryTx, BridgeExitTx } from "@/types/bridge";

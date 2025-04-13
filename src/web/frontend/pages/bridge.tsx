@@ -5,9 +5,10 @@ import { ConnectionStatus, DetectionStatus } from "@/types/wallet";
 import { WalletContext } from "@/frontend/context/wallet-provider";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import useNetworks from "../hooks/useNetworks";
+import NetworkForm from "../components/network-form";
 
 export default function Bridge() {
-  const { currentNetwork } = useNetworks();
+  const { isUnsupportedNetwork } = useNetworks();
   const { connectionStatus, detectionStatus } = useContext(WalletContext);
 
   const walletNotConnected =
@@ -36,13 +37,10 @@ export default function Bridge() {
     }
 
     if (connectionStatus === ConnectionStatus.CONNECTED) {
-      if (currentNetwork) {
+      if (!isUnsupportedNetwork) {
         return <BridgeForm />;
       } else {
-        return displayMessage(
-          "Unsupported network. Please switch to Aeternity mainnet or Hyperchain",
-          false
-        );
+        return <NetworkForm />;
       }
     }
   };

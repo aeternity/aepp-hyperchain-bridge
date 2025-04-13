@@ -32,7 +32,7 @@ export const HC_DEV: Network = {
   mdwWebSocketUrl: "http://localhost:24001/v3/websocket",
   explorerUrl: "http://localhost:28020",
   bridgeContractAddress:
-    "ct_2hbzhiUxfSQSA5KfTiXCVdbbCvJ2wo2jnmKeNXAxFNwurbbg4y",
+    "ct_2fi1rcyFZdbkXsqFBxD2CS8NBDDaLWUzMyhZruYn9RKm2pRPaV",
 };
 
-export const DEFAULT_NETWORKS = [AE_MAINNET, AE_TESTNET, HC_DEV];
+export const DEFAULT_NETWORKS = [AE_MAINNET];

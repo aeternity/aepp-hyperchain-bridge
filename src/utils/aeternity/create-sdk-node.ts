@@ -12,10 +12,10 @@ import { networkDefaults } from "@/constants/networks";
 
 const sdkInstanceMap = new Map<string, AeSdk>();
 
-export async function createSdkInstance(
+export function createSdkInstance(
   network: NetworkBase,
   addAccounts: boolean = true
-): Promise<AeSdk> {
+): AeSdk {
   if (!sdkInstanceMap.has(network.id)) {
     let accounts: MemoryAccount[] = [];
 

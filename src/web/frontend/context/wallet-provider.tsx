@@ -1,6 +1,7 @@
 import { createContext, useCallback, useEffect, useState } from "react";
 import {
   AccountBase,
+  Node,
   SUBSCRIPTION_TYPES,
   WalletConnectorFrame,
 } from "@aeternity/aepp-sdk";
@@ -8,6 +9,7 @@ import {
 import { ConnectionStatus, DetectionStatus, Wallet } from "@/types/wallet";
 import { getConnector, getWallet, walletSdk } from "../utils/wallet-sdk";
 import useNetworks from "../hooks/useNetworks";
+import { NetworkBase } from "@/types/network";
 
 export const WalletContext = createContext({
   address: "",
@@ -16,6 +18,7 @@ export const WalletContext = createContext({
   connectionStatus: ConnectionStatus.IDLE,
   connect: () => {},
   disconnect: () => {},
+  addNewNode: (network: NetworkBase) => {},
   requestNetworkChange: (networkId: string) => {},
 });
 
@@ -24,7 +27,7 @@ export default function WalletProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const { getNetworkById } = useNetworks();
+  const { getNetworkById, refetchNetworks } = useNetworks();
 
   const [networkId, setNetworkId] = useState("");
   const [address, setAddress] = useState<`ak_${string}` | "">("");
@@ -73,14 +76,23 @@ export default function WalletProvider({
     }
   }, [connector, setConnectionStatus]);
 
-  const handleNetworkChange = (_networkId: string) => {
-    if (getNetworkById(_networkId)) {
-      walletSdk.selectNode(_networkId);
-      setNetworkId(_networkId);
-    } else {
-      setNetworkId("");
-    }
-  };
+  const handleNetworkChange = useCallback(
+    (_networkId: string) => {
+      const network = getNetworkById(_networkId);
+      if (network) {
+        setNetworkId(_networkId);
+      } else {
+        setNetworkId("");
+      }
+    },
+    [getNetworkById, setNetworkId]
+  );
+
+  const addNewNode = useCallback((network: NetworkBase) => {
+    walletSdk.addNode(network.name, new Node(network.url), true);
+    setNetworkId(network.id);
+    refetchNetworks();
+  }, []);
 
   useEffect(() => {
     if (!connector) return;
@@ -136,6 +148,7 @@ export default function WalletProvider({
         detectionStatus,
         connectionStatus,
         connect,
+        addNewNode,
         disconnect,
         requestNetworkChange,
       }}

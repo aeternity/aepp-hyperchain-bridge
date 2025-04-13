@@ -5,6 +5,7 @@ import historyAPI from "./backend/api/history";
 import networksAPI from "./backend/api/networks";
 import signatureAPI from "./backend/api/signature";
 import syncActions from "./backend/job/sync-actions";
+import verifyNetworkAPI from "./backend/api/verify-network";
 
 await syncActions();
 
@@ -13,6 +14,7 @@ const server = serve({
   routes: {
     "/*": index,
     "/api/networks": networksAPI,
+    "/api/networks/verify": verifyNetworkAPI,
     "/api/history/:userAddress": historyAPI,
     "/api/signature/:networkURL/:bridgeAddress/:entryIdx/:entryTxHash":
       signatureAPI,

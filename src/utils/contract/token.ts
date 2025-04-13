@@ -2,7 +2,7 @@ import { AeSdk, Contract } from "@aeternity/aepp-sdk";
 import { BridgeTestSetup, TokenLink } from "@/types/bridge";
 import { Network } from "@/types/network";
 import FungibleToken_aci from "@/aci/FungibleToken.json";
-import { walletSdk } from "@/web/frontend/utils/wallet-sdk";
+
 import { TokenMeta } from "@/types/token";
 
 export const setAllowanceIfNeeded = async (

@@ -1,10 +1,10 @@
 import { networkDefaults } from "@/constants/networks";
-import type { Network } from "@/types/network";
+import type { NetworkBase } from "@/types/network";
 import { AeSdk, CompilerHttp, Node } from "@aeternity/aepp-sdk";
 
 const sdkInstanceMap = new Map<string, AeSdk>();
 
-export async function createSdkBrowser(network: Network): Promise<AeSdk> {
+export function createSdkBrowser(network: NetworkBase): AeSdk {
   if (!sdkInstanceMap.has(network.id)) {
     sdkInstanceMap.set(
       network.id,

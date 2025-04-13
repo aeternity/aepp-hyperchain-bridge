@@ -3,6 +3,7 @@ import { parseArgs } from "util";
 import { AeSdk, Contract, getFileSystem } from "@aeternity/aepp-sdk";
 
 import { getNetworkById } from "@/utils/data/filters";
+import { BRIDGE_SOURCE_PATH } from "@/constants/artifact-paths";
 
 export function parseArguments() {
   let { values } = parseArgs({
@@ -83,4 +84,8 @@ export async function deployContract(aeSdk: AeSdk, sourcePath: string) {
     sourceCode,
     fileSystem,
   });
+}
+
+export async function deployBridgeContract(aeSdk: AeSdk) {
+  return deployContract(aeSdk, BRIDGE_SOURCE_PATH);
 }

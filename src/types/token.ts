@@ -11,7 +11,7 @@ export interface FungibleToken extends ContractMethodsBase {
 export interface TokenMeta {
   name: string;
   symbol: string;
-  decimals: bigint;
+  decimals: bigint | number;
 }
 
 export interface Token extends TokenMeta {
