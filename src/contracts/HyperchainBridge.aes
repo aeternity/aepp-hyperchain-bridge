@@ -173,7 +173,7 @@ payable main contract HyperchainBridge =
       String.concat("Bridged ", request.entry_token_meta.name), 
       request.entry_token_meta.decimals,
       String.concat("b", request.entry_token_meta.symbol),
-      String.to_int(Int.to_str(request.entry.amount))): FungibleToken
+      Some(request.entry.amount)): FungibleToken
 
     new_token.transfer(request.entry.from, request.entry.amount)
 
