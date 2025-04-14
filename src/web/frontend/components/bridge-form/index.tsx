@@ -17,7 +17,7 @@ import Title from "../base/title";
 import { BridgeActionContext } from "../../context/bridge-action-provider";
 
 export default function BridgeForm() {
-  const { otherNetworks } = useNetworks();
+  const { otherNetworks, currentNetwork } = useNetworks();
   const { reloadBalance } = useContext(NetworkContext);
   const { enterBridge, isBusy } = useContext(BridgeActionContext);
   const { tokens, refetch: refetchTokenBalances } = useTokenBalances();
@@ -43,6 +43,10 @@ export default function BridgeForm() {
       setErrors(validate());
     }
   }, [selectedNetworkId, selectedTokenAddress, amount]);
+
+  useEffect(() => {
+    setSelectedNetworkId(otherNetworks[0]?.id);
+  }, [currentNetwork]);
 
   const handleBridgeClick = useCallback(async () => {
     const _errors = validate();
