@@ -14,8 +14,8 @@ const OPERATOR_ACCOUNT_ADDRESS =
 const MINIMUM_BALANCE = 0.01;
 
 export default function DeployContractModal({ onClose, network }: Props) {
+  const { addNewNode, refetchNetworks } = useContext(WalletContext);
   const { showError, showSuccess } = useContext(NotificationContext);
-  const { addNewNode } = useContext(WalletContext);
 
   const [balance, setBalance] = useState("");
   const [isBusy, setIsBusy] = useState(false);
@@ -50,6 +50,7 @@ export default function DeployContractModal({ onClose, network }: Props) {
         `Network ${network.name} successfully created! You can now use it in the app.`
       );
       addNewNode(network);
+      refetchNetworks();
       onClose();
     } else {
       showError(response.error);

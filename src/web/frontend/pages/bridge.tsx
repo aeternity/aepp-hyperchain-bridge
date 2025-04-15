@@ -4,12 +4,11 @@ import BridgeForm from "@/frontend/components/bridge-form";
 import { ConnectionStatus, DetectionStatus } from "@/types/wallet";
 import { WalletContext } from "@/frontend/context/wallet-provider";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
-import useNetworks from "../hooks/useNetworks";
 import NetworkForm from "../components/network-form";
 
 export default function Bridge() {
-  const { isUnsupportedNetwork } = useNetworks();
-  const { connectionStatus, detectionStatus } = useContext(WalletContext);
+  const { connectionStatus, detectionStatus, isUnsupportedNetwork } =
+    useContext(WalletContext);
 
   const walletNotConnected =
     connectionStatus === ConnectionStatus.CONNECTING ||

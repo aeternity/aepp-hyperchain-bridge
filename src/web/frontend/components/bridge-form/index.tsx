@@ -9,17 +9,17 @@ import { byAddress } from "@/utils/data/filters";
 import BridgeHistory from "../bridge-history";
 
 import { useTokenBalances } from "@/frontend/hooks/useTokenBalances";
-import useNetworks from "@/frontend/hooks/useNetworks";
 
 import BridgeActionDetailsModal from "./bridge-action-details";
-import { NetworkContext } from "../../context/network-provider";
+import { NetworkBalanceContext } from "../../context/network-balance-provider";
 import Title from "../base/title";
 import { BridgeActionContext } from "../../context/bridge-action-provider";
+import { WalletContext } from "../../context/wallet-provider";
 
 export default function BridgeForm() {
-  const { otherNetworks, currentNetwork } = useNetworks();
-  const { reloadBalance } = useContext(NetworkContext);
+  const { reloadBalance } = useContext(NetworkBalanceContext);
   const { enterBridge, isBusy } = useContext(BridgeActionContext);
+  const { otherNetworks, currentNetwork } = useContext(WalletContext);
   const { tokens, refetch: refetchTokenBalances } = useTokenBalances();
 
   const [amount, setAmount] = useState("");
@@ -45,7 +45,8 @@ export default function BridgeForm() {
   }, [selectedNetworkId, selectedTokenAddress, amount]);
 
   useEffect(() => {
-    setSelectedNetworkId(otherNetworks[0]?.id);
+    setSelectedNetworkId("");
+    setSelectedTokenAddress("");
   }, [currentNetwork]);
 
   const handleBridgeClick = useCallback(async () => {
@@ -85,12 +86,14 @@ export default function BridgeForm() {
             className="w-1/2 px-4 max-[400px]:w-full"
             error={errors.network}
             networks={otherNetworks}
+            value={selectedNetworkId}
             onSelect={setSelectedNetworkId}
           />
           <TokenSelect
             className="w-1/2 px-4 max-[400px]:w-full"
             error={errors.token}
             tokens={tokens}
+            value={selectedTokenAddress}
             onSelect={setSelectedTokenAddress}
           />
 

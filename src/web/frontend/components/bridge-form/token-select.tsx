@@ -6,6 +6,7 @@ interface Props {
   className?: string;
   tokens: TokenAmount[];
   error?: string;
+  value: string;
   onSelect: (tokenAddress: string) => void;
 }
 
@@ -13,6 +14,7 @@ export default function TokenSelect({
   tokens,
   className,
   error,
+  value,
   onSelect,
 }: Props) {
   const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) =>
@@ -30,7 +32,7 @@ export default function TokenSelect({
         </div>
       </legend>
       <select
-        defaultValue="Select a token"
+        value={value || "Select a token"}
         className={`select ${!!error ? "select-error" : ""}`}
         onChange={handleSelect}
       >

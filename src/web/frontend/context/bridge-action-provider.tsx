@@ -1,11 +1,11 @@
 import { createContext, useCallback, useContext, useState } from "react";
-import useNetworks from "../hooks/useNetworks";
 import { NotificationContext } from "./notification-provider";
 import { walletSdk } from "../utils/wallet-sdk";
 import { getBridgeContract } from "@/utils/contract/helper";
 import { BridgeAction } from "@/types/bridge";
 import { Token } from "@/types/token";
 import { setTokenAllowance } from "../utils/token-helper";
+import { WalletContext } from "./wallet-provider";
 
 type Props = {
   children: React.ReactNode;
@@ -26,8 +26,10 @@ export const BridgeActionContext = createContext({
 });
 
 export default function BridgeActionProvider({ children }: Props) {
-  const { getNetworkById, getNetworkBaseById, currentNetwork } = useNetworks();
+  const { getNetworkById, getNetworkBaseById, currentNetwork } =
+    useContext(WalletContext);
   const { showError, showInfo, showSuccess } = useContext(NotificationContext);
+
   const [isBusy, setBusy] = useState(false);
   const [modalAction, setModalAction] = useState<BridgeAction>();
 

@@ -14,13 +14,12 @@ import {
   LinkIcon,
 } from "@heroicons/react/24/outline";
 
-import useNetworks from "../../hooks/useNetworks";
-
 import { useContext } from "react";
 import { BridgeActionContext } from "../../context/bridge-action-provider";
+import { WalletContext } from "../../context/wallet-provider";
 
 export default function BridgeActionDetailsModal() {
-  const { getNetworkById, currentNetwork } = useNetworks();
+  const { getNetworkById, currentNetwork } = useContext(WalletContext);
   const { exitBridge, modalAction, setModalAction, isBusy } =
     useContext(BridgeActionContext);
 

@@ -7,16 +7,16 @@ import {
   LinkIcon,
 } from "@heroicons/react/24/outline";
 
-import useNetworks from "../../hooks/useNetworks";
 import { useContext } from "react";
 import { BridgeActionContext } from "../../context/bridge-action-provider";
+import { WalletContext } from "../../context/wallet-provider";
 
 interface Props {
   action: BridgeAction;
 }
 
 export default function TransactionListItem({ action }: Props) {
-  const { getNetworkById } = useNetworks();
+  const { getNetworkById } = useContext(WalletContext);
   const { setModalAction } = useContext(BridgeActionContext);
 
   const targetNetwork = getNetworkById(action.targetNetworkId)!;

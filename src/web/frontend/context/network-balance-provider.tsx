@@ -1,24 +1,21 @@
-import { Network } from "@/types/network";
 import { TokenMeta } from "@/types/token";
 import React, { createContext, useContext } from "react";
 import { WalletContext } from "./wallet-provider";
 import { useQuery } from "@tanstack/react-query";
 import { walletSdk } from "../utils/wallet-sdk";
-import useNetworks from "../hooks/useNetworks";
 
-export const NetworkContext = createContext({
+export const NetworkBalanceContext = createContext({
   balance: "",
   currency: undefined as TokenMeta | undefined,
   reloadBalance: () => {},
 });
 
-export default function NetworkProvider({
+export default function NetworkBalanceProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { networkId, address } = useContext(WalletContext);
-  const { currentNetwork } = useNetworks();
+  const { networkId, address, currentNetwork } = useContext(WalletContext);
 
   const { data: balance, refetch: reloadBalance } = useQuery({
     queryKey: ["balance", networkId, address],
@@ -41,8 +38,9 @@ export default function NetworkProvider({
     },
     enabled: !!currentNetwork,
   });
+
   return (
-    <NetworkContext.Provider
+    <NetworkBalanceContext.Provider
       value={{
         balance,
         currency,
@@ -50,6 +48,6 @@ export default function NetworkProvider({
       }}
     >
       {children}
-    </NetworkContext.Provider>
+    </NetworkBalanceContext.Provider>
   );
 }

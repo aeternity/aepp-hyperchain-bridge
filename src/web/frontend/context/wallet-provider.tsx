@@ -8,18 +8,30 @@ import {
 
 import { ConnectionStatus, DetectionStatus, Wallet } from "@/types/wallet";
 import { getConnector, getWallet, walletSdk } from "../utils/wallet-sdk";
-import useNetworks from "../hooks/useNetworks";
-import { NetworkBase } from "@/types/network";
+
+import { Network, NetworkBase } from "@/types/network";
+import { useQuery } from "@tanstack/react-query";
+import { getNetworks } from "../utils/api";
+import { DEFAULT_NETWORKS } from "@/constants/networks";
+import { byId, notById } from "@/utils/data/filters";
+import { mapNetworkToBase } from "@/utils/data/mappers";
 
 export const WalletContext = createContext({
   address: "",
   networkId: "",
   detectionStatus: DetectionStatus.IDLE,
   connectionStatus: ConnectionStatus.IDLE,
+  isUnsupportedNetwork: false,
+  allNetworks: [] as Network[],
+  otherNetworks: [] as Network[],
+  currentNetwork: undefined as Network | undefined,
   connect: () => {},
   disconnect: () => {},
   addNewNode: (network: NetworkBase) => {},
   requestNetworkChange: (networkId: string) => {},
+  refetchNetworks: () => {},
+  getNetworkById: (id: string) => undefined as Network | undefined,
+  getNetworkBaseById: (id: string) => ({} as NetworkBase),
 });
 
 export default function WalletProvider({
@@ -27,18 +39,29 @@ export default function WalletProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const { getNetworkById, refetchNetworks } = useNetworks();
-
   const [networkId, setNetworkId] = useState("");
   const [address, setAddress] = useState<`ak_${string}` | "">("");
-
+  const [wallet, setWallet] = useState<Wallet | null>(null);
+  const [connector, setConnector] = useState<WalletConnectorFrame | null>(null);
   const [detectionStatus, setDetectionStatus] = useState(DetectionStatus.IDLE);
   const [connectionStatus, setConnectionStatus] = useState(
     ConnectionStatus.IDLE
   );
 
-  const [wallet, setWallet] = useState<Wallet | null>(null);
-  const [connector, setConnector] = useState<WalletConnectorFrame | null>(null);
+  const { data: remoteNetworks, refetch: refetchNetworks } = useQuery({
+    queryKey: ["networks"],
+    queryFn: getNetworks,
+    initialData: [],
+  });
+  const allNetworks = [...DEFAULT_NETWORKS, ...remoteNetworks] as Network[];
+  const otherNetworks = allNetworks.filter(notById(networkId));
+  const currentNetwork = allNetworks.find(byId(networkId));
+  const isUnsupportedNetwork =
+    !currentNetwork && connectionStatus === ConnectionStatus.CONNECTED;
+
+  const getNetworkById = (id: string) => allNetworks.find(byId(id));
+  const getNetworkBaseById = (id: string) =>
+    mapNetworkToBase(getNetworkById(id)!);
 
   useEffect(() => {
     setDetectionStatus(DetectionStatus.DETECTING);
@@ -92,7 +115,6 @@ export default function WalletProvider({
   const addNewNode = useCallback((network: NetworkBase) => {
     walletSdk.addNode(network.name, new Node(network.url), true);
     setNetworkId(network.id);
-    refetchNetworks();
   }, []);
 
   useEffect(() => {
@@ -148,9 +170,16 @@ export default function WalletProvider({
         networkId,
         detectionStatus,
         connectionStatus,
+        allNetworks,
+        otherNetworks,
+        currentNetwork,
+        isUnsupportedNetwork,
         connect,
         addNewNode,
         disconnect,
+        getNetworkById,
+        refetchNetworks,
+        getNetworkBaseById,
         requestNetworkChange,
       }}
     >

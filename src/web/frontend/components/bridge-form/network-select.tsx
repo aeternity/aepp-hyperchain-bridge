@@ -5,6 +5,7 @@ interface Props {
   className?: string;
   networks: Network[];
   error?: string;
+  value: string;
   onSelect: (networkId: string) => void;
 }
 
@@ -12,6 +13,7 @@ export default function NetworkSelect({
   networks,
   className,
   error,
+  value,
   onSelect,
 }: Props) {
   const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) =>
@@ -29,8 +31,8 @@ export default function NetworkSelect({
         </div>
       </legend>
       <select
-        defaultValue="Select a network"
         className={`select ${!!error && "select-error"}`}
+        value={value || "Select a network"}
         onChange={handleSelect}
       >
         <option disabled={true}>Select a network</option>

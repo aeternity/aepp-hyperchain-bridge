@@ -3,13 +3,12 @@ import PowerIcon from "@heroicons/react/24/outline/PowerIcon";
 
 import { shorten, formatBalance } from "@/utils/data/formatters";
 import { WalletContext } from "@/frontend/context/wallet-provider";
-import { NetworkContext } from "@/web/frontend/context/network-provider";
-import useNetworks from "@/web/frontend/hooks/useNetworks";
+import { NetworkBalanceContext } from "@/web/frontend/context/network-balance-provider";
 
 export default function ConnectedView() {
-  const { currentNetwork, isUnsupportedNetwork } = useNetworks();
-  const { address, disconnect } = useContext(WalletContext);
-  const { balance, currency } = useContext(NetworkContext);
+  const { address, disconnect, currentNetwork, isUnsupportedNetwork } =
+    useContext(WalletContext);
+  const { balance, currency } = useContext(NetworkBalanceContext);
   const [justCopied, setJustCopied] = useState(false);
 
   const handleAddressClick = () => {
