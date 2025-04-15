@@ -7,7 +7,7 @@ import {
   BanknotesIcon,
   CheckCircleIcon,
   CircleStackIcon,
-  ClockIcon,
+  CalendarIcon,
   DocumentTextIcon,
   ExclamationCircleIcon,
   ExclamationTriangleIcon,
@@ -64,7 +64,7 @@ export default function BridgeActionDetailsModal() {
           <tbody className="[&>tr>th]:font-semibold [&>tr>td]:font-medium [&>tr>td]:pr-0 [&>tr>th]:pl-0">
             <tr>
               <td>
-                <ClockIcon className="w-5 h-5" />
+                <CalendarIcon className="w-5 h-5" />
               </td>
               <th>Entry Date & Time:</th>
               <td>
@@ -128,7 +128,7 @@ export default function BridgeActionDetailsModal() {
               <>
                 <tr>
                   <td>
-                    <ClockIcon className="w-5 h-5" />
+                    <CalendarIcon className="w-5 h-5" />
                   </td>
                   <th>Entry Date & Time:</th>
                   <td>
@@ -179,6 +179,9 @@ export default function BridgeActionDetailsModal() {
           </button>
         )}
       </div>
+      <form method="dialog" className="modal-backdrop">
+        <button>close</button>
+      </form>
     </dialog>
   );
 }

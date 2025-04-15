@@ -43,7 +43,7 @@ export default function TransactionListItem({ action }: Props) {
           </a>
         </div>
         <span className="text-xs">
-          {moment(action.entryTimestamp).format("D/M/YYYY, h:mm")}
+          {moment(action.entryTimestamp).format("DD.MM.YYYY | HH:mm")}
         </span>
       </div>
       <div className="flex flex-row mt-2 justify-between">

@@ -109,7 +109,7 @@ export default function BridgeForm() {
 
           <button
             disabled={isBusy}
-            className="btn bg-aepink text-white font-medium w-[200px] mb-2 mt-2"
+            className="btn bg-aepink text-white font-medium w-[200px] mb-3 mt-2"
             color="primary"
             onClick={handleBridgeClick}
           >

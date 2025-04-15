@@ -6,10 +6,9 @@ import useBridgeActionsHistory from "../../hooks/useBridgeActionsHistory";
 import { BridgeActionContext } from "../../context/bridge-action-provider";
 
 export default function BridgeHistory() {
+  const { isBusy, isHistoryVisible, setHistoryVisibility } =
+    useContext(BridgeActionContext);
   const { actions, isFetched, isFetching, refetch } = useBridgeActionsHistory();
-  const { isBusy } = useContext(BridgeActionContext);
-
-  const nonCompletedActions = actions.filter((a) => !a.isCompleted);
 
   useEffect(() => {
     if (!isBusy && !isFetching) {
@@ -23,23 +22,9 @@ export default function BridgeHistory() {
         id="transaction-history-drawer"
         type="checkbox"
         className="drawer-toggle"
+        checked={isHistoryVisible}
+        onChange={(e) => setHistoryVisibility(e.target.checked)}
       />
-      <div className="drawer-content text-center">
-        <label
-          htmlFor="transaction-history-drawer"
-          className="drawer-button btn btn-link text-aepink"
-        >
-          View History
-          {!isFetching && nonCompletedActions.length > 0 && (
-            <div className="badge badge-sm badge-neutral bg-aepink border-white pt-0.5">
-              {nonCompletedActions.length}
-            </div>
-          )}
-          {isFetching && (
-            <span className="loading-xs loading loading-spinner text-neutral"></span>
-          )}
-        </label>
-      </div>
       <div className="drawer-side">
         <label
           htmlFor="transaction-history-drawer"

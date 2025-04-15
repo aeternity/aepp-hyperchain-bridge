@@ -14,6 +14,8 @@ type Props = {
 export const BridgeActionContext = createContext({
   isBusy: false,
   modalAction: undefined as BridgeAction | undefined,
+  isHistoryVisible: false,
+  setHistoryVisibility: (show: boolean) => {},
   exitBridge: async (action: BridgeAction): Promise<[boolean, any]> =>
     new Promise((resolve) => resolve([false, null])),
   enterBridge: async (
@@ -26,12 +28,13 @@ export const BridgeActionContext = createContext({
 });
 
 export default function BridgeActionProvider({ children }: Props) {
+  const { showError, showInfo, showSuccess } = useContext(NotificationContext);
   const { getNetworkById, getNetworkBaseById, currentNetwork } =
     useContext(WalletContext);
-  const { showError, showInfo, showSuccess } = useContext(NotificationContext);
 
   const [isBusy, setBusy] = useState(false);
   const [modalAction, setModalAction] = useState<BridgeAction>();
+  const [isHistoryVisible, setHistoryVisibility] = useState(false);
 
   const enterBridge = useCallback(
     async (
@@ -160,7 +163,15 @@ export default function BridgeActionProvider({ children }: Props) {
 
   return (
     <BridgeActionContext.Provider
-      value={{ isBusy, modalAction, exitBridge, enterBridge, setModalAction }}
+      value={{
+        isBusy,
+        modalAction,
+        isHistoryVisible,
+        setHistoryVisibility,
+        exitBridge,
+        enterBridge,
+        setModalAction,
+      }}
     >
       {children}
     </BridgeActionContext.Provider>

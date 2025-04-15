@@ -1,14 +1,19 @@
 import { useContext, useState } from "react";
-import PowerIcon from "@heroicons/react/24/outline/PowerIcon";
 
 import { shorten, formatBalance } from "@/utils/data/formatters";
 import { WalletContext } from "@/frontend/context/wallet-provider";
 import { NetworkBalanceContext } from "@/web/frontend/context/network-balance-provider";
+import { ClockIcon, PowerIcon } from "@heroicons/react/24/outline";
+import { BridgeActionContext } from "@/web/frontend/context/bridge-action-provider";
+import useBridgeActionsHistory from "@/web/frontend/hooks/useBridgeActionsHistory";
 
 export default function ConnectedView() {
+  const { actions } = useBridgeActionsHistory();
+  const { balance, currency } = useContext(NetworkBalanceContext);
+  const { setHistoryVisibility } = useContext(BridgeActionContext);
   const { address, disconnect, currentNetwork, isUnsupportedNetwork } =
     useContext(WalletContext);
-  const { balance, currency } = useContext(NetworkBalanceContext);
+
   const [justCopied, setJustCopied] = useState(false);
 
   const handleAddressClick = () => {
@@ -16,6 +21,8 @@ export default function ConnectedView() {
     setJustCopied(true);
     setTimeout(() => setJustCopied(false), 1000);
   };
+
+  const nonCompletedActions = actions.filter((a) => !a.isCompleted);
 
   return (
     <div className="flex flex-row items-center">
@@ -39,10 +46,25 @@ export default function ConnectedView() {
         )}
         <div
           onClick={handleAddressClick}
-          className="bg-aepink w-35 cursor-pointer rounded-l-xl px-2.5 py-1 text-center"
+          className="bg-aepink w-30 cursor-pointer rounded-l-xl px-2.5 py-1 text-center"
         >
           {justCopied ? "Copied!" : shorten(address)}
         </div>
+      </div>
+      <div className="relative">
+        {nonCompletedActions.length > 0 && (
+          <div className="badge badge-xs badge-neutral bg-aepink border-0 pt-[.5px] absolute right-[-6px] top-[-6px]">
+            {nonCompletedActions.length}
+          </div>
+        )}
+        <ClockIcon
+          width={30}
+          height={30}
+          stroke="oklch(.21 .034 264.665)"
+          strokeWidth={2.5}
+          className="hover:bg-aepink-100 ml-1  cursor-pointer rounded-sm p-1"
+          onClick={() => setHistoryVisibility(true)}
+        />
       </div>
       <PowerIcon
         onClick={disconnect}
@@ -50,7 +72,7 @@ export default function ConnectedView() {
         height={30}
         stroke="red"
         strokeWidth={2.5}
-        className="hover:bg-aepink-100 mx-2 cursor-pointer rounded-sm p-1"
+        className="hover:bg-aepink-100 mr-2 ml-1 cursor-pointer rounded-sm p-1"
       />
     </div>
   );
