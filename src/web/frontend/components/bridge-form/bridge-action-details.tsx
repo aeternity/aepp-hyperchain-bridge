@@ -31,7 +31,7 @@ export default function BridgeActionDetailsModal() {
   const connectedToTargetNetwork = currentNetwork?.id === targetNetwork.id;
 
   const handleBridgeComplete = async () => {
-    const [isSucceeded, complete] = await exitBridge(modalAction);
+    await exitBridge(modalAction);
   };
 
   return (

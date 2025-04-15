@@ -12,7 +12,7 @@ export const AE_TESTNET: Network = {
   mdwWebSocketUrl: "wss://testnet.aeternity.io/mdw/v3/websocket",
   explorerUrl: "https://testnet.aescan.io",
   bridgeContractAddress:
-    "ct_2AowNPhqwkp4FS2GwzNYpWZ9J6oMkGw36nYPaa8LvcnqCsNXoY",
+    "ct_2fYJ99Q3BXueqxkpM8XqbVJeet6NGck1Z6EV6XNeWXTJ6Vg9WU",
 };
 
 export const AE_MAINNET: Network = {
@@ -23,7 +23,7 @@ export const AE_MAINNET: Network = {
   mdwWebSocketUrl: "wss://mainnet.aeternity.io/mdw/v3/websocket",
   explorerUrl: "https://aescan.io",
   bridgeContractAddress:
-    "ct_2WuwEimsN5nYDUDPcdZKXyAy1U7rsgEhxtzioDQUsdCVrdffqJ",
+    "ct_2t3ncpfYQzQbYXrh9rKZrxtqu6gVzRXcdGGmjLmCwry2SV5RXz",
 };
 
 export const HC_DEV: Network = {

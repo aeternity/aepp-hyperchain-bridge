@@ -69,7 +69,6 @@ export default function BridgeActionProvider({ children }: Props) {
         );
 
         showSuccess(`Bridge entry is successful with tx hash: ${result?.hash}`);
-        showInfo(`Fetching entry transaction details. Please wait...`);
 
         const newEntryAction = await fetchBridgeAction(
           currentNetwork.id,

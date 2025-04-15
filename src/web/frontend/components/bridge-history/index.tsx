@@ -1,21 +1,22 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 
 import Title from "../base/title";
 import BridgeHistoryList from "./history-list";
 import useBridgeActionsHistory from "../../hooks/useBridgeActionsHistory";
+import { BridgeActionContext } from "../../context/bridge-action-provider";
 
-interface Props {
-  isContractBusy: boolean;
-}
-
-export default function BridgeHistory({ isContractBusy }: Props) {
+export default function BridgeHistory() {
   const { actions, isFetched, isFetching, refetch } = useBridgeActionsHistory();
+  const { isBusy } = useContext(BridgeActionContext);
+
+  const nonCompletedActions = actions.filter((a) => !a.isCompleted);
+
   useEffect(() => {
-    if (!isContractBusy) {
+    if (!isBusy && !isFetching) {
       refetch();
     }
-  }, [isContractBusy, refetch]);
-  const nonCompletedActions = actions.filter((a) => !a.isCompleted);
+  }, [isBusy, refetch]);
+
   return (
     <div className="drawer drawer-end">
       <input

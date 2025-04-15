@@ -59,19 +59,13 @@ export default function BridgeForm() {
       .shiftedBy(Number(selectedToken.decimals))
       .toString();
 
-    const [isSucceeded, txResult] = await enterBridge(
+    const [isSucceeded] = await enterBridge(
       selectedNetworkId,
       selectedToken,
       amountWithDecimals
     );
 
     if (!isSucceeded) return;
-
-    const entryTx = {
-      ...txResult.decodedResult,
-      hash: txResult.hash,
-      timestamp: Date.now(),
-    };
 
     refetchTokenBalances();
     reloadBalance();
@@ -120,7 +114,7 @@ export default function BridgeForm() {
           </button>
 
           <BridgeActionDetailsModal />
-          <BridgeHistory isContractBusy={isBusy} />
+          <BridgeHistory />
         </div>
       </fieldset>
     </>
