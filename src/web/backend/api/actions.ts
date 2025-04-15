@@ -14,9 +14,7 @@ export const byUserAddress = {
       .order("entryTimestamp", { ascending: false });
 
     if (error) {
-      return new Response(JSON.stringify({ ok: false, error }), {
-        status: 500,
-      });
+      return new Response(JSON.stringify({ ok: false, error }));
     }
 
     return new Response(JSON.stringify({ ok: true, data: data || [] }));

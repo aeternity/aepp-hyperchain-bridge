@@ -10,7 +10,7 @@ import * as actions from "./backend/api/actions";
 await syncActions();
 
 const server = serve({
-  port: Bun.env.PORT || 3000,
+  port: 3000,
   routes: {
     "/*": index,
     "/api/networks": networks,
