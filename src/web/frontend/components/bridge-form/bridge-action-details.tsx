@@ -61,12 +61,12 @@ export default function BridgeActionDetailsModal() {
         </h3>
         <div className="divider my-2" />
         <table className="table table-zebra">
-          <tbody className="[&>tr>th]:font-semibold [&>tr>td]:font-medium [&>tr>td]:pr-0 [&>tr>th]:pl-0">
+          <tbody className="[&>tr>th]:font-semibold [&>tr>td]:font-medium [&>tr>td]:px-2 [&>tr>th]:p-0">
             <tr>
               <td>
                 <CalendarIcon className="w-5 h-5" />
               </td>
-              <th>Entry Date & Time:</th>
+              <th>Entry Date & Time</th>
               <td>
                 {moment(modalAction.entryTimestamp).format(
                   "HH:mm | DD.MM.YYYY"
@@ -77,7 +77,7 @@ export default function BridgeActionDetailsModal() {
               <td>
                 <DocumentTextIcon className="w-5 h-5" />
               </td>
-              <th>Entry Transaction:</th>
+              <th>Entry Transaction</th>
               <td className="flex-row flex items-center">
                 <a
                   className="link "
@@ -130,7 +130,7 @@ export default function BridgeActionDetailsModal() {
                   <td>
                     <CalendarIcon className="w-5 h-5" />
                   </td>
-                  <th>Entry Date & Time:</th>
+                  <th>Exit Date & Time</th>
                   <td>
                     {moment(modalAction.exitTimestamp).format(
                       "HH:mm | DD.MM.YYYY"
@@ -141,7 +141,7 @@ export default function BridgeActionDetailsModal() {
                   <td>
                     <DocumentTextIcon className="w-5 h-5" />
                   </td>
-                  <th>Exit Transaction:</th>
+                  <th>Exit Transaction</th>
                   <td className="flex-row flex items-center">
                     <a
                       className="link "
@@ -157,21 +157,25 @@ export default function BridgeActionDetailsModal() {
             )}
           </tbody>
         </table>
-        <div className="divider" />
         {!connectedToTargetNetwork && !modalAction.isCompleted && (
-          <div className="alert alert-warning mb-5">
-            <ExclamationCircleIcon className="w-6 h-6 mr-0.5" />
-            <p>
-              Switch to{" "}
-              <span className="font-medium">{targetNetwork.name} Network</span>{" "}
-              on your wallet to continue the bridging process.
-            </p>
-          </div>
+          <>
+            <div className="divider" />
+            <div className="alert alert-warning mb-5">
+              <ExclamationCircleIcon className="w-6 h-6 mr-0.5" />
+              <p>
+                Switch to{" "}
+                <span className="font-medium">
+                  {targetNetwork.name} Network
+                </span>{" "}
+                on your wallet to continue the bridging process.
+              </p>
+            </div>
+          </>
         )}
         {!modalAction.isCompleted && (
           <button
             disabled={!connectedToTargetNetwork || isBusy}
-            className="btn bg-aepink text-white font-medium w-[200px] mb-2 mt-2 flex justify-self-center"
+            className="btn bg-aepink text-white font-medium w-[200px] mb-2 mt-6 flex justify-self-center"
             color="primary"
             onClick={handleBridgeComplete}
           >
