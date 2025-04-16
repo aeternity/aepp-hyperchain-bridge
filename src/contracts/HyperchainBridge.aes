@@ -147,8 +147,8 @@ payable main contract HyperchainBridge =
         if (_exit_link.is_source_native) 
           Chain.spend(request.entry.from, request.entry.amount)
         else 
-            Option.force(_exit_link.source_token) // check this line
-              .mint(request.entry.from, request.entry.amount)
+          Option.force(_exit_link.source_token)
+            .transfer(request.entry.from, request.entry.amount)
 
         _exit_link
       else

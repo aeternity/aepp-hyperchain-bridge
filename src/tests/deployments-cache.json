@@ -1,7 +1,7 @@
 {
   "ae_uat": {
     "bridge": {
-      "address": "ct_L1Tgsm19h33buAGTsUvvAe1Lpn21UL5uSu7v4Dx54Dfadev9Z",
+      "address": "ct_2dmuM7HCxALpSceKpB8PNvHqRQnNAX3BnnNohhXszgu3pHHu8H",
       "aci": [
         {
           "namespace": {
@@ -862,7 +862,7 @@
       ]
     },
     "token": {
-      "address": "ct_23wPX5UEGWPnhdGa5CvDKFTJ4QuB7NaxmXEfWzgzF3ttvJMofN",
+      "address": "ct_dW23r9qyPM2Dna41yawRSP2zp37BqKEA9WqPLMatyk5my5dST",
       "aci": [
         {
           "namespace": {
@@ -1327,7 +1327,7 @@
   },
   "ae_mainnet": {
     "bridge": {
-      "address": "ct_2RbzoWzb8u3XfNrrZEUXrhchJSfxc7gaeek4KToY55jvhUs7S3",
+      "address": "ct_kokAXNT2V16f7TVKyrxJTSqjtDjbXAYptLX3WZSyodmCjxsmx",
       "aci": [
         {
           "namespace": {
@@ -2188,7 +2188,7 @@
       ]
     },
     "token": {
-      "address": "ct_292j4JuhDWAsxrye9H57P9DKrfJsDdux7f2T7E4dJirv1iJ76U",
+      "address": "ct_19F7JTPdHYWEfazybvPJEFMyaNvM6L5mVVinUS56MhZkfTNtf",
       "aci": [
         {
           "namespace": {
