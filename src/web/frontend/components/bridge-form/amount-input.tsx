@@ -32,7 +32,7 @@ export default function AmountInput({
 
   return (
     <fieldset className={`fieldset ${className}`}>
-      <legend className="fieldset-legend ">
+      <legend className="fieldset-legend gap-0">
         <span className="font-semibold">Amount</span>
         <div
           className="tooltip ml-1 self-center font-normal"

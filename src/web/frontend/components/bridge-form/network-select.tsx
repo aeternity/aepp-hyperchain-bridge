@@ -21,7 +21,7 @@ export default function NetworkSelect({
 
   return (
     <fieldset className={`fieldset ${className}`}>
-      <legend className="fieldset-legend ">
+      <legend className="fieldset-legend gap-0">
         <span className="font-semibold">Destination Network</span>
         <div
           className="tooltip ml-1 self-center font-normal"
