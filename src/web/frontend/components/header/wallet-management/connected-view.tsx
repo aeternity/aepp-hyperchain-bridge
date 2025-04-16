@@ -60,7 +60,7 @@ export default function ConnectedView() {
         <ClockIcon
           width={30}
           height={30}
-          stroke="oklch(.21 .034 264.665)"
+          stroke="gray"
           strokeWidth={2.5}
           className="hover:bg-aepink-100 ml-1  cursor-pointer rounded-sm p-1"
           onClick={() => setHistoryVisibility(true)}
