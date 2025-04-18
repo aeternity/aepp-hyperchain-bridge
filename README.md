@@ -63,11 +63,17 @@ The Hyperchain Bridge enables seamless token transfers between the Aeternity blo
    Add a trusted account's private key to the `.env` file under the `BRIDGE_OWNER_PK` variable.  
    **Note:** Private keys must be in the old format (128 characters long, base64 string).
 
-4. **Deploy Bridge Contracts:**  
-   Deploy the HyperchainBridge contracts for each network using the trusted bridge operator account.
+4. **Add Networks:**  
+   Add your Hyperchain networks to `src/constants/networks.ts` with the appropriate settings (leave bridge contract addresses empty and fill them once deploy step is done)
 
-5. **Add Networks:**  
-   Add your Hyperchain networks to `src/constants/networks.ts` with the appropriate settings and bridge contract addresses.
+5. **Deploy Bridge Contracts:**  
+   Deploy the HyperchainBridge contracts for each network using deploy scripts:
+
+   ```bash
+   bun deploy-bridge --network $NETWORK_ID
+   ```
+
+   Note: Before running the deploy command, make sure corresponding network has been added to `src/constants/networks.ts` and `BRIDGE_OWNER_PK` environment variable is set.
 
 ### Application Checklist
 
@@ -87,7 +93,7 @@ Before running the application, ensure the following steps are completed:
    SUPABASE_ANON_KEY=
    ```
 
-2. Update the network constants in `src/constants/networks.ts` with the bridge contract addresses deployed using the bridge operator account.
+2. Update the network constants in `src/constants/networks.ts` with the deployed bridge contract addresses using the bridge operator account.
 
 3. Ensure the Hyperchain networks are added to the constants with valid attributes. By default, only Mainnet and Testnet networks are included. Additional chains can be specified in this file or added through the network identification flow.
 
