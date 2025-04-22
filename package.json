@@ -1,5 +1,5 @@
 {
-  "name": "bun-react-template",
+  "name": "aepp-hyperchain-bridge",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -7,8 +7,7 @@
   "module": "src/index.tsx",
   "scripts": {
     "dev": "bun --hot src/web/index.ts",
-    "start": "NODE_ENV=production bun src/web/index.ts",
-    "build": "bun run build.ts",
+    "start": "bun src/web/index.ts",
     "tests": "bun test --timeout 60000",
     "deploy-bridge": "bun run ./src/scripts/deploy-bridge.ts"
   },
