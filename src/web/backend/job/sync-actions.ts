@@ -77,7 +77,7 @@ async function updateActionsWithExitRequest(
       `Error updating actions for ${network.name}: ${error.message}`
     );
   }
-  if (data) {
+  if (data?.length) {
     console.log(
       `Updated idx:${data[0].entryIdx} actions for ${network.name} with hash ${exit.hash}`
     );
