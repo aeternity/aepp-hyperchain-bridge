@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.0.1](https://www.github.com/aeternity/aepp-hyperchain-bridge/compare/v1.0.0...v1.0.1) (2025-04-24)
+
+
+### Bug Fixes
+
+* update condition to check for data length ([abbd061](https://www.github.com/aeternity/aepp-hyperchain-bridge/commit/abbd061a4d6fc2c3b98c29990d58c329690ad02e))
+
 ## 1.0.0 (2025-04-24)
 
 
