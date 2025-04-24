@@ -27,30 +27,24 @@ payable main contract HyperchainBridge =
     amount            : int,
     exit_link         : option(token_link),
     token_type        : token_type,
-    target_network    : network,
+    target_network_id : string,
     source_network_id : string }
 
   record exit_request = {
     entry           : bridge_entry,
     entry_tx_hash   : string,
-    entry_network   : network,
     entry_token_meta: token_meta }
 
   record token_link = {
     local_token       : FungibleToken,
     source_token      : option(FungibleToken),
-    source_network    : network, 
+    source_network_id : string,
     is_source_native  : bool }
 
   record token_meta = {
     name      : string,
     symbol    : string,
     decimals  : int }
-
-  record network = {
-    id    : string,
-    url   : string, 
-    name  : string }
 
   stateful entrypoint init(): state = { 
     operator        = Call.caller,
@@ -61,9 +55,11 @@ payable main contract HyperchainBridge =
       "HyperchainBridgeToken", 18, "HBT", None): FungibleToken }
 
   entrypoint operator(): address = state.operator
-  entrypoint token_links(): list(token_link) = state.token_links
-  entrypoint bridge_entries(): list(bridge_entry) = state.bridge_entries
-  entrypoint processed_exits(): list(exit_request) = state.processed_exits
+
+  // @dev These entrypoints are used to get the state of the contract for testing purposes.
+  entrypoint _token_links(): list(token_link) = state.token_links
+  entrypoint _bridge_entries(): list(bridge_entry) = state.bridge_entries
+  entrypoint _processed_exits(): list(exit_request) = state.processed_exits
 
   entrypoint bridge_entry(idx: int): option(bridge_entry) =
     List.find((e) => e.idx == idx, state.bridge_entries)
@@ -90,16 +86,16 @@ payable main contract HyperchainBridge =
 
   /// @notice Allows the user to enter the bridge with a specified amount and token type.
   /// @param amount The amount of tokens to bridge.
-  /// @param target_network The target network for the bridge.
+  /// @param target_network_id The ID of the target network to bridge to.
   /// @param token The token being bridged (optional when using native tokens).
   /// @return The bridge entry created for the transaction.
   /// @dev This function requires the caller to have sufficient balance and allowance for the token.
   payable stateful entrypoint enter_bridge(
     amount: int,
-    target_network: network, 
+    target_network_id: string, 
     token: option(FungibleToken)
     ): bridge_entry =
-    require_not_same_network(target_network)
+    require_not_same_network(target_network_id)
 
     let token_type = get_token_type(token)
     switch(token_type)
@@ -123,7 +119,7 @@ payable main contract HyperchainBridge =
       amount = amount, 
       from = Call.caller, 
       token_type = token_type,
-      target_network = target_network,
+      target_network_id = target_network_id,
       source_network_id = Chain.network_id,
       exit_link = get_token_link(token) }
 
@@ -173,16 +169,16 @@ payable main contract HyperchainBridge =
       String.concat("Bridged ", request.entry_token_meta.name), 
       request.entry_token_meta.decimals,
       String.concat("b", request.entry_token_meta.symbol),
-      Some(request.entry.amount)): FungibleToken
-
-    new_token.transfer(request.entry.from, request.entry.amount)
+      None): FungibleToken
+    
+    new_token.mint(request.entry.from, request.entry.amount)
 
     let native_source = request.entry.token_type == Native
     let new_link = {
-      local_token      = new_token, 
-      source_token     = if (!native_source) request.entry.token else None,
-      is_source_native = native_source,
-      source_network   = request.entry_network }
+      local_token       = new_token, 
+      source_token      = if (!native_source) request.entry.token else None,
+      is_source_native  = native_source,
+      source_network_id = request.entry.source_network_id }
 
     put(state{token_links = state.token_links ++ [new_link]})
     new_link
@@ -202,7 +198,6 @@ payable main contract HyperchainBridge =
       String.concats([
         stringify_bridge_entry(request.entry),
         request.entry_tx_hash,
-        stringify_network_keys(request.entry_network),
         stringify_token_meta(request.entry_token_meta),
         Int.to_str(timestamp) ])
       
@@ -210,9 +205,6 @@ payable main contract HyperchainBridge =
 
 
   /// Stringify functions for various data types
-  function stringify_network_keys(network: network): string =
-    String.concat(network.id, network.url)
-  
   function stringify_token_meta(meta: token_meta): string =
     String.concats([
       meta.name,
@@ -226,7 +218,7 @@ payable main contract HyperchainBridge =
       String.concats([
         get_token_contract_address_str(Some(link.local_token)),
         get_token_contract_address_str(link.source_token),
-        stringify_network_keys(link.source_network),
+        link.source_network_id,
         if (link.is_source_native) "true" else "false" ])
   
   function stringify_token_type(token_type: token_type): string =
@@ -243,7 +235,7 @@ payable main contract HyperchainBridge =
       Int.to_str(entry.amount),
       stringify_token_link(entry.exit_link),
       stringify_token_type(entry.token_type),
-      stringify_network_keys(entry.target_network),
+      entry.target_network_id,
       entry.source_network_id ])
 
   
@@ -263,15 +255,15 @@ payable main contract HyperchainBridge =
     require(amount > 0, "INVALID_AMOUNT")
     require(Call.value == amount, "CALL_VALUE_AND_AMOUNT_NOT_EQUAL")
 
-  function require_not_same_network(target_network: network) =
-    require(Chain.network_id != target_network.id, "SAME_NETWORK")
+  function require_not_same_network(target_network_id: string) =
+    require(Chain.network_id != target_network_id, "SAME_NETWORK")
 
   function verify_exit_request(request: exit_request, timestamp: int, sig: signature) =
     require(Call.caller == request.entry.from, "WRONG_CALLER")
     require(request.entry.amount > 0, "AMOUNT_CANNOT_BE_ZERO")
     require(!check_request_processed(request), "ALREADY_PROCESSED")
     require(Chain.timestamp - timestamp < 60000, "TIMESTAMP_EXPIRED")
-    require(Chain.network_id == request.entry.target_network.id, "BAD_TARGET_NETWORK")
+    require(Chain.network_id == request.entry.target_network_id, "BAD_TARGET_NETWORK")
     if (request.entry.token_type == Link)
       require(Option.is_some(request.entry.exit_link), 
         "EXIT_LINK_REQUIRED_FOR_LINKED_TOKEN")
@@ -286,8 +278,7 @@ payable main contract HyperchainBridge =
     List.find(
       (c) => c.entry.idx == request.entry.idx &&
         c.entry_tx_hash == request.entry_tx_hash &&
-        c.entry.target_network.id == request.entry.target_network.id &&
-        c.entry.target_network.url == request.entry.target_network.url
+        c.entry.target_network_id == request.entry.target_network_id
       ,state.processed_exits) != None
 
   entrypoint get_token_link(token: option(FungibleToken)) =
@@ -298,8 +289,7 @@ payable main contract HyperchainBridge =
     let is_source_native = request.entry.token_type == Native
     List.find(
       (t) => t.source_token == request.entry.token && 
-        t.source_network.id == request.entry_network.id && 
-        t.source_network.url == request.entry_network.url &&
+        t.source_network_id == request.entry.source_network_id && 
         t.is_source_native == is_source_native
       ,state.token_links)
   

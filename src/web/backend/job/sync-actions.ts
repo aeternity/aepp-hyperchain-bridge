@@ -68,7 +68,7 @@ async function updateActionsWithExitRequest(
       exitRequestData: JSON.stringify(mapBigIntsToNumbers(exit.exitRequest)),
       isCompleted: true,
     })
-    .eq("sourceNetworkId", exit.exitRequest.entry_network.id)
+    .eq("sourceNetworkId", exit.exitRequest.entry.source_network_id)
     .eq("entryIdx", Number(exit.exitRequest.entry.idx))
     .select();
 

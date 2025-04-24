@@ -76,11 +76,6 @@ export default {
       const _exitRequest: ExitRequest = {
         entry,
         entry_tx_hash: entryTxHash,
-        entry_network: {
-          name: currency.network_name,
-          url: networkURL,
-          id: status.network_id,
-        },
         entry_token_meta,
       };
       const exitRequest = mapBigIntsToNumbers(_exitRequest) as ExitRequest;

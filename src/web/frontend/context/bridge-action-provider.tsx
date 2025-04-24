@@ -61,11 +61,10 @@ export default function BridgeActionProvider({ children }: Props) {
           );
           if (!alreadySet) showInfo("Allowance is set successfully");
         }
-        const network = getNetworkBaseById(destinationNetworkId);
 
         const result = await bridgeContract?.enter_bridge(
           BigInt(amount),
-          network,
+          destinationNetworkId,
           isNative ? undefined : token.address,
           {
             ttl: 30,
