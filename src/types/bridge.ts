@@ -8,10 +8,10 @@ export type HyperchainBridgeContract = Contract<HyperchainBridge>;
 
 export interface HyperchainBridge extends ContractMethodsBase {
   operator: () => Promise<string>;
-  token_links: () => Promise<TokenLink[]>;
-  bridge_entries: () => Promise<BridgeEntry[]>;
+  _token_links: () => Promise<TokenLink[]>;
+  _bridge_entries: () => Promise<BridgeEntry[]>;
+  _processed_exits: () => Promise<ExitRequest[]>;
   bridge_entry: (idx: number | bigint) => Promise<BridgeEntry | null>;
-  processed_exits: () => Promise<ExitRequest[]>;
   check_ids_processed: (
     ids: Array<number | bigint>,
     source_network_id: string
@@ -19,7 +19,7 @@ export interface HyperchainBridge extends ContractMethodsBase {
 
   enter_bridge: (
     amount: number | bigint,
-    target_network: NetworkBase,
+    target_network_id: string,
     token?: string,
     options?: {
       amount?: number | bigint;
@@ -49,8 +49,8 @@ export interface BridgeEntry {
   amount: bigint;
   token_type: TokenType;
   exit_link?: TokenLink;
-  target_network: NetworkBase;
   source_network_id: string;
+  target_network_id: string;
 }
 
 export interface BridgeEntryTx extends BridgeEntry {
@@ -71,7 +71,6 @@ export type BridgeAction = Tables<"actions">;
 export interface ExitRequest {
   entry: BridgeEntry;
   entry_tx_hash: string;
-  entry_network: NetworkBase;
   entry_token_meta: TokenMeta;
 }
 
@@ -79,7 +78,7 @@ export interface TokenLink {
   local_token: string;
   is_source_native: boolean;
   source_token?: string;
-  source_network: NetworkBase;
+  source_network_id: string;
 }
 
 export interface BridgeTestSetup {

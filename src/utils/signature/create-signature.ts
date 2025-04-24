@@ -28,8 +28,7 @@ export const createMessage = (request: ExitRequest, timestamp: number) => {
     ? [
         request.entry.exit_link.local_token,
         request.entry.exit_link.source_token || "",
-        request.entry.exit_link.source_network.id,
-        request.entry.exit_link.source_network.url,
+        request.entry.exit_link.source_network_id,
         request.entry.exit_link.is_source_native.toString(),
       ].join("")
     : [""];
@@ -41,12 +40,9 @@ export const createMessage = (request: ExitRequest, timestamp: number) => {
     request.entry.amount.toString(),
     exitLinkStr,
     tokenTypeToStr(request.entry.token_type),
-    request.entry.target_network.id,
-    request.entry.target_network.url,
+    request.entry.target_network_id,
     request.entry.source_network_id,
     request.entry_tx_hash,
-    request.entry_network.id,
-    request.entry_network.url,
     request.entry_token_meta.name,
     request.entry_token_meta.symbol,
     request.entry_token_meta.decimals.toString(),

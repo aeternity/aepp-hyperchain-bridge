@@ -1,7 +1,7 @@
 {
   "ae_uat": {
     "bridge": {
-      "address": "ct_2dmuM7HCxALpSceKpB8PNvHqRQnNAX3BnnNohhXszgu3pHHu8H",
+      "address": "ct_2US6K3CeSypGAi1xzHjT6KaXmVRP3F8A5hP4UT7oD4eBWrBot8",
       "aci": [
         {
           "namespace": {
@@ -486,7 +486,7 @@
               },
               {
                 "arguments": [],
-                "name": "token_links",
+                "name": "_token_links",
                 "payable": false,
                 "returns": {
                   "list": [
@@ -497,7 +497,7 @@
               },
               {
                 "arguments": [],
-                "name": "bridge_entries",
+                "name": "_bridge_entries",
                 "payable": false,
                 "returns": {
                   "list": [
@@ -508,7 +508,7 @@
               },
               {
                 "arguments": [],
-                "name": "processed_exits",
+                "name": "_processed_exits",
                 "payable": false,
                 "returns": {
                   "list": [
@@ -569,8 +569,8 @@
                     "type": "int"
                   },
                   {
-                    "name": "target_network",
-                    "type": "HyperchainBridge.network"
+                    "name": "target_network_id",
+                    "type": "string"
                   },
                   {
                     "name": "token",
@@ -753,8 +753,8 @@
                       "type": "HyperchainBridge.token_type"
                     },
                     {
-                      "name": "target_network",
-                      "type": "HyperchainBridge.network"
+                      "name": "target_network_id",
+                      "type": "string"
                     },
                     {
                       "name": "source_network_id",
@@ -775,10 +775,6 @@
                     {
                       "name": "entry_tx_hash",
                       "type": "string"
-                    },
-                    {
-                      "name": "entry_network",
-                      "type": "HyperchainBridge.network"
                     },
                     {
                       "name": "entry_token_meta",
@@ -805,8 +801,8 @@
                       }
                     },
                     {
-                      "name": "source_network",
-                      "type": "HyperchainBridge.network"
+                      "name": "source_network_id",
+                      "type": "string"
                     },
                     {
                       "name": "is_source_native",
@@ -835,26 +831,6 @@
                   ]
                 },
                 "vars": []
-              },
-              {
-                "name": "network",
-                "typedef": {
-                  "record": [
-                    {
-                      "name": "id",
-                      "type": "string"
-                    },
-                    {
-                      "name": "url",
-                      "type": "string"
-                    },
-                    {
-                      "name": "name",
-                      "type": "string"
-                    }
-                  ]
-                },
-                "vars": []
               }
             ]
           }
@@ -862,7 +838,7 @@
       ]
     },
     "token": {
-      "address": "ct_dW23r9qyPM2Dna41yawRSP2zp37BqKEA9WqPLMatyk5my5dST",
+      "address": "ct_ercCHvDsVaSZPXZCyaSSkSmE6QGwf4xHstARrvQJmM1LvPAp3",
       "aci": [
         {
           "namespace": {
@@ -1327,7 +1303,7 @@
   },
   "ae_mainnet": {
     "bridge": {
-      "address": "ct_kokAXNT2V16f7TVKyrxJTSqjtDjbXAYptLX3WZSyodmCjxsmx",
+      "address": "ct_2VkJLNUbH6uaCBxBqQXHjLoeC5nLD4Nt8NYo38K2DeifwYhJiy",
       "aci": [
         {
           "namespace": {
@@ -1812,7 +1788,7 @@
               },
               {
                 "arguments": [],
-                "name": "token_links",
+                "name": "_token_links",
                 "payable": false,
                 "returns": {
                   "list": [
@@ -1823,7 +1799,7 @@
               },
               {
                 "arguments": [],
-                "name": "bridge_entries",
+                "name": "_bridge_entries",
                 "payable": false,
                 "returns": {
                   "list": [
@@ -1834,7 +1810,7 @@
               },
               {
                 "arguments": [],
-                "name": "processed_exits",
+                "name": "_processed_exits",
                 "payable": false,
                 "returns": {
                   "list": [
@@ -1895,8 +1871,8 @@
                     "type": "int"
                   },
                   {
-                    "name": "target_network",
-                    "type": "HyperchainBridge.network"
+                    "name": "target_network_id",
+                    "type": "string"
                   },
                   {
                     "name": "token",
@@ -2079,8 +2055,8 @@
                       "type": "HyperchainBridge.token_type"
                     },
                     {
-                      "name": "target_network",
-                      "type": "HyperchainBridge.network"
+                      "name": "target_network_id",
+                      "type": "string"
                     },
                     {
                       "name": "source_network_id",
@@ -2101,10 +2077,6 @@
                     {
                       "name": "entry_tx_hash",
                       "type": "string"
-                    },
-                    {
-                      "name": "entry_network",
-                      "type": "HyperchainBridge.network"
                     },
                     {
                       "name": "entry_token_meta",
@@ -2131,8 +2103,8 @@
                       }
                     },
                     {
-                      "name": "source_network",
-                      "type": "HyperchainBridge.network"
+                      "name": "source_network_id",
+                      "type": "string"
                     },
                     {
                       "name": "is_source_native",
@@ -2161,26 +2133,6 @@
                   ]
                 },
                 "vars": []
-              },
-              {
-                "name": "network",
-                "typedef": {
-                  "record": [
-                    {
-                      "name": "id",
-                      "type": "string"
-                    },
-                    {
-                      "name": "url",
-                      "type": "string"
-                    },
-                    {
-                      "name": "name",
-                      "type": "string"
-                    }
-                  ]
-                },
-                "vars": []
               }
             ]
           }
@@ -2188,7 +2140,7 @@
       ]
     },
     "token": {
-      "address": "ct_19F7JTPdHYWEfazybvPJEFMyaNvM6L5mVVinUS56MhZkfTNtf",
+      "address": "ct_nWC9Pd8G5QJcbBpNPqKBJXwscn2D5isATa8nuUkpRgHuB6SWc",
       "aci": [
         {
           "namespace": {

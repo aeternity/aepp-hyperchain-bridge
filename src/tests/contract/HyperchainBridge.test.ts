@@ -18,7 +18,6 @@ import {
   createMessage,
   createSignature,
 } from "@/utils/signature/create-signature";
-import { mapNetworkToBase } from "@/utils/data/mappers";
 import { Contract } from "@aeternity/aepp-sdk";
 import {
   getOriginalTokenBalance,
@@ -68,10 +67,10 @@ describe("HyperchainBridge", async () => {
         (await token.balance(getContractAccountAddress(contract)))
           .decodedResult || 0
       );
-      const { decodedResult: entriesBefore } = await contract.bridge_entries();
+      const { decodedResult: entriesBefore } = await contract._bridge_entries();
       const { decodedResult: newEntry, hash } = await contract.enter_bridge(
         depositAmount,
-        mapNetworkToBase(BRIDGE_B.network),
+        BRIDGE_B.network.id,
         token.$options.address
       );
       const bridgeBalance = BigInt(
@@ -86,7 +85,7 @@ describe("HyperchainBridge", async () => {
         from: userAddress,
         amount: depositAmount,
         token: token.$options.address,
-        target_network: mapNetworkToBase(BRIDGE_B.network),
+        target_network_id: BRIDGE_B.network.id,
         token_type: TokenType.Standard,
         exit_link: undefined,
         source_network_id: network.id,
@@ -106,10 +105,10 @@ describe("HyperchainBridge", async () => {
           getContractAccountAddress(contract) as `ak_${string}`
         )) || 0
       );
-      const { decodedResult: entriesBefore } = await contract.bridge_entries();
+      const { decodedResult: entriesBefore } = await contract._bridge_entries();
       const { decodedResult: newEntry, hash } = await contract.enter_bridge(
         depositAmount,
-        mapNetworkToBase(BRIDGE_B.network),
+        BRIDGE_B.network.id,
         undefined,
         {
           amount: depositAmount,
@@ -129,7 +128,7 @@ describe("HyperchainBridge", async () => {
         from: userAddress,
         amount: depositAmount,
         token: undefined,
-        target_network: mapNetworkToBase(BRIDGE_B.network),
+        target_network_id: BRIDGE_B.network.id,
         token_type: TokenType.Native,
         exit_link: undefined,
         source_network_id: network.id,
@@ -162,7 +161,7 @@ describe("HyperchainBridge", async () => {
       await exitsPromiseB;
       const { sdk, contract, network } = BRIDGE_B;
 
-      const { decodedResult: tokenLinks } = await contract.token_links();
+      const { decodedResult: tokenLinks } = await contract._token_links();
       for await (const _tokenLink of tokenLinks) {
         const tokenLink = _tokenLink as TokenLink;
         const userBalanceBefore = await getOriginalTokenBalance(
@@ -176,14 +175,14 @@ describe("HyperchainBridge", async () => {
           getContractAccountAddress(contract),
           BRIDGE_B
         );
-        const { decodedResult: entries } = await contract.bridge_entries();
+        const { decodedResult: entries } = await contract._bridge_entries();
         const {
           hash,
           decodedResult: newEntry,
           result,
         } = await contract.enter_bridge(
           depositAmount,
-          mapNetworkToBase(BRIDGE_A.network),
+          BRIDGE_A.network.id,
           tokenLink.local_token
         );
         const { gasPrice, gasUsed } = result!;
@@ -210,7 +209,7 @@ describe("HyperchainBridge", async () => {
           token: tokenLink.local_token,
           token_type: TokenType.Link,
           exit_link: tokenLink,
-          target_network: mapNetworkToBase(BRIDGE_A.network),
+          target_network_id: BRIDGE_A.network.id,
           source_network_id: network.id,
         });
 
@@ -260,7 +259,7 @@ const testBridgeExits = async (
       decodedResult: exitLink,
     } = await contract.exit_bridge(request, timestamp, signature);
     const { gasPrice, gasUsed } = result!;
-    const { decodedResult: processedExits } = await contract.processed_exits();
+    const { decodedResult: processedExits } = await contract._processed_exits();
 
     if (!exitTokenAddress) {
       exitTokenAddress = (exitLink as TokenLink).local_token;
@@ -355,7 +354,6 @@ const saveEntry = async (
     entry,
     entry_token_meta,
     entry_tx_hash: tx_hash,
-    entry_network: mapNetworkToBase(bridge.network),
   };
 
   executedEntries[dataIndex].push({

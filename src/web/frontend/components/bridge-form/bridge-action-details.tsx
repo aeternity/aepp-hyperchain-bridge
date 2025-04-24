@@ -17,8 +17,10 @@ import {
 import { useContext } from "react";
 import { BridgeActionContext } from "../../context/bridge-action-provider";
 import { WalletContext } from "../../context/wallet-provider";
+import { useTokenBalances } from "../../hooks/useTokenBalances";
 
 export default function BridgeActionDetailsModal() {
+  const { refetch } = useTokenBalances();
   const { getNetworkById, currentNetwork } = useContext(WalletContext);
   const { exitBridge, modalAction, setModalAction, isBusy } =
     useContext(BridgeActionContext);
@@ -31,6 +33,7 @@ export default function BridgeActionDetailsModal() {
 
   const handleBridgeComplete = async () => {
     await exitBridge(modalAction);
+    refetch();
   };
 
   return (

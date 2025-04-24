@@ -2,7 +2,6 @@ import { BridgeEntryTx, BridgeExitTx, TokenType } from "@/types/bridge";
 import { Network, NetworkBase, NetworkWithCurrency } from "@/types/network";
 import { AciContractCallEncoder } from "@aeternity/aepp-calldata";
 import HyperchainBridge_aci from "@/aci/HyperchainBridge.json";
-import { TokenMeta } from "@/types/token";
 import { TablesInsert } from "@/web/backend/lib/database.types";
 import { getTokenMeta } from "../aeternity/node";
 
@@ -59,11 +58,7 @@ export const enterBridgeTxToBridgeEntryTx = (data: any): BridgeEntryTx => {
     token,
     amount: BigInt(returnValue[3].value),
     token_type: tokenTypeFromIndex(returnValue[5].value[0]),
-    target_network: {
-      id: returnValue[6].value[0].value,
-      url: returnValue[6].value[1].value,
-      name: returnValue[6].value[2].value,
-    },
+    target_network_id: returnValue[6].value,
     source_network_id: returnValue[7].value,
     exit_link: returnValue[4].value,
   };
@@ -97,7 +92,7 @@ export async function bridgeEntryTxToAction(
     bridgeEntryData: JSON.stringify(mapBigIntsToNumbers(entry)),
     amount: Number(entry.amount),
     sourceNetworkId: entry.source_network_id,
-    targetNetworkId: entry.target_network.id,
+    targetNetworkId: entry.target_network_id,
     tokenAddress: entry.token || null,
     tokenName: tokenMeta.name,
     tokenSymbol: tokenMeta.symbol,
