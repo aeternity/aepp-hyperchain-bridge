@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://www.github.com/aeternity/aepp-hyperchain-bridge/compare/v1.0.1...v1.1.0) (2025-04-25)
+
+
+### Features
+
+* improve transaction processing & fixes ([0acc7dc](https://www.github.com/aeternity/aepp-hyperchain-bridge/commit/0acc7dc7c6bdba6881a631bf2b86876b124806f4))
+
 ### [1.0.1](https://www.github.com/aeternity/aepp-hyperchain-bridge/compare/v1.0.0...v1.0.1) (2025-04-24)
 
 
