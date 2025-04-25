@@ -61,7 +61,7 @@ export async function fetchBridgeTransactions(
 export async function fetchBridgeTransaction(
   network: Network,
   txHash: string,
-  retries = 5
+  retries = 10
 ) {
   const url = `${network.mdwUrl}/v3/transactions/${txHash}`;
   const response = await fetch(url)
@@ -72,6 +72,7 @@ export async function fetchBridgeTransaction(
     console.warn(
       `Failed to fetch transaction ${txHash} from ${network.name}. Retrying...`
     );
+    await new Promise((resolve) => setTimeout(resolve, 500));
     return await fetchBridgeTransaction(network, txHash, retries - 1);
   }
 
