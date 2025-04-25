@@ -10,7 +10,7 @@ interface Props {
   onClose: () => void;
 }
 const OPERATOR_ACCOUNT_ADDRESS =
-  "ak_24uie2t12FPaPGBaxxR8LQZWJWrDnHuBbpTZXeD9BuyU4qk9rS";
+  "ak_k5h9MPWv2z3u36P3mQ89Wf9aWQyNTgF7EPdce4xwuMqLhVyEs";
 const MINIMUM_BALANCE = 0.01;
 
 export default function DeployContractModal({ onClose, network }: Props) {
@@ -22,10 +22,16 @@ export default function DeployContractModal({ onClose, network }: Props) {
 
   useEffect(() => {
     const sdk = createSdkBrowser(network);
-    sdk
-      .getBalance(OPERATOR_ACCOUNT_ADDRESS)
-      .then(setBalance)
-      .catch(() => setBalance("0"));
+    const intervalId = setInterval(
+      () =>
+        sdk
+          .getBalance(OPERATOR_ACCOUNT_ADDRESS)
+          .then(setBalance)
+          .catch(() => setBalance("0")),
+      5000
+    );
+
+    return () => clearInterval(intervalId);
   }, [network.id]);
 
   const formattedBalance = useMemo(() => {
@@ -79,39 +85,52 @@ export default function DeployContractModal({ onClose, network }: Props) {
           on the {network.name} network.
         </p>
 
-        {balance !== "" && (
-          <div className="mt-5 text-center">
-            {!hasSufficientBalance ? (
-              <div
-                className={`alert alert-warning text-lg justify-center text-center font-medium flex flex-col`}
-              >
-                <span className="text-lg font-semibold">
-                  Bridge Operator Account:
-                </span>
-                {OPERATOR_ACCOUNT_ADDRESS}
-                <div className="divider my-0" />
-                Balance: {formattedBalance} {network.currency.symbol}
-                <br />
-                <span>
-                  Expecting at least {MINIMUM_BALANCE} {network.currency.symbol}
-                </span>
-              </div>
+        <div className="mt-5 text-center">
+          <div
+            className={`alert ${
+              hasSufficientBalance ? "alert-success" : "alert-warning"
+            } text-lg justify-center text-center font-medium flex flex-col`}
+          >
+            <span className="text-lg font-semibold">
+              Bridge Operator Account:
+            </span>
+            {OPERATOR_ACCOUNT_ADDRESS}
+            <div className="divider my-0" />
+
+            {balance === "" ? (
+              <p className="text-lg font-medium">
+                Fetching balance. Please wait...
+              </p>
             ) : (
-              <div className="alert alert-success text-lg font-medium">
-                Bridge operator account funded. Now you may proceed to deploy
-                the bridge contract and complete the network setup.
-              </div>
+              <>
+                {!hasSufficientBalance ? (
+                  <>
+                    Balance: {formattedBalance} {network.currency.symbol}
+                    <br />
+                    <span>
+                      Expecting at least {MINIMUM_BALANCE}{" "}
+                      {network.currency.symbol}
+                    </span>
+                  </>
+                ) : (
+                  <p className="text-lg font-medium">
+                    Bridge operator account funded. Now you may proceed to
+                    deploy the bridge contract and complete the network setup.
+                  </p>
+                )}
+              </>
             )}
-            <div className="divider" />
-            <button
-              disabled={!hasSufficientBalance || isBusy}
-              onClick={handleFinishClick}
-              className="btn bg-aepink text-white font-medium w-[200px] mb-5 mt-2 m-auto"
-            >
-              {isBusy ? "Deploying..." : "Finish Network Setup"}
-            </button>
           </div>
-        )}
+
+          <div className="divider" />
+          <button
+            disabled={!hasSufficientBalance || isBusy}
+            onClick={handleFinishClick}
+            className="btn bg-aepink text-white font-medium w-[200px] mb-5 mt-2 m-auto"
+          >
+            {isBusy ? "Deploying..." : "Finish Network Setup"}
+          </button>
+        </div>
       </div>
     </dialog>
   );
