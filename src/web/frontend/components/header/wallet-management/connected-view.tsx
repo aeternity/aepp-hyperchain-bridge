@@ -2,9 +2,9 @@ import { useContext, useState } from "react";
 
 import { shorten, formatBalance } from "@/utils/data/formatters";
 import { WalletContext } from "@/frontend/context/wallet-provider";
-import { NetworkBalanceContext } from "@/web/frontend/context/network-balance-provider";
+import { NetworkBalanceContext } from "@/web/frontend/context/balance-provider";
 import { ClockIcon, PowerIcon } from "@heroicons/react/24/outline";
-import { BridgeActionContext } from "@/web/frontend/context/bridge-action-provider";
+import { BridgeActionContext } from "@/web/frontend/context/action-provider";
 import useBridgeActionsHistory from "@/web/frontend/hooks/useBridgeActionsHistory";
 
 export default function ConnectedView() {

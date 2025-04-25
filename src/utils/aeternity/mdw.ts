@@ -57,3 +57,23 @@ export async function fetchBridgeTransactions(
     .then((res) => res.json())
     .catch((e) => console.error(e.message));
 }
+
+export async function fetchBridgeTransaction(
+  network: Network,
+  txHash: string,
+  retries = 5
+) {
+  const url = `${network.mdwUrl}/v3/transactions/${txHash}`;
+  const response = await fetch(url)
+    .then((res) => res.json())
+    .catch((e) => console.error(e.message));
+
+  if (!response?.tx?.function && retries > 0) {
+    console.warn(
+      `Failed to fetch transaction ${txHash} from ${network.name}. Retrying...`
+    );
+    return await fetchBridgeTransaction(network, txHash, retries - 1);
+  }
+
+  return response;
+}

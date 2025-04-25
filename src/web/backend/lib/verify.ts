@@ -1,48 +1,16 @@
-import { TokenMeta } from "@/types/token";
 import WebSocket from "ws";
+import { supabase } from "./supabase";
+import { Network } from "@/types/network";
+import { DEFAULT_NETWORKS } from "@/constants/networks";
 
-interface ReqBody {
+export interface NetworkUrls {
   node: string;
   mdw: string;
   mdwWS: string;
   explorer: string;
 }
 
-export default {
-  async POST(req: Bun.BunRequest): Promise<Response> {
-    const urls: ReqBody = await req.json();
-
-    try {
-      const { status, currency, mdwStatus, explorerPage, isMdwWsOk } =
-        await readURLsData(urls);
-
-      const networkId = status.network_id;
-      const networkName = currency.network_name;
-      const currency_: TokenMeta = {
-        name: networkName,
-        symbol: currency.symbol,
-        decimals: Math.log10(currency.subunits_per_unit),
-      };
-
-      const ok =
-        !!networkId &&
-        !!networkName &&
-        !!mdwStatus &&
-        !!explorerPage &&
-        isMdwWsOk;
-
-      return Response.json({ ok, networkId, networkName, currency: currency_ });
-    } catch (error) {
-      console.error("Error verifying network:", error);
-      return Response.json({
-        ok: false,
-        error: `Network verification failed: ${error}`,
-      });
-    }
-  },
-};
-
-async function readURLsData(urls: ReqBody) {
+export async function readURLsData(urls: NetworkUrls) {
   const { node, mdw, mdwWS, explorer } = urls;
 
   const [statusResp, currencyResp, mdwResp, explorerResp, isMdwWsOk] =
@@ -87,7 +55,7 @@ async function readURLsData(urls: ReqBody) {
   };
 }
 
-const checkMdwWS = async (url: string) => {
+export const checkMdwWS = async (url: string) => {
   return new Promise((resolve) => {
     setTimeout(() => resolve(false), 2000);
     const ws = new WebSocket(url);
@@ -101,3 +69,26 @@ const checkMdwWS = async (url: string) => {
     });
   });
 };
+
+export async function throwWhenNetworkExists(network: Network) {
+  const found = DEFAULT_NETWORKS.find(
+    (n) =>
+      n.id === network.id ||
+      n.url === network.url ||
+      n.mdwUrl === network.mdwUrl ||
+      n.mdwWebSocketUrl === network.mdwWebSocketUrl
+  );
+  if (found) {
+    throw new Error(`Network exists: ${found.name}`);
+  }
+
+  const { data, count } = await supabase
+    .from("networks")
+    .select("*")
+    .or(
+      `id.is.${network.id},url.is.${network.url},mdwUrl.is.${network.mdwUrl},mdwWebSocketUrl.is.${network.mdwWebSocketUrl}`
+    );
+  if (count) {
+    throw new Error(`Network exists: ${data[0].name}`);
+  }
+}

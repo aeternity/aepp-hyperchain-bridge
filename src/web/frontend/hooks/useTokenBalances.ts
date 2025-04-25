@@ -4,11 +4,13 @@ import { useQuery } from "@tanstack/react-query";
 import { fromAccountsBalancesToTokenAmount } from "../utils/mappers";
 import { TokenAmount } from "@/types/token";
 import BigNumber from "bignumber.js";
-import { NetworkBalanceContext } from "../context/network-balance-provider";
+import { NetworkBalanceContext } from "../context/balance-provider";
 
 export const useTokenBalances = () => {
   const { address, currentNetwork } = useContext(WalletContext);
-  const { balance, currency } = useContext(NetworkBalanceContext);
+  const { balance, currency, reloadBalance } = useContext(
+    NetworkBalanceContext
+  );
 
   const fetchAccountTokenBalances = async () => {
     const response = await fetch(
@@ -17,11 +19,22 @@ export const useTokenBalances = () => {
     return await response.json();
   };
 
-  const { isPending, data, isFetching, refetch, isFetched } = useQuery({
+  const {
+    isPending,
+    data,
+    isFetching,
+    refetch: _refetch,
+    isFetched,
+  } = useQuery({
     queryKey: ["token-balances", currentNetwork?.id, address],
     queryFn: fetchAccountTokenBalances,
     enabled: !!address && !!currentNetwork,
   });
+
+  const refetch = () => {
+    _refetch();
+    reloadBalance();
+  };
 
   const nativeToken =
     currency &&

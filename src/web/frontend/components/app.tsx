@@ -8,8 +8,8 @@ import Header from "./header";
 import Bridge from "../pages/bridge";
 import WalletProvider from "../context/wallet-provider";
 import NotificationProvider from "../context/notification-provider";
-import BridgeActionProvider from "../context/bridge-action-provider";
-import NetworkBalanceProvider from "../context/network-balance-provider";
+import BridgeActionProvider from "../context/action-provider";
+import NetworkBalanceProvider from "../context/balance-provider";
 
 const queryClient = new QueryClient();
 

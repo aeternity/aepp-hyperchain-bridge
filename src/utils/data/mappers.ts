@@ -3,7 +3,7 @@ import { Network, NetworkBase, NetworkWithCurrency } from "@/types/network";
 import { AciContractCallEncoder } from "@aeternity/aepp-calldata";
 import HyperchainBridge_aci from "@/aci/HyperchainBridge.json";
 import { TablesInsert } from "@/web/backend/lib/database.types";
-import { getTokenMeta } from "../aeternity/node";
+import { getTokenMeta } from "../aeternity/mdw";
 
 const bridgeEncoder = new AciContractCallEncoder(HyperchainBridge_aci);
 

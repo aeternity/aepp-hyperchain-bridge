@@ -29,8 +29,7 @@ export const BridgeActionContext = createContext({
 
 export default function BridgeActionProvider({ children }: Props) {
   const { showError, showInfo, showSuccess } = useContext(NotificationContext);
-  const { getNetworkById, getNetworkBaseById, currentNetwork } =
-    useContext(WalletContext);
+  const { getNetworkById, currentNetwork } = useContext(WalletContext);
 
   const [isBusy, setBusy] = useState(false);
   const [modalAction, setModalAction] = useState<BridgeAction>();
@@ -72,12 +71,9 @@ export default function BridgeActionProvider({ children }: Props) {
           }
         );
 
-        showSuccess(`Bridge entry is successful with tx hash: ${result?.hash}`);
-
-        const newEntryAction = await fetchBridgeAction(
+        const newEntryAction = await syncBridgeAction(
           currentNetwork.id,
-          Number(result.decodedResult.idx),
-          1000
+          result.hash
         );
 
         if (newEntryAction) {
@@ -129,23 +125,16 @@ export default function BridgeActionProvider({ children }: Props) {
           }
         );
 
-        showSuccess(
-          `Exit bridge transaction is successful with tx hash: ${exitTx?.hash}`
-        );
-
-        showInfo(`Fetching exit transaction details. Please wait...`);
-
-        const remoteActionData = await fetchBridgeAction(
-          sourceNetwork.id,
-          action.entryIdx,
-          1000
+        const remoteActionData = await syncBridgeAction(
+          currentNetwork.id,
+          exitTx.hash
         );
 
         if (remoteActionData?.isCompleted) {
           setModalAction(remoteActionData);
         } else {
           showError(
-            "Cannot fetch exit transaction details, please check the history later."
+            "Cannot process exit transaction details, please check the history later."
           );
         }
 
@@ -177,20 +166,18 @@ export default function BridgeActionProvider({ children }: Props) {
   );
 }
 
-const fetchBridgeAction = async (
-  sourceNetworkId: string,
-  entryIdx: number,
-  timeout = 0
+const syncBridgeAction = async (
+  networkId: string,
+  hash: string
 ): Promise<BridgeAction | null> => {
-  return new Promise(async (resolve, reject) => {
-    setTimeout(async () => {
-      const { ok, data, error } = await fetch(
-        `/api/action/${sourceNetworkId}/${entryIdx}`
-      ).then((res) => res.json());
+  const { ok, data, error } = await fetch(
+    `/api/actions/sync/${networkId}/${hash}`
+  ).then((res) => res.json());
 
-      if (!ok) reject(error);
+  if (!ok) {
+    console.error(error);
+    return null;
+  }
 
-      resolve(data);
-    }, timeout);
-  });
+  return data;
 };

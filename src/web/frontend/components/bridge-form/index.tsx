@@ -10,10 +10,10 @@ import BridgeHistory from "../bridge-history";
 
 import { useTokenBalances } from "@/frontend/hooks/useTokenBalances";
 
-import BridgeActionDetailsModal from "./bridge-action-details";
-import { NetworkBalanceContext } from "../../context/network-balance-provider";
+import BridgeActionDetailsModal from "./action-details";
+import { NetworkBalanceContext } from "../../context/balance-provider";
 import Title from "../base/title";
-import { BridgeActionContext } from "../../context/bridge-action-provider";
+import { BridgeActionContext } from "../../context/action-provider";
 import { WalletContext } from "../../context/wallet-provider";
 
 export default function BridgeForm() {

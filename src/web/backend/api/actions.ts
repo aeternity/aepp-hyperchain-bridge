@@ -1,6 +1,7 @@
 import { supabase } from "../lib/supabase";
+import { syncAction } from "../lib/sync";
 
-export const byUserAddress = {
+export const getByUserAddress = {
   async GET(
     req: Bun.BunRequest<"/api/actions/:userAddress">
   ): Promise<Response> {
@@ -14,14 +15,14 @@ export const byUserAddress = {
       .order("entryTimestamp", { ascending: false });
 
     if (error) {
-      return new Response(JSON.stringify({ ok: false, error }));
+      return Response.json({ ok: false, error });
     }
 
-    return new Response(JSON.stringify({ ok: true, data: data || [] }));
+    return Response.json({ ok: true, data: data || [] });
   },
 };
 
-export const byNetworkIdAndEntryIdx = {
+export const getByNetworkIdAndEntryIdx = {
   async GET(
     req: Bun.BunRequest<"/api/action/:sourceNetworkId/:entryIdx">
   ): Promise<Response> {
@@ -34,9 +35,25 @@ export const byNetworkIdAndEntryIdx = {
       .eq("entryIdx", Number(entryIdx));
 
     if (error) {
-      return new Response(JSON.stringify({ ok: false, error }));
+      return Response.json({ ok: false, error });
     }
 
-    return new Response(JSON.stringify({ ok: true, data: data[0] }));
+    return Response.json({ ok: true, data: data[0] });
+  },
+};
+
+export const syncTransaction = {
+  async GET(
+    req: Bun.BunRequest<"/api/actions/sync/:networkId/:hash">
+  ): Promise<Response> {
+    const { networkId, hash } = req.params;
+
+    const action = await syncAction(hash, networkId);
+
+    if (!action) {
+      return Response.json({ ok: false, error: "Action not found" });
+    }
+
+    return Response.json({ ok: true, data: action });
   },
 };

@@ -1,9 +1,15 @@
 export const getNetworks = async () => {
   try {
     const resp = await fetch(`/api/networks`);
-    return await resp.json();
-  } catch (e) {
-    console.error("Error fetching networks", e);
+    const { ok, data } = await resp.json();
+
+    if (!ok) {
+      throw new Error("Failed to fetch networks");
+    }
+
+    return data;
+  } catch (e: any) {
+    console.error("Error fetching networks", e.message);
     return [];
   }
 };

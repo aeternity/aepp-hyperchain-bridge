@@ -8,7 +8,7 @@ import {
 } from "@heroicons/react/24/outline";
 
 import { useContext } from "react";
-import { BridgeActionContext } from "../../context/bridge-action-provider";
+import { BridgeActionContext } from "../../context/action-provider";
 import { WalletContext } from "../../context/wallet-provider";
 
 interface Props {

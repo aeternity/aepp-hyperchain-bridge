@@ -3,7 +3,7 @@ import { useContext, useEffect } from "react";
 import Title from "../base/title";
 import BridgeHistoryList from "./history-list";
 import useBridgeActionsHistory from "../../hooks/useBridgeActionsHistory";
-import { BridgeActionContext } from "../../context/bridge-action-provider";
+import { BridgeActionContext } from "../../context/action-provider";
 
 export default function BridgeHistory() {
   const { isBusy, isHistoryVisible, setHistoryVisibility } =

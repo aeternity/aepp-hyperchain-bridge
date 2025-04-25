@@ -15,7 +15,7 @@ import {
 } from "@heroicons/react/24/outline";
 
 import { useContext } from "react";
-import { BridgeActionContext } from "../../context/bridge-action-provider";
+import { BridgeActionContext } from "../../context/action-provider";
 import { WalletContext } from "../../context/wallet-provider";
 import { useTokenBalances } from "../../hooks/useTokenBalances";
 
@@ -33,7 +33,7 @@ export default function BridgeActionDetailsModal() {
 
   const handleBridgeComplete = async () => {
     await exitBridge(modalAction);
-    refetch();
+    setTimeout(refetch, 1000);
   };
 
   return (
