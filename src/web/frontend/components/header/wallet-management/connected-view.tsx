@@ -51,21 +51,23 @@ export default function ConnectedView() {
           {justCopied ? "Copied!" : shorten(address)}
         </div>
       </div>
-      <div className="relative">
-        {nonCompletedActions.length > 0 && (
-          <div className="badge badge-xs badge-neutral bg-aepink border-0 pt-[.5px] absolute right-[-6px] top-[-6px]">
-            {nonCompletedActions.length}
-          </div>
-        )}
-        <ClockIcon
-          width={30}
-          height={30}
-          stroke="gray"
-          strokeWidth={2.5}
-          className="hover:bg-aepink-100 ml-1  cursor-pointer rounded-sm p-1"
-          onClick={() => setHistoryVisibility(true)}
-        />
-      </div>
+      {!isUnsupportedNetwork && (
+        <div className="relative">
+          {nonCompletedActions.length > 0 && (
+            <div className="badge badge-xs badge-neutral bg-aepink border-0 pt-[.5px] absolute right-[-6px] top-[-6px]">
+              {nonCompletedActions.length}
+            </div>
+          )}
+          <ClockIcon
+            width={30}
+            height={30}
+            stroke="gray"
+            strokeWidth={2.5}
+            className="hover:bg-aepink-100 ml-1  cursor-pointer rounded-sm p-1"
+            onClick={() => setHistoryVisibility(true)}
+          />
+        </div>
+      )}
       <PowerIcon
         onClick={disconnect}
         width={30}
