@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.3.0](https://www.github.com/aeternity/aepp-hyperchain-bridge/compare/v1.2.0...v1.3.0) (2025-04-28)
+
+
+### Features
+
+* enhance network change handling to validate nodes in pool before selection ([fbaf4c8](https://www.github.com/aeternity/aepp-hyperchain-bridge/commit/fbaf4c8c169ef1505491e38adfa533af651cd0d4))
+* increase security on request verification & add cleanup, pause, resume functions ([95652e2](https://www.github.com/aeternity/aepp-hyperchain-bridge/commit/95652e22f6d32e616a346c0380ca0a8b400e402f))
+
+
+### Bug Fixes
+
+* improve network fetching logic and connection status handling in WalletProvider ([7d06806](https://www.github.com/aeternity/aepp-hyperchain-bridge/commit/7d06806e54d04cbd5eb6a832071613c5d28e94bc))
+* update bridge contract addresses and operator account in network configurations ([0ec7693](https://www.github.com/aeternity/aepp-hyperchain-bridge/commit/0ec769316a6cc2797a450b0ca31c0604614dce8c))
+* update string concatenation to use semicolons ([b6aa4a5](https://www.github.com/aeternity/aepp-hyperchain-bridge/commit/b6aa4a55f18da714392d1fc6eec4ada5b6a0b7ba))
+
 ## [1.2.0](https://www.github.com/aeternity/aepp-hyperchain-bridge/compare/v1.1.0...v1.2.0) (2025-04-28)
 
 
