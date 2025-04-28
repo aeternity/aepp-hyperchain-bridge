@@ -10,7 +10,7 @@ interface Props {
   onClose: () => void;
 }
 const OPERATOR_ACCOUNT_ADDRESS =
-  "ak_k5h9MPWv2z3u36P3mQ89Wf9aWQyNTgF7EPdce4xwuMqLhVyEs";
+  "ak_M1JgjC9w4B9sppDCM17Yx2gQCX3cVNdgQ15GWzHc6dNV5q8a4";
 const MINIMUM_BALANCE = 0.01;
 
 export default function DeployContractModal({ onClose, network }: Props) {

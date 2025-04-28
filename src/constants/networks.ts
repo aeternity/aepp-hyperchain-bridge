@@ -11,8 +11,7 @@ export const AE_TESTNET: Network = {
   mdwUrl: "https://testnet.aeternity.io/mdw",
   mdwWebSocketUrl: "wss://testnet.aeternity.io/mdw/v3/websocket",
   explorerUrl: "https://testnet.aescan.io",
-  bridgeContractAddress:
-    "ct_2hiiV3xaYB9K7krVfTrNBvWBtgz8ggP5Hszf3oMhGxHgRQqdHJ",
+  bridgeContractAddress: "ct_QksbVuph6RBEBCGK8vtEYas1x1teEc7usbDJRStaj74JTvR2h",
 };
 
 export const AE_MAINNET: Network = {
@@ -23,18 +22,7 @@ export const AE_MAINNET: Network = {
   mdwWebSocketUrl: "wss://mainnet.aeternity.io/mdw/v3/websocket",
   explorerUrl: "https://aescan.io",
   bridgeContractAddress:
-    "ct_2TXM3bekjzkjqKYSu8SEhuju84qFP2mSEz9vszE9vW6LgZAXJn",
-};
-
-export const HC_DEV: Network = {
-  id: "hc_devnet",
-  name: "HC Devnet Local",
-  url: "http://localhost:23013",
-  mdwUrl: "http://localhost:24000",
-  mdwWebSocketUrl: "http://localhost:24001/v3/websocket",
-  explorerUrl: "http://localhost:28020",
-  bridgeContractAddress:
-    "ct_2fi1rcyFZdbkXsqFBxD2CS8NBDDaLWUzMyhZruYn9RKm2pRPaV",
+    "ct_2qjrzvyepd5xLwefTfyGp87S4SFDmtgraWtWgSUw5CZL3LUDhD",
 };
 
 export const DEFAULT_NETWORKS = [AE_MAINNET, AE_TESTNET];
