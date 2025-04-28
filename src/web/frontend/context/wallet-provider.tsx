@@ -48,7 +48,11 @@ export default function WalletProvider({
     ConnectionStatus.IDLE
   );
 
-  const { data: remoteNetworks, refetch: refetchNetworks } = useQuery({
+  const {
+    data: remoteNetworks,
+    refetch: refetchNetworks,
+    isFetched: isFetchedNetworks,
+  } = useQuery({
     queryKey: ["networks"],
     queryFn: getNetworks,
     initialData: [],
@@ -56,8 +60,7 @@ export default function WalletProvider({
   const allNetworks = [...DEFAULT_NETWORKS, ...remoteNetworks] as Network[];
   const otherNetworks = allNetworks.filter(notById(networkId));
   const currentNetwork = allNetworks.find(byId(networkId));
-  const isUnsupportedNetwork =
-    !currentNetwork && connectionStatus === ConnectionStatus.CONNECTED;
+  const isUnsupportedNetwork = !currentNetwork;
 
   const getNetworkById = (id: string) => allNetworks.find(byId(id));
   const getNetworkBaseById = (id: string) =>
@@ -123,7 +126,7 @@ export default function WalletProvider({
   }, []);
 
   useEffect(() => {
-    if (!connector) return;
+    if (!connector || !isFetchedNetworks) return;
 
     connector.addListener("accountsChange", async (accounts: AccountBase[]) => {
       walletSdk.addAccount(accounts[0], { select: true });
@@ -147,7 +150,7 @@ export default function WalletProvider({
     return () => {
       connector.removeAllListeners();
     };
-  }, [connector, tryConnect]);
+  }, [connector, isFetchedNetworks, tryConnect]);
 
   const connect = async () => {
     tryConnect();
