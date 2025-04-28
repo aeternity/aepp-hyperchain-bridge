@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.2.0](https://www.github.com/aeternity/aepp-hyperchain-bridge/compare/v1.1.0...v1.2.0) (2025-04-28)
+
+
+### Features
+
+* update operator account address and improve balance fetching logic ([c4d2bb0](https://www.github.com/aeternity/aepp-hyperchain-bridge/commit/c4d2bb0abe5456aa8201f49a13fb195779a559ca))
+
+
+### Bug Fixes
+
+* add warning message to prevent incorrect token bridging between networks ([4f5ad24](https://www.github.com/aeternity/aepp-hyperchain-bridge/commit/4f5ad248eac8ab0bbed2835809352a86f33fc580))
+* conditionally render action history based on network support ([3403948](https://www.github.com/aeternity/aepp-hyperchain-bridge/commit/34039484be3018d0309444d2602c31fb8364c8d4))
+* increase retry limit for fetching bridge transaction ([6974ef2](https://www.github.com/aeternity/aepp-hyperchain-bridge/commit/6974ef254ecb2b09f31e8bd8abdddc550d06e467))
+
 ## [1.1.0](https://www.github.com/aeternity/aepp-hyperchain-bridge/compare/v1.0.1...v1.1.0) (2025-04-25)
 
 
