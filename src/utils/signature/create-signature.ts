@@ -26,28 +26,59 @@ export const createSignature = async (
 export const createMessage = (request: ExitRequest, timestamp: number) => {
   const exitLinkStr = request.entry.exit_link
     ? [
+        "link.local_token:",
         request.entry.exit_link.local_token,
+        ";",
+        "link.source_token:",
         request.entry.exit_link.source_token || "",
+        ";",
+        "link.source_network_id:",
         request.entry.exit_link.source_network_id,
+        ";",
+        "link.is_source_native:",
         request.entry.exit_link.is_source_native.toString(),
-      ].join(";")
-    : [""];
+        ";",
+      ].join("")
+    : ["token_link:;"];
 
   return [
+    "entry.idx:",
     request.entry.idx.toString(),
+    ";",
+    "entry.from:",
     request.entry.from,
+    ";",
+    "entry.token:",
     request.entry.token || "",
+    ";",
+    "entry.amount:",
     request.entry.amount.toString(),
+    ";",
     exitLinkStr,
+    "entry.token_type:",
     tokenTypeToStr(request.entry.token_type),
+    ";",
+    "entry.target_network_id:",
     request.entry.target_network_id,
+    ";",
+    "entry.source_network_id:",
     request.entry.source_network_id,
+    ";",
+    "entry_tx_hash:",
     request.entry_tx_hash,
+    ";",
+    "meta.name:",
     request.entry_token_meta.name,
+    ";",
+    "meta.symbol:",
     request.entry_token_meta.symbol,
+    ";",
+    "meta.decimals:",
     request.entry_token_meta.decimals.toString(),
+    ";",
+    "timestamp:",
     timestamp.toString(),
   ]
-    .join(";")
+    .join("")
     .toLowerCase();
 };

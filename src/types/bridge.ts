@@ -1,6 +1,6 @@
 import { AeSdk, type ContractMethodsBase, Contract } from "@aeternity/aepp-sdk";
 
-import { Network, NetworkBase } from "./network";
+import { Network } from "./network";
 import { FungibleTokenContract, TokenMeta } from "./token";
 import { Tables } from "@/web/backend/lib/database.types";
 

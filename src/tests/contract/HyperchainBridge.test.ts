@@ -279,7 +279,7 @@ const testBridgeExits = async (
     }
 
     expect(processedExits.length).toBeGreaterThan(0);
-    const lastExit = processedExits[processedExits.length - 1] as ExitRequest;
+    const lastExit = processedExits[0] as ExitRequest;
 
     const idxProcessResults = (
       await contract.check_ids_processed(

@@ -1,7 +1,7 @@
 {
   "ae_uat": {
     "bridge": {
-      "address": "ct_2R3sdriYKVfH2Rcia8k7dgpuYUfhrvFHh2GHfWtiNEkBP283V",
+      "address": "ct_LSjSbSAFa9uCFoXDy5ERkevM6jjYwProKDhyRD87RHwoKyMTG",
       "aci": [
         {
           "namespace": {
@@ -607,6 +607,33 @@
                 "stateful": true
               },
               {
+                "arguments": [],
+                "name": "cleanup",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [],
+                "name": "pause",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [],
+                "name": "resume",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
                 "arguments": [
                   {
                     "name": "request",
@@ -671,6 +698,14 @@
                 {
                   "name": "token_ref",
                   "type": "FungibleToken"
+                },
+                {
+                  "name": "paused",
+                  "type": "bool"
+                },
+                {
+                  "name": "entry_nonce",
+                  "type": "int"
                 },
                 {
                   "name": "token_links",
@@ -838,7 +873,7 @@
       ]
     },
     "token": {
-      "address": "ct_jNZZ7H8s8jxPqhjJ28hexK28w7DsWvSp95tMKS9sy7D3ydzK2",
+      "address": "ct_rTdteKhiBr5QhhMsTnpiebeoz5FeaAfF67ZcbdW7Fa8v6u1P2",
       "aci": [
         {
           "namespace": {
@@ -1303,7 +1338,7 @@
   },
   "ae_mainnet": {
     "bridge": {
-      "address": "ct_28BX2ge951bPPqJg3tXPx3KkybCaxMwerDMc65MXCfkhEF1R3w",
+      "address": "ct_jgQVswhF6yynCecMbWCGUP2czVaBC9iofzjBQf9LDHPBJcKXZ",
       "aci": [
         {
           "namespace": {
@@ -1909,6 +1944,33 @@
                 "stateful": true
               },
               {
+                "arguments": [],
+                "name": "cleanup",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [],
+                "name": "pause",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
+                "arguments": [],
+                "name": "resume",
+                "payable": false,
+                "returns": {
+                  "tuple": []
+                },
+                "stateful": true
+              },
+              {
                 "arguments": [
                   {
                     "name": "request",
@@ -1973,6 +2035,14 @@
                 {
                   "name": "token_ref",
                   "type": "FungibleToken"
+                },
+                {
+                  "name": "paused",
+                  "type": "bool"
+                },
+                {
+                  "name": "entry_nonce",
+                  "type": "int"
                 },
                 {
                   "name": "token_links",
@@ -2140,7 +2210,7 @@
       ]
     },
     "token": {
-      "address": "ct_FpzJQQXRZ4CiREygNVnunRaKFF5Ysj4iPtnHhmvYwwHGqjbAM",
+      "address": "ct_2sQbeN1UrwdiU1N8u23LX3DA7tQiQb6ZYpWU547gg39h2x8PmE",
       "aci": [
         {
           "namespace": {
