@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.2.1](https://www.github.com/aeternity/aepp-hyperchain-bridge/compare/v1.2.0...v1.2.1) (2025-04-28)
+
+
+### Bug Fixes
+
+* update string concatenation to use semicolons ([b6aa4a5](https://www.github.com/aeternity/aepp-hyperchain-bridge/commit/b6aa4a55f18da714392d1fc6eec4ada5b6a0b7ba))
+
 ## [1.2.0](https://www.github.com/aeternity/aepp-hyperchain-bridge/compare/v1.1.0...v1.2.0) (2025-04-28)
 
 
