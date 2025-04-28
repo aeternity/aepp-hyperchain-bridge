@@ -100,11 +100,16 @@ export default function WalletProvider({
   }, [connector, setConnectionStatus]);
 
   const handleNetworkChange = useCallback(
-    (_networkId: string) => {
+    async (_networkId: string) => {
       const network = getNetworkById(_networkId);
       if (network) {
-        walletSdk.selectNode(_networkId);
-        setNetworkId(_networkId);
+        const nodesInPool = await walletSdk.getNodesInPool();
+        if (nodesInPool.find((n) => n.nodeNetworkId === network.id)) {
+          walletSdk.selectNode(_networkId);
+          setNetworkId(_networkId);
+        } else {
+          addNewNode(network);
+        }
       } else {
         setNetworkId("");
       }
