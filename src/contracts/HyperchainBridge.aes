@@ -123,7 +123,7 @@ payable main contract HyperchainBridge =
       source_network_id = Chain.network_id,
       exit_link = get_token_link(token) }
 
-    put(state{bridge_entries = state.bridge_entries ++ [new_bridge_entry]})
+    put(state{bridge_entries = new_bridge_entry :: state.bridge_entries})
     new_bridge_entry
 
 
@@ -154,7 +154,7 @@ payable main contract HyperchainBridge =
             found.local_token.mint(request.entry.from, request.entry.amount)
             found
       
-    put(state{processed_exits = state.processed_exits ++ [request]})
+    put(state{processed_exits = request :: state.processed_exits})
     exit_link
 
   /// @notice Creates a token link and mints the specified amount of tokens.
@@ -180,7 +180,7 @@ payable main contract HyperchainBridge =
       is_source_native  = native_source,
       source_network_id = request.entry.source_network_id }
 
-    put(state{token_links = state.token_links ++ [new_link]})
+    put(state{token_links = new_link :: state.token_links})
     new_link
 
   /// @notice Stringifies the exit request.
