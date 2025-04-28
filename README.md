@@ -2,6 +2,9 @@
 
 The Hyperchain Bridge enables seamless token transfers between the Aeternity blockchain and its Hyperchains. It ensures secure and efficient scalability and interoperability across these networks. By monitoring Aeternity networks, it indexes and stores bridge transactions, facilitating fast data retrieval for the user interface. Additionally, the application empowers users to integrate new Hyperchain networks, extending bridge capabilities to emerging networks.
 
+> **⚠ Warning:**  
+> The Hyperchain Bridge is a work in progress and is not production-ready. Use it with caution and be aware of the risk of losing funds.
+
 ## Getting Started
 
 ### Prerequisites

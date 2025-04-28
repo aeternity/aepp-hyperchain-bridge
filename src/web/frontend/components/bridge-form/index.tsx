@@ -15,6 +15,7 @@ import { NetworkBalanceContext } from "../../context/balance-provider";
 import Title from "../base/title";
 import { BridgeActionContext } from "../../context/action-provider";
 import { WalletContext } from "../../context/wallet-provider";
+import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
 export default function BridgeForm() {
   const { reloadBalance } = useContext(NetworkBalanceContext);
@@ -120,6 +121,12 @@ export default function BridgeForm() {
           <BridgeHistory />
         </div>
       </fieldset>
+      <p className="alert alert-error alert-outline font-medium mt-4">
+        <ExclamationTriangleIcon className="h-10 w-10 flex-shrink-0 stroke-current" />
+        Please do not bridge AE tokens from Mainnet to Testnet or from Testnet
+        to Mainnet. These transfers may result in the loss of your assets.
+        Always ensure you are bridging within the correct network environment.
+      </p>
     </>
   );
 }
