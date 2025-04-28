@@ -197,8 +197,11 @@ payable main contract HyperchainBridge =
     let timed_exit_request_str = 
       String.concats([
         stringify_bridge_entry(request.entry),
+        ";",
         request.entry_tx_hash,
+        ";",
         stringify_token_meta(request.entry_token_meta),
+        ";",
         Int.to_str(timestamp) ])
       
     String.to_lower(timed_exit_request_str)
@@ -208,7 +211,9 @@ payable main contract HyperchainBridge =
   function stringify_token_meta(meta: token_meta): string =
     String.concats([
       meta.name,
+      ";",
       meta.symbol,
+      ";",
       Int.to_str(meta.decimals)])
 
   function stringify_token_link(_link: option(token_link)): string =
@@ -217,8 +222,11 @@ payable main contract HyperchainBridge =
       let link = Option.force(_link)
       String.concats([
         get_token_contract_address_str(Some(link.local_token)),
+        ";",
         get_token_contract_address_str(link.source_token),
+        ";",
         link.source_network_id,
+        ";",
         if (link.is_source_native) "true" else "false" ])
   
   function stringify_token_type(token_type: token_type): string =
@@ -230,12 +238,19 @@ payable main contract HyperchainBridge =
   function stringify_bridge_entry(entry: bridge_entry): string =
     String.concats([
       Int.to_str(entry.idx), 
+      ";",
       Address.to_str(entry.from),
+      ";",
       get_token_contract_address_str(entry.token),
+      ";",
       Int.to_str(entry.amount),
+      ";",
       stringify_token_link(entry.exit_link),
+      ";",
       stringify_token_type(entry.token_type),
+      ";",
       entry.target_network_id,
+      ";",
       entry.source_network_id ])
 
   

@@ -30,7 +30,7 @@ export const createMessage = (request: ExitRequest, timestamp: number) => {
         request.entry.exit_link.source_token || "",
         request.entry.exit_link.source_network_id,
         request.entry.exit_link.is_source_native.toString(),
-      ].join("")
+      ].join(";")
     : [""];
 
   return [
@@ -48,6 +48,6 @@ export const createMessage = (request: ExitRequest, timestamp: number) => {
     request.entry_token_meta.decimals.toString(),
     timestamp.toString(),
   ]
-    .join("")
+    .join(";")
     .toLowerCase();
 };
