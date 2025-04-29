@@ -11,12 +11,14 @@ import { DEFAULT_NETWORKS, networkDefaults } from "@/constants/networks";
 import { Wallet } from "@/types/wallet";
 import { Network } from "@/types/network";
 
+export const walletNodes = DEFAULT_NETWORKS.map((network: Network) => ({
+  name: network.id,
+  instance: new Node(network.url),
+}));
+
 export const walletSdk = new AeSdk({
   onCompiler: new CompilerHttp(networkDefaults.compilerUrl),
-  nodes: DEFAULT_NETWORKS.map((network: Network) => ({
-    name: network.id,
-    instance: new Node(network.url),
-  })),
+  nodes: walletNodes,
 });
 
 export const getWallet = (): Promise<Wallet | null> =>

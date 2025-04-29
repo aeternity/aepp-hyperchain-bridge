@@ -7,7 +7,12 @@ import {
 } from "@aeternity/aepp-sdk";
 
 import { ConnectionStatus, DetectionStatus, Wallet } from "@/types/wallet";
-import { getConnector, getWallet, walletSdk } from "../utils/wallet-sdk";
+import {
+  getConnector,
+  getWallet,
+  walletNodes,
+  walletSdk,
+} from "../utils/wallet-sdk";
 
 import { Network, NetworkBase } from "@/types/network";
 import { useQuery } from "@tanstack/react-query";
@@ -60,7 +65,9 @@ export default function WalletProvider({
   const allNetworks = [...DEFAULT_NETWORKS, ...remoteNetworks] as Network[];
   const otherNetworks = allNetworks.filter(notById(networkId));
   const currentNetwork = allNetworks.find(byId(networkId));
-  const isUnsupportedNetwork = !currentNetwork;
+
+  const isUnsupportedNetwork =
+    isFetchedNetworks && currentNetwork === undefined;
 
   const getNetworkById = (id: string) => allNetworks.find(byId(id));
   const getNetworkBaseById = (id: string) =>
@@ -103,11 +110,10 @@ export default function WalletProvider({
   }, [connector, setConnectionStatus]);
 
   const handleNetworkChange = useCallback(
-    async (_networkId: string) => {
+    (_networkId: string) => {
       const network = getNetworkById(_networkId);
       if (network) {
-        const nodesInPool = await walletSdk.getNodesInPool();
-        if (nodesInPool.find((n) => n.nodeNetworkId === network.id)) {
+        if (walletNodes.find((n) => n.name === network.id)) {
           walletSdk.selectNode(_networkId);
           setNetworkId(_networkId);
         } else {
@@ -121,7 +127,9 @@ export default function WalletProvider({
   );
 
   const addNewNode = useCallback((network: NetworkBase) => {
-    walletSdk.addNode(network.name, new Node(network.url), true);
+    const instance = new Node(network.url);
+    walletNodes.push({ name: network.name, instance });
+    walletSdk.addNode(network.name, instance, true);
     setNetworkId(network.id);
   }, []);
 
