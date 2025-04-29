@@ -6,9 +6,6 @@ import { HyperchainBridge, HyperchainBridgeContract } from "@/types/bridge";
 import HyperchainBridge_aci from "@/aci/HyperchainBridge.json";
 import FungibleToken_aci from "@/aci/FungibleToken.json";
 import { FungibleToken, FungibleTokenContract } from "@/types/token";
-import { AciContractCallEncoder } from "@aeternity/aepp-calldata";
-
-const BridgeCallData = new AciContractCallEncoder(HyperchainBridge_aci);
 
 export async function getContract<T extends ContractMethodsBase>(
   aeSdk: AeSdk,
@@ -19,6 +16,7 @@ export async function getContract<T extends ContractMethodsBase>(
     ...aeSdk.getContext(),
     address,
     aci,
+    omitUnknown: true,
   });
 }
 
@@ -30,6 +28,7 @@ export async function getBridgeContract(
     ...aeSdk.getContext(),
     aci: HyperchainBridge_aci,
     address,
+    omitUnknown: true,
   });
 }
 
@@ -41,5 +40,6 @@ export async function getTokenContract(
     ...aeSdk.getContext(),
     aci: FungibleToken_aci,
     address,
+    omitUnknown: true,
   });
 }

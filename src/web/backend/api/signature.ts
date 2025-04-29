@@ -31,7 +31,8 @@ export default {
         bridgeAddress as `ct_${string}`
       );
 
-      const _operator = (await bridge.operator()).decodedResult;
+      const _operator = (await bridge.operator({ omitUnknown: true }))
+        .decodedResult;
 
       if (operator !== _operator) {
         throw new Error(
@@ -42,7 +43,8 @@ export default {
       const _entry = await (
         await bridge.$getCallResultByTxHash(
           entryTxHash as `th_${string}`,
-          "enter_bridge"
+          "enter_bridge",
+          { omitUnknown: true }
         )
       ).decodedResult;
 

@@ -68,6 +68,7 @@ export default function BridgeActionProvider({ children }: Props) {
           {
             ttl: 30,
             amount: isNative ? BigInt(amount) : undefined,
+            omitUnknown: true,
           }
         );
 
@@ -122,6 +123,7 @@ export default function BridgeActionProvider({ children }: Props) {
           signature,
           {
             ttl: 30,
+            omitUnknown: true,
           }
         );
 

@@ -24,6 +24,7 @@ export interface HyperchainBridge extends ContractMethodsBase {
     options?: {
       amount?: number | bigint;
       ttl?: number;
+      omitUnknown?: boolean;
     }
   ) => Promise<BridgeEntry>;
 
@@ -33,6 +34,7 @@ export interface HyperchainBridge extends ContractMethodsBase {
     signature: string,
     options?: {
       ttl?: number;
+      omitUnknown?: boolean;
     }
   ) => Promise<TokenLink>;
 
