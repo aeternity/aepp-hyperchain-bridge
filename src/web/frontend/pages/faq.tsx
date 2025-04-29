@@ -21,7 +21,7 @@ export default function FAQ() {
         <h2 className="text-2xl font-semibold my-4">
           How does the Hyperchains Bridge work?
         </h2>
-        <p className="mb-3 text-sm">
+        <div className="mb-3 text-sm">
           The bridge operates in two main steps:
           <ul className="m-4 [&>li]:mb-2 list-decimal">
             <li>
@@ -38,7 +38,7 @@ export default function FAQ() {
           </ul>
           All transactions are cryptographically secured and validated on both
           ends.
-        </p>
+        </div>
         <div className="divider" />
 
         <h2 className="text-2xl font-semibold my-4">What are Hyperchains?</h2>
@@ -53,7 +53,7 @@ export default function FAQ() {
         <h2 className="text-2xl font-semibold my-4">
           Why is the Hyperchains Bridge important?
         </h2>
-        <p className="mb-3 text-sm">
+        <div className="mb-3 text-sm">
           The bridge is a critical piece of infrastructure that:
           <ul className="m-4 [&>li]:mb-2 list-disc">
             <li>Expands token utility across different chains.</li>
@@ -69,13 +69,13 @@ export default function FAQ() {
               operate across multiple blockchain environments.
             </li>
           </ul>
-        </p>
+        </div>
         <div className="divider" />
 
         <h2 className="text-2xl font-semibold my-4">
           Is the Hyperchains Bridge secure?
         </h2>
-        <p className="mb-3 text-sm">
+        <div className="mb-3 text-sm">
           Yes. Security and decentralization are core principles. The bridge:
           <ul className="m-4 [&>li]:mb-2 list-disc">
             <li>Uses Sophia smart contracts for on-chain validation.</li>
@@ -89,7 +89,7 @@ export default function FAQ() {
               control of their assets.
             </li>
           </ul>
-        </p>
+        </div>
         <div className="divider" />
 
         <h2 className="text-2xl font-semibold my-4">
@@ -136,7 +136,7 @@ export default function FAQ() {
         <h2 className="text-2xl font-semibold my-4">
           Where can I learn more or get started?
         </h2>
-        <p className="mb-3 text-sm">
+        <div className="mb-3 text-sm">
           You can:
           <ul className="m-4 [&>li]:mb-2 list-disc">
             <li>
@@ -170,7 +170,7 @@ export default function FAQ() {
               to ask questions and collaborate with others.
             </li>
           </ul>
-        </p>
+        </div>
       </div>
     </main>
   );
