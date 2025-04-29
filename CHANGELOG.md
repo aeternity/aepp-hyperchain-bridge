@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.3.1](https://www.github.com/aeternity/aepp-hyperchain-bridge/compare/v1.3.0...v1.3.1) (2025-04-29)
+
+
+### Refactorings
+
+* extract walletNodes initialization to improve network handling in wallet-sdk ([eceaf42](https://www.github.com/aeternity/aepp-hyperchain-bridge/commit/eceaf426194325ee45d1c0acd1c62503c725577d))
+
 ## [1.3.0](https://www.github.com/aeternity/aepp-hyperchain-bridge/compare/v1.2.0...v1.3.0) (2025-04-28)
 
 
