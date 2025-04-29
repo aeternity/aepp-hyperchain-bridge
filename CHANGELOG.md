@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.4.0](https://www.github.com/aeternity/aepp-hyperchain-bridge/compare/v1.3.1...v1.4.0) (2025-04-29)
+
+
+### Features
+
+* integrate routing and add documentation and FAQ pages ([5a62480](https://www.github.com/aeternity/aepp-hyperchain-bridge/commit/5a62480602c09183ae1c1ef6b2e811066b9f6974))
+
+
+### Bug Fixes
+
+* hydration error ([45726b6](https://www.github.com/aeternity/aepp-hyperchain-bridge/commit/45726b63be1c547d533867018726470c44441815))
+* undefined event definition errors ([6b54ae2](https://www.github.com/aeternity/aepp-hyperchain-bridge/commit/6b54ae2b0de4aecd819b5033ea43b5dfc0bf1daa))
+
 ### [1.3.1](https://www.github.com/aeternity/aepp-hyperchain-bridge/compare/v1.3.0...v1.3.1) (2025-04-29)
 
 
