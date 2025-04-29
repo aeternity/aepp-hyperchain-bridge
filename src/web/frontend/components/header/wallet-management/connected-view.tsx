@@ -6,6 +6,8 @@ import { NetworkBalanceContext } from "@/web/frontend/context/balance-provider";
 import { ClockIcon, PowerIcon } from "@heroicons/react/24/outline";
 import { BridgeActionContext } from "@/web/frontend/context/action-provider";
 import useBridgeActionsHistory from "@/web/frontend/hooks/useBridgeActionsHistory";
+import BridgeHistory from "../../bridge-history";
+import BridgeActionDetailsModal from "../../bridge-form/action-details";
 
 export default function ConnectedView() {
   const { actions } = useBridgeActionsHistory();
@@ -66,6 +68,8 @@ export default function ConnectedView() {
             className="hover:bg-aepink-100 ml-1  cursor-pointer rounded-sm p-1"
             onClick={() => setHistoryVisibility(true)}
           />
+          <BridgeHistory />
+          <BridgeActionDetailsModal />
         </div>
       )}
       <PowerIcon

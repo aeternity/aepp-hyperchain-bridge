@@ -1,20 +1,17 @@
 import BigNumber from "bignumber.js";
 import { useCallback, useContext, useEffect, useState } from "react";
 
-import { validateForm } from "./validation";
 import TokenSelect from "./token-select";
 import AmountInput from "./amount-input";
 import NetworkSelect from "./network-select";
+import { validateForm } from "./validation";
 import { byAddress } from "@/utils/data/filters";
-import BridgeHistory from "../bridge-history";
 
-import { useTokenBalances } from "@/frontend/hooks/useTokenBalances";
-
-import BridgeActionDetailsModal from "./action-details";
-import { NetworkBalanceContext } from "../../context/balance-provider";
 import Title from "../base/title";
-import { BridgeActionContext } from "../../context/action-provider";
 import { WalletContext } from "../../context/wallet-provider";
+import { useTokenBalances } from "@/frontend/hooks/useTokenBalances";
+import { NetworkBalanceContext } from "../../context/balance-provider";
+import { BridgeActionContext } from "../../context/action-provider";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
 export default function BridgeForm() {
@@ -116,9 +113,6 @@ export default function BridgeForm() {
           >
             Confirm Transaction
           </button>
-
-          <BridgeActionDetailsModal />
-          <BridgeHistory />
         </div>
       </fieldset>
       <p className="alert alert-error alert-outline font-medium mt-4">

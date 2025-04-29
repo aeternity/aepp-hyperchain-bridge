@@ -2,8 +2,8 @@ import { useContext, useEffect } from "react";
 
 import Title from "../base/title";
 import BridgeHistoryList from "./history-list";
-import useBridgeActionsHistory from "../../hooks/useBridgeActionsHistory";
 import { BridgeActionContext } from "../../context/action-provider";
+import useBridgeActionsHistory from "../../hooks/useBridgeActionsHistory";
 
 export default function BridgeHistory() {
   const { isBusy, isHistoryVisible, setHistoryVisibility } =
@@ -17,7 +17,7 @@ export default function BridgeHistory() {
   }, [isBusy, refetch]);
 
   return (
-    <div className="drawer drawer-end">
+    <div className="drawer drawer-end z-20">
       <input
         id="transaction-history-drawer"
         type="checkbox"
