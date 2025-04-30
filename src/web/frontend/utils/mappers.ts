@@ -1,4 +1,5 @@
-import { BridgeEntryTx, TokenType } from "@/types/bridge";
+import { Domain } from "@/types/bridge";
+import { Network } from "@/types/network";
 import { TokenAmount } from "@/types/token";
 import BigNumber from "bignumber.js";
 

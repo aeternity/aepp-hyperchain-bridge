@@ -1,7 +1,7 @@
 {
   "ae_uat": {
     "bridge": {
-      "address": "ct_LSjSbSAFa9uCFoXDy5ERkevM6jjYwProKDhyRD87RHwoKyMTG",
+      "address": "ct_2M2QzjtLuQiHU9JCKwMXv1NmCMdV2mxZFF8Es9mSStvpej9qgb",
       "aci": [
         {
           "namespace": {
@@ -486,6 +486,22 @@
               },
               {
                 "arguments": [],
+                "name": "domain",
+                "payable": false,
+                "returns": "HyperchainBridge.domain",
+                "stateful": false
+              },
+              {
+                "arguments": [],
+                "name": "domain_hash",
+                "payable": false,
+                "returns": {
+                  "bytes": 32
+                },
+                "stateful": false
+              },
+              {
+                "arguments": [],
                 "name": "_token_links",
                 "payable": false,
                 "returns": {
@@ -593,10 +609,6 @@
                     "type": "HyperchainBridge.exit_request"
                   },
                   {
-                    "name": "timestamp",
-                    "type": "int"
-                  },
-                  {
                     "name": "sig",
                     "type": "signature"
                   }
@@ -632,22 +644,6 @@
                   "tuple": []
                 },
                 "stateful": true
-              },
-              {
-                "arguments": [
-                  {
-                    "name": "request",
-                    "type": "HyperchainBridge.exit_request"
-                  },
-                  {
-                    "name": "timestamp",
-                    "type": "int"
-                  }
-                ],
-                "name": "stringify_exit_request",
-                "payable": false,
-                "returns": "string",
-                "stateful": false
               },
               {
                 "arguments": [
@@ -814,6 +810,10 @@
                     {
                       "name": "entry_token_meta",
                       "type": "HyperchainBridge.token_meta"
+                    },
+                    {
+                      "name": "timestamp",
+                      "type": "int"
                     }
                   ]
                 },
@@ -866,6 +866,46 @@
                   ]
                 },
                 "vars": []
+              },
+              {
+                "name": "domain",
+                "typedef": {
+                  "record": [
+                    {
+                      "name": "name",
+                      "type": {
+                        "option": [
+                          "string"
+                        ]
+                      }
+                    },
+                    {
+                      "name": "version",
+                      "type": {
+                        "option": [
+                          "int"
+                        ]
+                      }
+                    },
+                    {
+                      "name": "networkId",
+                      "type": {
+                        "option": [
+                          "string"
+                        ]
+                      }
+                    },
+                    {
+                      "name": "contractAddress",
+                      "type": {
+                        "option": [
+                          "HyperchainBridge"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                "vars": []
               }
             ]
           }
@@ -873,7 +913,7 @@
       ]
     },
     "token": {
-      "address": "ct_rTdteKhiBr5QhhMsTnpiebeoz5FeaAfF67ZcbdW7Fa8v6u1P2",
+      "address": "ct_2Qs3CirwdkBwjZJ2fsAouFbNCcQmWP57eQmXYtAzYEYBg9dh9H",
       "aci": [
         {
           "namespace": {
@@ -1338,7 +1378,7 @@
   },
   "ae_mainnet": {
     "bridge": {
-      "address": "ct_jgQVswhF6yynCecMbWCGUP2czVaBC9iofzjBQf9LDHPBJcKXZ",
+      "address": "ct_LLYcpmxqrPysDLZmdhbqYzooyUYtAvsNzuw5EoceNdMZAGuLL",
       "aci": [
         {
           "namespace": {
@@ -1823,6 +1863,22 @@
               },
               {
                 "arguments": [],
+                "name": "domain",
+                "payable": false,
+                "returns": "HyperchainBridge.domain",
+                "stateful": false
+              },
+              {
+                "arguments": [],
+                "name": "domain_hash",
+                "payable": false,
+                "returns": {
+                  "bytes": 32
+                },
+                "stateful": false
+              },
+              {
+                "arguments": [],
                 "name": "_token_links",
                 "payable": false,
                 "returns": {
@@ -1930,10 +1986,6 @@
                     "type": "HyperchainBridge.exit_request"
                   },
                   {
-                    "name": "timestamp",
-                    "type": "int"
-                  },
-                  {
                     "name": "sig",
                     "type": "signature"
                   }
@@ -1969,22 +2021,6 @@
                   "tuple": []
                 },
                 "stateful": true
-              },
-              {
-                "arguments": [
-                  {
-                    "name": "request",
-                    "type": "HyperchainBridge.exit_request"
-                  },
-                  {
-                    "name": "timestamp",
-                    "type": "int"
-                  }
-                ],
-                "name": "stringify_exit_request",
-                "payable": false,
-                "returns": "string",
-                "stateful": false
               },
               {
                 "arguments": [
@@ -2151,6 +2187,10 @@
                     {
                       "name": "entry_token_meta",
                       "type": "HyperchainBridge.token_meta"
+                    },
+                    {
+                      "name": "timestamp",
+                      "type": "int"
                     }
                   ]
                 },
@@ -2203,6 +2243,46 @@
                   ]
                 },
                 "vars": []
+              },
+              {
+                "name": "domain",
+                "typedef": {
+                  "record": [
+                    {
+                      "name": "name",
+                      "type": {
+                        "option": [
+                          "string"
+                        ]
+                      }
+                    },
+                    {
+                      "name": "version",
+                      "type": {
+                        "option": [
+                          "int"
+                        ]
+                      }
+                    },
+                    {
+                      "name": "networkId",
+                      "type": {
+                        "option": [
+                          "string"
+                        ]
+                      }
+                    },
+                    {
+                      "name": "contractAddress",
+                      "type": {
+                        "option": [
+                          "HyperchainBridge"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                "vars": []
               }
             ]
           }
@@ -2210,7 +2290,7 @@
       ]
     },
     "token": {
-      "address": "ct_2sQbeN1UrwdiU1N8u23LX3DA7tQiQb6ZYpWU547gg39h2x8PmE",
+      "address": "ct_KZ5r7owJ13baSqkxMVZycc3UkCd5GAPg6wwxV1anRt9zxJBXK",
       "aci": [
         {
           "namespace": {

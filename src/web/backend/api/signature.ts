@@ -1,10 +1,12 @@
 import assert from "assert";
 import { createSdkInstance } from "@/utils/aeternity/create-sdk-node";
 import { getBridgeContract } from "@/utils/contract/helper";
-import { BridgeEntry, ExitRequest } from "@/types/bridge";
+import { BridgeEntry, Domain, ExitRequest } from "@/types/bridge";
 import { getTokenMeta } from "@/utils/contract/token";
 import { createSignature } from "@/utils/signature/create-signature";
-import { mapBigIntsToNumbers } from "@/utils/data/mappers";
+import { domainFromNetwork, mapBigIntsToNumbers } from "@/utils/data/mappers";
+import { getAllNetworks } from "../lib/utils";
+import { byId } from "@/utils/data/filters";
 
 export default {
   async GET(
@@ -67,6 +69,14 @@ export default {
         "Specified idx does not match the transaction hash."
       );
 
+      const targetNetwork = (await getAllNetworks()).find(
+        byId(entry.target_network_id)
+      );
+
+      if (!targetNetwork) {
+        throw new Error("Network not found");
+      }
+
       const entry_token_meta = entry.token
         ? await getTokenMeta(sdk, entry.token)
         : {
@@ -75,21 +85,21 @@ export default {
             decimals: BigInt(Math.log10(currency.subunits_per_unit)),
           };
 
-      const _exitRequest: ExitRequest = {
+      const exitRequest: ExitRequest = mapBigIntsToNumbers({
         entry,
         entry_tx_hash: entryTxHash,
         entry_token_meta,
-      };
-      const exitRequest = mapBigIntsToNumbers(_exitRequest) as ExitRequest;
-      const timestamp = Date.now();
-      const signature = await createSignature(
-        sdk,
-        exitRequest,
-        timestamp,
-        operator
-      );
+        timestamp: BigInt(Date.now()),
+      });
 
-      return Response.json({ ok: true, signature, timestamp, exitRequest });
+      const domain = domainFromNetwork(targetNetwork);
+      const signature = await createSignature(sdk, domain, exitRequest);
+
+      return Response.json({
+        ok: true,
+        signature,
+        exitRequest,
+      });
     } catch (error) {
       return Response.json({
         ok: false,

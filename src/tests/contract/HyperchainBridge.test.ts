@@ -14,11 +14,8 @@ import {
   getContractAccountAddress,
   setupContracts,
 } from "@/utils/test/setup-tests";
-import {
-  createMessage,
-  createSignature,
-} from "@/utils/signature/create-signature";
-import { Contract } from "@aeternity/aepp-sdk";
+import { createSignature } from "@/utils/signature/create-signature";
+import { Contract, decode } from "@aeternity/aepp-sdk";
 import {
   getOriginalTokenBalance,
   getTokenBalanceOfAccount,
@@ -27,6 +24,7 @@ import {
 } from "@/utils/contract/token";
 import { sleep } from "bun";
 import FungibleToken_aci from "@/aci/FungibleToken.json";
+import { domainFromNetwork } from "@/utils/data/mappers";
 
 const { BRIDGE_A, BRIDGE_B } = await setupContracts(AE_TESTNET, AE_MAINNET);
 
@@ -74,12 +72,12 @@ describe("HyperchainBridge", async () => {
         token.$options.address
       );
       const bridgeBalance = BigInt(
-        (await token.balance(getContractAccountAddress(contract))).decodedResult
+        (await (
+          await token.balance(getContractAccountAddress(contract))
+        ).decodedResult) || 0
       );
 
-      expect(bridgeBalance).toBe(
-        (bridgeBalanceBefore || BigInt(0)) + depositAmount
-      );
+      expect(bridgeBalance).toBe(bridgeBalanceBefore + depositAmount);
       expect(newEntry as BridgeEntry).toEqual({
         idx: BigInt(entriesBefore.length),
         from: userAddress,
@@ -144,11 +142,6 @@ describe("HyperchainBridge", async () => {
   });
 
   describe("exits on Network B", async () => {
-    test("verify exit request message", async () => {
-      await entriesPromiseA;
-      await testMessageEquality(BRIDGE_B, exitsToProcess.A[0]);
-    });
-
     test(`bridge exits of Native and Standard tokens`, async () => {
       await entriesPromiseA;
       await testBridgeExits(BRIDGE_B, exitsToProcess.A);
@@ -220,11 +213,6 @@ describe("HyperchainBridge", async () => {
   });
 
   describe("exits on Network A", async () => {
-    test("verify bridge exit request message", async () => {
-      await entriesPromiseB;
-      await testMessageEquality(BRIDGE_A, exitsToProcess.B[0]);
-    });
-
     test(`bridge exits of Link tokens`, async () => {
       await entriesPromiseB;
       await testBridgeExits(BRIDGE_A, exitsToProcess.B);
@@ -236,15 +224,14 @@ const testBridgeExits = async (
   bridge: BridgeTestSetup,
   exitRequests: ExitRequest[]
 ) => {
-  const { sdk, contract } = bridge;
+  const { sdk, contract, network } = bridge;
   for await (const request of exitRequests) {
-    const timestamp = Date.now();
-    const signature = await createSignature(
-      sdk,
-      request,
-      timestamp,
-      ownerAddress
-    );
+    request.timestamp = BigInt(Date.now());
+    const domain = {
+      ...domainFromNetwork(network),
+      contractAddress: contract.$options.address as `ct_${string}`,
+    };
+    const signature = await createSignature(sdk, domain, request);
     let exitTokenAddress = await retrieveExitTokenAddress(bridge, request);
 
     const userBalanceBefore = await getTokenBalanceOfAccount(
@@ -252,12 +239,12 @@ const testBridgeExits = async (
       sdk,
       userAddress
     );
-
+    const { decodedResult: _domain } = await contract.domain();
     const {
       hash,
       result,
       decodedResult: exitLink,
-    } = await contract.exit_bridge(request, timestamp, signature);
+    } = await contract.exit_bridge(request, decode(signature));
     const { gasPrice, gasUsed } = result!;
     const { decodedResult: processedExits } = await contract._processed_exits();
 
@@ -314,17 +301,6 @@ const retrieveExitTokenAddress = async (
   }
 };
 
-const testMessageEquality = async (
-  bridge: BridgeTestSetup,
-  request: ExitRequest
-) => {
-  const timestamp = Date.now();
-  const message = createMessage(request, timestamp);
-  const { decodedResult: contractMessage } =
-    await bridge.contract.stringify_exit_request(request, timestamp);
-  expect(contractMessage).toBe(message);
-};
-
 const saveEntry = async (
   entry: BridgeEntry,
   tx_hash: string,
@@ -354,6 +330,7 @@ const saveEntry = async (
     entry,
     entry_token_meta,
     entry_tx_hash: tx_hash,
+    timestamp: 0n,
   };
 
   executedEntries[dataIndex].push({

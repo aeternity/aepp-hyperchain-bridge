@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@aeternity/aepp-calldata": "^1.9.1",
-    "@aeternity/aepp-sdk": "^14.0.0",
+    "@aeternity/aepp-sdk": "14.0.0",
     "@heroicons/react": "^2.2.0",
     "@supabase/supabase-js": "^2.49.4",
     "@tanstack/react-query": "^5.69.3",

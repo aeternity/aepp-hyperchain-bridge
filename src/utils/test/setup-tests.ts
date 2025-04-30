@@ -30,7 +30,7 @@ export async function setupContracts(
   return { ...contractsA, ...contractsB };
 }
 
-async function setupBridgeForNetwork(
+export async function setupBridgeForNetwork(
   code: string,
   network: Network
 ): Promise<{ [key: string]: BridgeTestSetup }> {

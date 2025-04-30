@@ -15,12 +15,7 @@ import {
   exitBridgeTxToExitRequest,
   mapBigIntsToNumbers,
 } from "@/utils/data/mappers";
-import { queryNetworks } from "./queries";
-
-async function getAllNetworks() {
-  const dbNetworks = await queryNetworks();
-  return DEFAULT_NETWORKS.concat(dbNetworks || []);
-}
+import { getAllNetworks } from "./utils";
 
 export async function syncAll() {
   // TODO: check for skipped indices

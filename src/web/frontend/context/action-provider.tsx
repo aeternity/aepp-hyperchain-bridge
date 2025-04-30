@@ -2,10 +2,11 @@ import { createContext, useCallback, useContext, useState } from "react";
 import { NotificationContext } from "./notification-provider";
 import { walletSdk } from "../utils/wallet-sdk";
 import { getBridgeContract } from "@/utils/contract/helper";
-import { BridgeAction } from "@/types/bridge";
+import { BridgeAction, ExitRequest } from "@/types/bridge";
 import { Token } from "@/types/token";
 import { setTokenAllowance } from "../utils/token-helper";
 import { WalletContext } from "./wallet-provider";
+import { decode } from "@aeternity/aepp-sdk";
 
 type Props = {
   children: React.ReactNode;
@@ -112,15 +113,13 @@ export default function BridgeActionProvider({ children }: Props) {
             sourceNetwork.bridgeContractAddress
           }/${action.entryIdx}/${action.entryTxHash}`
         );
-        const { ok, error, signature, exitRequest, timestamp } =
-          await _resp.json();
+        const { ok, error, signature, exitRequest } = await _resp.json();
 
         if (!ok) throw new Error(error);
 
         const exitTx = await bridgeContract?.exit_bridge(
           exitRequest,
-          timestamp,
-          signature,
+          decode(signature),
           {
             ttl: 30,
             omitUnknown: true,

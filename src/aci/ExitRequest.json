@@ -1,0 +1,109 @@
+{
+  "record": [
+    {
+      "name": "entry",
+      "type": {
+        "record": [
+          {
+            "name": "idx",
+            "type": "int"
+          },
+          {
+            "name": "from",
+            "type": "address"
+          },
+          {
+            "name": "token",
+            "type": {
+              "option": ["contract_pubkey"]
+            }
+          },
+          {
+            "name": "amount",
+            "type": "int"
+          },
+          {
+            "name": "exit_link",
+            "type": {
+              "option": [
+                {
+                  "record": [
+                    {
+                      "name": "local_token",
+                      "type": "contract_pubkey"
+                    },
+                    {
+                      "name": "source_token",
+                      "type": {
+                        "option": ["contract_pubkey"]
+                      }
+                    },
+                    {
+                      "name": "source_network_id",
+                      "type": "string"
+                    },
+                    {
+                      "name": "is_source_native",
+                      "type": "bool"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "token_type",
+            "type": {
+              "variant": [
+                {
+                  "Native": []
+                },
+                {
+                  "Link": []
+                },
+                {
+                  "Standard": []
+                }
+              ]
+            }
+          },
+          {
+            "name": "target_network_id",
+            "type": "string"
+          },
+          {
+            "name": "source_network_id",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "entry_tx_hash",
+      "type": "string"
+    },
+    {
+      "name": "entry_token_meta",
+      "type": {
+        "record": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "symbol",
+            "type": "string"
+          },
+          {
+            "name": "decimals",
+            "type": "int"
+          }
+        ]
+      }
+    },
+    {
+      "name": "timestamp",
+      "type": "int"
+    }
+  ]
+}

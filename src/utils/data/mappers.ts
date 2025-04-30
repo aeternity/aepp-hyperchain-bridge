@@ -1,4 +1,4 @@
-import { BridgeEntryTx, BridgeExitTx, TokenType } from "@/types/bridge";
+import { BridgeEntryTx, BridgeExitTx, Domain, TokenType } from "@/types/bridge";
 import { Network, NetworkBase, NetworkWithCurrency } from "@/types/network";
 import { AciContractCallEncoder } from "@aeternity/aepp-calldata";
 import HyperchainBridge_aci from "@/aci/HyperchainBridge.json";
@@ -100,3 +100,10 @@ export async function bridgeEntryTxToAction(
     userAddress: entry.from,
   };
 }
+
+export const domainFromNetwork = (network: Network): Domain => ({
+  name: "Hyperchain Bridge",
+  version: 1,
+  networkId: network.id,
+  contractAddress: network.bridgeContractAddress as `ct_${string}`,
+});

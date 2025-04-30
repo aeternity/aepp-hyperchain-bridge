@@ -7,11 +7,15 @@ import { Tables } from "@/web/backend/lib/database.types";
 export type HyperchainBridgeContract = Contract<HyperchainBridge>;
 
 export interface HyperchainBridge extends ContractMethodsBase {
+  domain: () => Promise<Domain>;
   operator: () => Promise<string>;
+  domain_hash: () => Promise<string>;
+  bridge_entry: (idx: number | bigint) => Promise<BridgeEntry | null>;
+
   _token_links: () => Promise<TokenLink[]>;
   _bridge_entries: () => Promise<BridgeEntry[]>;
   _processed_exits: () => Promise<ExitRequest[]>;
-  bridge_entry: (idx: number | bigint) => Promise<BridgeEntry | null>;
+
   check_ids_processed: (
     ids: Array<number | bigint>,
     source_network_id: string
@@ -30,18 +34,19 @@ export interface HyperchainBridge extends ContractMethodsBase {
 
   exit_bridge: (
     request: ExitRequest,
-    timestamp: number,
-    signature: string,
+    signature: any,
     options?: {
       ttl?: number;
       omitUnknown?: boolean;
     }
   ) => Promise<TokenLink>;
+}
 
-  stringify_exit_request: (
-    request: ExitRequest,
-    timestamp: number
-  ) => Promise<string>;
+export interface Domain {
+  name: string;
+  version: number;
+  networkId: string;
+  contractAddress: `ct_${string}`;
 }
 
 export interface BridgeEntry {
@@ -74,6 +79,7 @@ export interface ExitRequest {
   entry: BridgeEntry;
   entry_tx_hash: string;
   entry_token_meta: TokenMeta;
+  timestamp: bigint;
 }
 
 export interface TokenLink {
@@ -102,6 +108,7 @@ export const TokenType = {
     return { Standard: [] };
   },
 };
+
 type TokenType = (typeof TokenType)[keyof typeof TokenType];
 export const tokenTypeToStr = (t: TokenType) => {
   if ("Native" in t) return "Native";
