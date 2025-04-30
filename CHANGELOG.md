@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.5.0](https://www.github.com/aeternity/aepp-hyperchain-bridge/compare/v1.4.0...v1.5.0) (2025-04-30)
+
+
+### Features
+
+* add package version to footer ([037ff17](https://www.github.com/aeternity/aepp-hyperchain-bridge/commit/037ff17028cab4d0c1570b22ae9aead81396fa6b))
+* enhance signature verification ([28b3545](https://www.github.com/aeternity/aepp-hyperchain-bridge/commit/28b3545ac596b6f42d8d7829c5332e084b88fd13))
+
 ## [1.4.0](https://www.github.com/aeternity/aepp-hyperchain-bridge/compare/v1.3.1...v1.4.0) (2025-04-29)
 
 
