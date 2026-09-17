@@ -1,5 +1,5 @@
 import { DEFAULT_NETWORKS } from "@/constants/networks";
-import { supabase } from "./supabase";
+import { upsertActions, updateActionExit } from "./db";
 import { Network, NetworkWithCurrency } from "@/types/network";
 
 import { BridgeAction, BridgeEntryTx, BridgeExitTx } from "@/types/bridge";
@@ -43,17 +43,14 @@ export async function syncAction(hash: string, networkId: string) {
       currency,
     });
 
-    const { data, error } = await supabase
-      .from("actions")
-      .upsert(action)
-      .select()
-      .single();
-
-    if (error) {
+    let data: BridgeAction;
+    try {
+      [data] = await upsertActions([action]);
+    } catch (error: any) {
       console.error(
         `Error inserting action for ${networkToSync.name}: ${error.message}`
       );
-      throw new Error(error.message);
+      throw error;
     }
 
     return data;
@@ -107,24 +104,20 @@ async function updateActionWithExitRequest(
   exit: BridgeExitTx,
   network: Network
 ) {
-  const { data, error } = await supabase
-    .from("actions")
-    .update({
+  let data: BridgeAction | null;
+  try {
+    data = await updateActionExit({
+      sourceNetworkId: exit.exitRequest.entry.source_network_id,
+      entryIdx: Number(exit.exitRequest.entry.idx),
       exitTimestamp: exit.timestamp,
       exitTxHash: exit.hash,
       exitRequestData: JSON.stringify(mapBigIntsToNumbers(exit.exitRequest)),
-      isCompleted: true,
-    })
-    .eq("sourceNetworkId", exit.exitRequest.entry.source_network_id)
-    .eq("entryIdx", Number(exit.exitRequest.entry.idx))
-    .select()
-    .single();
-
-  if (error) {
+    });
+  } catch (error: any) {
     console.error(
       `Error updating actions for ${network.name}: ${error.message}`
     );
-    throw new Error(error.message);
+    throw error;
   }
 
   if (data) {
@@ -150,20 +143,18 @@ async function syncEnterTransactions(
     actionsToInsert.push(await bridgeEntryTxToAction(entry, network));
   }
 
-  const { data, error } = await supabase
-    .from("actions")
-    .upsert(actionsToInsert)
-    .select();
-
-  if (error) {
+  let data: BridgeAction[];
+  try {
+    data = actionsToInsert.length ? await upsertActions(actionsToInsert) : [];
+  } catch (error: any) {
     console.error(
       `Error inserting actions for ${network.name}: ${error.message}`
     );
-    throw new Error(error.message);
-  } else {
-    console.log(`Inserted ${data?.length} actions for ${network.name}`);
-    if (response.next) {
-      await syncEnterTransactions(network, response.next);
-    }
+    throw error;
+  }
+
+  console.log(`Inserted ${data.length} actions for ${network.name}`);
+  if (response.next) {
+    await syncEnterTransactions(network, response.next);
   }
 }

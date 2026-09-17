@@ -1,22 +1,13 @@
 import { Network } from "@/types/network";
-import { supabase } from "./supabase";
 import { BridgeAction } from "@/types/bridge";
+import { getNetworks, getLastAction } from "./db";
 
 export const queryNetworks = async (): Promise<Network[] | null> => {
-  const { data } = await supabase.from("networks").select("*");
-  return data;
+  return getNetworks();
 };
 
 export const queryLastAction = async (
   networkId: string
 ): Promise<BridgeAction | null> => {
-  const { data } = await supabase
-    .from("actions")
-    .select("*")
-    .eq("sourceNetworkId", networkId)
-    .order("entryIdx", { ascending: false })
-    .limit(1)
-    .single();
-
-  return data;
+  return getLastAction(networkId);
 };
