@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.5.1](https://www.github.com/aeternity/aepp-hyperchain-bridge/compare/v1.5.0...v1.5.1) (2026-09-17)
+
+
+### Bug Fixes
+
+* replace Supabase with self-hosted Postgres, don't crash on startup sync failure ([#12](https://www.github.com/aeternity/aepp-hyperchain-bridge/issues/12)) ([844d2dc](https://www.github.com/aeternity/aepp-hyperchain-bridge/commit/844d2dc2e1c14b6e75ff10826be3087f2e9b9646))
+
 ## [1.5.0](https://www.github.com/aeternity/aepp-hyperchain-bridge/compare/v1.4.0...v1.5.0) (2025-04-30)
 
 
