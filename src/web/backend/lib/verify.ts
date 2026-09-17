@@ -1,5 +1,5 @@
 import WebSocket from "ws";
-import { supabase } from "./supabase";
+import { findConflictingNetwork } from "./db";
 import { Network } from "@/types/network";
 import { DEFAULT_NETWORKS } from "@/constants/networks";
 
@@ -82,13 +82,8 @@ export async function throwWhenNetworkExists(network: Network) {
     throw new Error(`Network exists: ${found.name}`);
   }
 
-  const { data, count } = await supabase
-    .from("networks")
-    .select("*")
-    .or(
-      `id.is.${network.id},url.is.${network.url},mdwUrl.is.${network.mdwUrl},mdwWebSocketUrl.is.${network.mdwWebSocketUrl}`
-    );
-  if (count) {
-    throw new Error(`Network exists: ${data[0].name}`);
+  const existing = await findConflictingNetwork(network);
+  if (existing) {
+    throw new Error(`Network exists: ${existing.name}`);
   }
 }

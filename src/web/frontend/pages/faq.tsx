@@ -82,7 +82,7 @@ export default function FAQ() {
             <li>Verifies digital signatures and transaction metadata.</li>
             <li>
               Employs backend infrastructure built with modern, secure
-              technologies (Bun.js, Supabase).
+              technologies (Bun.js, PostgreSQL).
             </li>
             <li>
               Operates without custodial intermediaries — users remain in

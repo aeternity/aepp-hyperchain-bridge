@@ -1,4 +1,4 @@
-import { supabase } from "../lib/supabase";
+import { getActionsByUser, getActionByNetworkAndIdx } from "../lib/db";
 import { syncAction } from "../lib/sync";
 
 export const getByUserAddress = {
@@ -7,18 +7,12 @@ export const getByUserAddress = {
   ): Promise<Response> {
     const { userAddress } = req.params;
 
-    const { data, error } = await supabase
-      .from("actions")
-      .select("*")
-      .eq("userAddress", userAddress)
-      .order("isCompleted", { ascending: true })
-      .order("entryTimestamp", { ascending: false });
-
-    if (error) {
-      return Response.json({ ok: false, error });
+    try {
+      const data = await getActionsByUser(userAddress);
+      return Response.json({ ok: true, data });
+    } catch (error: any) {
+      return Response.json({ ok: false, error: error.message });
     }
-
-    return Response.json({ ok: true, data: data || [] });
   },
 };
 
@@ -28,17 +22,15 @@ export const getByNetworkIdAndEntryIdx = {
   ): Promise<Response> {
     const { sourceNetworkId, entryIdx } = req.params;
 
-    const { data, error } = await supabase
-      .from("actions")
-      .select("*")
-      .eq("sourceNetworkId", sourceNetworkId)
-      .eq("entryIdx", Number(entryIdx));
-
-    if (error) {
-      return Response.json({ ok: false, error });
+    try {
+      const data = await getActionByNetworkAndIdx(
+        sourceNetworkId,
+        Number(entryIdx)
+      );
+      return Response.json({ ok: true, data: data[0] });
+    } catch (error: any) {
+      return Response.json({ ok: false, error: error.message });
     }
-
-    return Response.json({ ok: true, data: data[0] });
   },
 };
 

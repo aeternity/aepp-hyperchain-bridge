@@ -12,55 +12,10 @@ The Hyperchain Bridge enables seamless token transfers between the Aeternity blo
 1. **Install Bun.js:**  
    The bridge application uses Bun.js as its JavaScript runtime. Install Bun.js on the machine that will run the application: [Bun.js Installation Guide](https://bun.sh/docs/installation).
 
-2. **Setup Supabase:**  
-   The bridge application relies on a PostgreSQL database hosted on the Supabase platform. The database should include the following tables: `actions` and `networks`. Use the SQL definitions below to create the tables:
-
-   <details>
-   <summary>SQL Definitions</summary>
-
-   ```sql
-   create table public.actions (
-     "sourceNetworkId" text not null,
-     "entryIdx" bigint not null,
-     "userAddress" text not null,
-     "targetNetworkId" text not null,
-     "tokenAddress" text null,
-     "tokenName" text not null,
-     "tokenSymbol" text not null,
-     "tokenDecimals" smallint not null,
-     amount numeric not null,
-     "bridgeEntryData" json not null,
-     "isCompleted" boolean not null default false,
-     "exitRequestData" json null,
-     "entryTxHash" text not null,
-     "exitTxHash" text null,
-     "entryTimestamp" numeric not null,
-     "exitTimestamp" numeric null,
-     constraint actions_pkey primary key ("sourceNetworkId", "entryIdx")
-   ) TABLESPACE pg_default;
-
-   create table public.networks (
-     id text not null,
-     url text not null,
-     name text not null,
-     "mdwUrl" text not null,
-     "explorerUrl" text not null,
-     "bridgeContractAddress" text not null,
-     "mdwWebSocketUrl" text not null,
-     constraint networks_pkey primary key (id),
-     constraint networks_explorerUrl_key unique ("explorerUrl"),
-     constraint networks_mdwUrl_key unique ("mdwUrl"),
-     constraint networks_mdwWebSocketUrl_key unique ("mdwWebSocketUrl"),
-     constraint networks_url_key unique (url)
-   ) TABLESPACE pg_default;
-   ```
-
-   </details>
-
-   After setting up the database:
-
-   - Obtain `SUPABASE_URL` and `SUPABASE_ANON_KEY` from the Supabase dashboard and add them to the `.env` file.
-   - Disable Row Level Security (RLS) for these tables.
+2. **Setup PostgreSQL:**  
+   The bridge application stores its data (`actions` and `networks` tables) in a PostgreSQL database. The
+   application creates both tables automatically on startup if they don't already exist, so no manual SQL
+   setup is required — just point it at an empty database via the `PG_*` environment variables below.
 
 3. **Add Bridge Operator Private Key:**  
    Add a trusted account's private key to the `.env` file under the `BRIDGE_OWNER_PK` variable.  
@@ -91,9 +46,13 @@ Before running the application, ensure the following steps are completed:
    # Bridge user account's private key (for testing purposes)
    BRIDGE_USER_PK=
 
-   # Supabase URL and Anonymous key from the Supabase dashboard
-   SUPABASE_URL=
-   SUPABASE_ANON_KEY=
+   # PostgreSQL connection details
+   PG_HOST=
+   PG_PORT=5432
+   PG_DATABASE=
+   PG_USER=
+   PG_PASSWORD=
+   PG_SSL=false
    ```
 
 2. Update the network constants in `src/constants/networks.ts` with the deployed bridge contract addresses using the bridge operator account.
@@ -136,7 +95,7 @@ The Hyperchain Bridge leverages the following technologies:
 - **Bun.js:** A JavaScript runtime powering backend services for efficient handling of bridge transactions, data processing, and routing.
 - **React:** Provides a responsive and user-friendly interface.
 - **Sophia:** A functional smart contract language for secure and efficient contracts on the Aeternity blockchain.
-- **Supabase:** An open-source Firebase alternative for managing PostgreSQL databases.
+- **PostgreSQL:** Stores indexed bridge transactions and network configuration.
 - **Docker:** Simplifies deployment and management by containerizing components for consistency across environments.
 - **aepp-js-sdk:** A JavaScript SDK for interacting with the Aeternity blockchain.
 - **Aeternity Middleware:** Indexes and provides access to blockchain data for efficient querying and retrieval.

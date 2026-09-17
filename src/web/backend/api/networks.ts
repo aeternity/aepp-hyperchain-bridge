@@ -1,5 +1,5 @@
 import { Network } from "@/types/network";
-import { supabase } from "../lib/supabase";
+import { insertNetwork } from "../lib/db";
 import { createSdkInstance } from "@/utils/aeternity/create-sdk-node";
 import { deployBridgeContract } from "@/utils/script/scripts-helper";
 import { queryNetworks } from "../lib/queries";
@@ -39,18 +39,11 @@ export default {
         bridgeContractAddress: bridgeContract.$options.address as string,
       };
 
-      const { data, error } = await supabase
-        .from("networks")
-        .insert(network)
-        .select();
-
-      if (error) {
-        throw new Error(error.message);
-      }
+      const data = await insertNetwork(network);
 
       return Response.json({
         ok: true,
-        data: data[0],
+        data,
       });
     } catch (error: any) {
       return Response.json({ ok: false, error: error.message });
