@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.5.2](https://www.github.com/aeternity/aepp-hyperchain-bridge/compare/v1.5.1...v1.5.2) (2026-09-21)
+
+
+### Miscellaneous
+
+* bump @aeternity/aepp-sdk to 15.0.0 ([e8ad456](https://www.github.com/aeternity/aepp-hyperchain-bridge/commit/e8ad456ecb01fc9dc061bbe53c7d3b7a130a713e))
+
 ### [1.5.1](https://www.github.com/aeternity/aepp-hyperchain-bridge/compare/v1.5.0...v1.5.1) (2026-09-17)
 
 
